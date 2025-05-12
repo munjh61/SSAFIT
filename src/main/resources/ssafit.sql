@@ -9,6 +9,7 @@ CREATE TABLE `user` (
     user_name VARCHAR(20) NOT NULL,
     password VARCHAR(50) NOT NULL,
     email VARCHAR(50) NOT NULL,
+	role VARCHAR(20) NOT NULL,
     reg_date TIMESTAMP DEFAULT now(),
     is_deleted boolean DEFAULT false,
     PRIMARY KEY(user_id)
@@ -48,10 +49,10 @@ CREATE TABLE `review` (
   CONSTRAINT `review_video_fk` FOREIGN KEY (`user_id`) REFERENCES `user`(`user_id`) ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE = InnoDB;
 
-INSERT INTO `user` (user_id, user_name, password, email) VALUES
-('user01', '김싸피', 'pw1234', 'kim@ssafy.com'),
-('user02', '이자바', 'java1234', 'lee@java.com'),
-('user03', '박프론트', 'front1234', 'park@web.com');
+INSERT INTO `user` (user_id, user_name, password, email, role) VALUES
+('user01', '김싸피', 'pw1234', 'kim@ssafy.com', 'admin'),
+('user02', '이자바', 'java1234', 'lee@java.com', 'user'),
+('user03', '박프론트', 'front1234', 'park@web.com', 'user');
 
 INSERT INTO `video` 
 (channel_name, url, title, view_cnt, image, part, user_id) VALUES

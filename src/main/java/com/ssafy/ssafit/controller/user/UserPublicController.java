@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class UserPublicController {
 
-    private final UserService userService;
+    // private final UserService userService;
+
     // 이메일 인증 요청
     //@PostMapping("/email/request")
     // 이메일 인증 확인
