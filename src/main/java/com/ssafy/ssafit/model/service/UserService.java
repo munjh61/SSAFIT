@@ -13,7 +13,7 @@ public interface UserService {
     int delete(String userId);
 
     //login
-    boolean valid(User user);
+    boolean login(User user);
     //regist
     boolean regist(User user);
 }

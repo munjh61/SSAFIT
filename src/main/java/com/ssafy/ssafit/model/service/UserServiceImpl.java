@@ -15,7 +15,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public boolean valid(User user) {
+    public boolean login(User user) {
         User tmp = select(user.getUserId());
         return passwordEncoder.matches(user.getPassword(), tmp.getPassword());
     }
@@ -24,9 +24,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean regist(User user) {
         if (select(user.getUserId()) == null) {
-            String pass = user.getPassword();
-            pass = passwordEncoder.encode(pass);
-            user.setPassword(pass);
+            String password = passwordEncoder.encode(user.getPassword());
+            user.setPassword(password);
             insert(user);
             return true;
         }

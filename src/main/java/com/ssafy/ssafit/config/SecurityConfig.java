@@ -1,5 +1,6 @@
 package com.ssafy.ssafit.config;
 
+import com.ssafy.ssafit.model.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +18,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    static final String frontURL = "http://localhost:5173";
+    final String frontURL = "http://localhost:5173";
+    final CustomOAuth2UserService oAuth2UserService;
 
     @Bean
     public PasswordEncoder passwordEncoder(){
