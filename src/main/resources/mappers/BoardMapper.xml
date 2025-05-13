@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.ssafit.model.dao.BoardDao">
+    <!-- CREATE -->
+    <insert id="insert" parameterType="Board">
+        INSERT INTO user (user_id, title, content, reg_date, view_cnt, tag)
+        VALUES (#{userId}, #{title}, #{content}, #{regDate}, #{viewCnt}, #{tag})
+    </insert>
+    <!-- READ -->
+    <select id="select" parameterType="String" resultType="Board">
+        SELECT board_id as boardId, user_id as userId, title, content, reg_date as regDate, view_cnt as viewCnt, tag
+        FROM board
+        WHERE board_id = #{boardId}
+    </select>
+    <!-- UPDATE -->
+    <update id="update" parameterType="Board">
+        UPDATE user
+        SET user_name = #{userName},
+        password = #{password},
+        email = #{email}
+        WHERE user_id = #{userId}
+    </update>
+    <!-- DELETE -->
+    <delete id="delete" parameterType="String">
+        UPDATE user
+        SET is_deleted = true
+        WHERE user_id = #{userId}
+    </delete>
+</mapper>
