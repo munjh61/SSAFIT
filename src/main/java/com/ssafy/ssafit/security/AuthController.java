@@ -13,11 +13,11 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final UserService userService;
+    private final LoginService loginService;
 
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@RequestBody User user) {
-        String token = userService.login(user.getUserId(), user.getPassword());
+        String token = loginService.login(user.getUserId(), user.getPassword());
 
         Map<String, String> result = new HashMap<>();
         result.put("token", token);
