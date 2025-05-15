@@ -64,7 +64,8 @@ CREATE TABLE bucket (
 CREATE TABLE emailtmp (
     emailtmp_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     email       VARCHAR(255),
-    token       VARCHAR(255)
+    token       VARCHAR(255),
+    due			TIMESTAMP
 );
 
 -- 모임
