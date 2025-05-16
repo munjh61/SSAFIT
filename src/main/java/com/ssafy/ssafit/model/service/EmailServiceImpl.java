@@ -32,7 +32,7 @@ public class EmailServiceImpl implements EmailService{
 
     // 생성 및 메일 전송
     @Override
-    public Boolean sendCode(String address) {
+    public boolean sendCode(String address) {
         Email exist = emailDao.select(address);
         if(exist != null){
             emailDao.delete(exist.getEmailId());
@@ -61,16 +61,38 @@ public class EmailServiceImpl implements EmailService{
     }
 
 
-    // 체크
+    // 인증되도록 체크하고 해당 인증의 유효기간을 설정함
     @Override
-    public Boolean checkCode(String address, String codeInput) {
+    public boolean checkCode(String address, String codeInput) {
         Email email = emailDao.select(address);
         if(email == null){
             return false;
         }
-        if(email.getDue().isAfter(LocalDateTime.now())){
+        if(email.getDue().isBefore(LocalDateTime.now())){
             return false;
         }
-        return email.getToken().equalsIgnoreCase(codeInput);
+        if(!email.getToken().equalsIgnoreCase(codeInput)){
+            return false;
+        }
+        email.setVerified(true);
+        email.setDue(LocalDateTime.now().plusMinutes(5)); // 인증 후 5분
+        emailDao.update(email);
+        return true;
     }
+
+    // 이미 인증이 된 이메일을 가지고 뭔가 하고 싶을 때
+    public boolean isVerifiedEmail(String address){
+        Email email = emailDao.select(address);
+        if(email == null){
+            return false;
+        }
+        if(!email.isVerified()){
+            return false;
+        }
+        if(email.getDue().isBefore(LocalDateTime.now())){
+            return false;
+        }
+        return true;
+    }
+
 }

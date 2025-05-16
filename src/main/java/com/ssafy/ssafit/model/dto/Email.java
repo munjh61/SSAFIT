@@ -13,4 +13,5 @@ public class Email {
     private String address;
     private String token;
     private LocalDateTime due;
+    private boolean verified;
 }
