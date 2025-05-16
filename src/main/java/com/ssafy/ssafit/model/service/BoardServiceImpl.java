@@ -14,27 +14,32 @@ public class BoardServiceImpl implements BoardService {
     private BoardDao boardDao;
 
     @Override
-    public List<Board> select(Board board) {
-        return boardDao.selectBoard();
+    public List<Board> searchBoard(String keyword) {
+        return boardDao.searchByKeyword(keyword);
     }
 
     @Override
-    public Board selectDetail(String boardId) {
-        return boardDao.selectDetailBoard(boardId);
+    public List<Board> getAllBoards() {
+        return boardDao.selectAll();
     }
 
     @Override
-    public void insert(Board board) {
+    public Board getBoardByBoardId(int boardId) {
+        return boardDao.selectByBoardId(boardId);
+    }
+
+    @Override
+    public void createBoard(Board board) {
         boardDao.insertBoard(board);
     }
 
     @Override
-    public void update(String boardId) {
+    public void modifyBoard(int boardId) {
         boardDao.updateBoard(boardId);
     }
 
     @Override
-    public boolean delete(String boardId) {
+    public boolean removeBoard(int boardId) {
         return boardDao.deleteBoard(boardId);
     }
 }

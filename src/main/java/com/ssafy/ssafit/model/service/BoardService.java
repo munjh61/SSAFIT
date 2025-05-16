@@ -5,14 +5,16 @@ import com.ssafy.ssafit.model.dto.Board;
 import java.util.List;
 
 public interface BoardService {
-    //board 검색
-    List<Board> select(Board board);
+    //board 검색 조회
+    List<Board> searchBoard(String keyword);
+    //board 전체 조회
+    List<Board> getAllBoards();
     //board 상세 조회
-    Board selectDetail(String boardId);
+    Board getBoardByBoardId(int boardId);
     //board 등록
-    void insert(Board board);
+    void createBoard(Board board);
     //board 수정
-    void update(String boardId);
+    void modifyBoard(int boardId);
     //board 삭제
-    boolean delete(String boardId);
+    boolean removeBoard(int boardId);
 }
