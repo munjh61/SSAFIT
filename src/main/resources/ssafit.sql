@@ -66,6 +66,7 @@ CREATE TABLE email (
     address     VARCHAR(255),
     token       VARCHAR(255),
     due			TIMESTAMP,
+    verified    TINYINT DEFAULT 0, -- 0 : 노 인정, 1 : 인정 due보다 현재가 작을 경우에만
     INDEX idx_email_address (address)
 );
 

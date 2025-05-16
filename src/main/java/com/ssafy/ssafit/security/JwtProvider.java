@@ -20,7 +20,7 @@ public class JwtProvider {
 
     private Key key;
 
-    private final long EXPIRATION_TIME = 1000 * 60 * 60; // 1시간
+    private final long EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 7 * 2; // 2주
 
     @PostConstruct
     // @PostConstruct : Bean이 다 불러지고 난 이후에 메서드를 실행하게 하는 어노테이션

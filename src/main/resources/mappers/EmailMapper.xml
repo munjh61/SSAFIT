@@ -16,4 +16,10 @@
         FROM email
         WHERE address = #{address}
     </select>
+    <update id="update" parameterType="Email">
+        UPDATE email
+        SET due = #{due},
+            verified = true
+        WHERE email_id = #{emailId}
+    </update>
 </mapper>

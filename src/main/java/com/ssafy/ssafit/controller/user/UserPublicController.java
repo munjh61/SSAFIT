@@ -31,7 +31,24 @@ public class UserPublicController {
     }
 
     // 이메일 인증 확인
-    //@PostMapping("/email/verify")
+    @PostMapping("/email/verify")
+    public ResponseEntity<String> emailVerify(@RequestBody Map<String, String> body){
+        System.out.println(1);
+        String email = body.get("email");
+        System.out.println(2);
+        String code = body.get("code");
+        System.out.println(3);
+        if(email == null || email.isBlank()){
+            return new ResponseEntity<>("이메일이 비어있거나 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
+        }
+        if(code == null || code.isBlank()){
+            return new ResponseEntity<>("코드 입력이 되지 않았습니다.", HttpStatus.BAD_REQUEST);
+        }
+        if(!emailService.checkCode(email, code)){
+            return new ResponseEntity<>("메일 인증에 실패하였습니다.", HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>("메일 인증에 성공하였습니다.", HttpStatus.OK);
+    }
     // 중복된 이메일 확인
     //@GetMapping("/email/{email}")
     // 중복된 아이디 확인
