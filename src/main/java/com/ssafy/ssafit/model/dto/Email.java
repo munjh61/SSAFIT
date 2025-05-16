@@ -8,9 +8,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Emailtmp {
-    private int emailtmpId;
-    private String email;
+public class Email {
+    private int emailId;
+    private String address;
     private String token;
     private LocalDateTime due;
 }

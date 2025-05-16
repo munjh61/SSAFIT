@@ -1,7 +1,7 @@
 package com.ssafy.ssafit.model.service;
 
 import com.ssafy.ssafit.model.dao.EmailDao;
-import com.ssafy.ssafit.model.dto.Emailtmp;
+import com.ssafy.ssafit.model.dto.Email;
 import lombok.*;
 import org.springframework.mail.MailSendException;
 import org.springframework.mail.SimpleMailMessage;
@@ -32,28 +32,29 @@ public class EmailServiceImpl implements EmailService{
 
     // 생성 및 메일 전송
     @Override
-    public Boolean SendCode(String email) {
-        Emailtmp exist = emailDao.select(email);
+    public Boolean sendCode(String address) {
+        Email exist = emailDao.select(address);
         if(exist != null){
-            emailDao.delete(exist.getEmailtmpId());
+            emailDao.delete(exist.getEmailId());
         }
         // 테이블에 임시 코드 넣기
         String code = createCode();
-        Emailtmp emailtmp = new Emailtmp();
-        emailtmp.setEmail(email);
-        emailtmp.setToken(code);
-        emailtmp.setDue(LocalDateTime.now().plusMinutes(5)); // 5분
-        emailDao.insert(emailtmp);
+        Email email = new Email();
+        email.setAddress(address);
+        email.setToken(code);
+        email.setDue(LocalDateTime.now().plusMinutes(5)); // 5분
+        emailDao.insert(email);
         // 이메일 전송하기
         try{
             SimpleMailMessage smm = new SimpleMailMessage();
-            smm.setTo(email);
+            smm.setTo(address);
             smm.setFrom("SSAFIT");
             smm.setSubject("[SSAFIT] 본인 인증 문자입니다.");
             smm.setText("SSAFIT 본인 인증 문자입니다. 최대 5분간 유효합니다.\n"+code);
             javaMailSender.send(smm);
         } catch (MailSendException e){
-            emailDao.delete(emailtmp.getEmailtmpId());
+            e.printStackTrace();
+            emailDao.delete(email.getEmailId());
             return false;
         }
         return true;
@@ -62,14 +63,14 @@ public class EmailServiceImpl implements EmailService{
 
     // 체크
     @Override
-    public Boolean code(String email, String codeInput) {
-        Emailtmp emailtmp = emailDao.select(email);
-        if(emailtmp == null){
+    public Boolean checkCode(String address, String codeInput) {
+        Email email = emailDao.select(address);
+        if(email == null){
             return false;
         }
-        if(emailtmp.getDue().isAfter(LocalDateTime.now())){
+        if(email.getDue().isAfter(LocalDateTime.now())){
             return false;
         }
-        return emailtmp.getToken().equals(codeInput);
+        return email.getToken().equalsIgnoreCase(codeInput);
     }
 }

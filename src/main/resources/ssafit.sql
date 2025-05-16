@@ -61,11 +61,12 @@ CREATE TABLE bucket (
 );
 
 -- 이메일 인증
-CREATE TABLE emailtmp (
-    emailtmp_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    email       VARCHAR(255),
+CREATE TABLE email (
+    email_id	BIGINT AUTO_INCREMENT PRIMARY KEY,
+    address     VARCHAR(255),
     token       VARCHAR(255),
-    due			TIMESTAMP
+    due			TIMESTAMP,
+    INDEX idx_email_address (address)
 );
 
 -- 모임

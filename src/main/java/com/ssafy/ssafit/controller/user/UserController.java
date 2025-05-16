@@ -8,7 +8,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/public/user")
+@RequestMapping("api/user")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -18,7 +18,6 @@ public class UserController {
     public ResponseEntity<?> getMyInfo(@AuthenticationPrincipal CustomUserDetails userDetails) {
         return ResponseEntity.ok(userDetails.getUser());
     }
-
     // 회원정보 변경
     //@PutMapping
     // 회원 탈퇴

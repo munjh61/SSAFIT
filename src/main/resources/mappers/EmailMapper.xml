@@ -3,17 +3,17 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ssafy.ssafit.model.dao.EmailDao">
-    <insert id="insert" parameterType="Emailtmp" keyProperty="emailtmpId" useGeneratedKeys="true">
-        INSERT INTO emailtmp (email, token)
-        VALUES (#{email}, #{token})
+    <insert id="insert" parameterType="Email" keyProperty="emailId" useGeneratedKeys="true">
+        INSERT INTO email (address, token)
+        VALUES (#{address}, #{token})
     </insert>
     <delete id="delete" parameterType="int">
-        DELETE FROM emailtmp
-        WHERE emailtmp_id = #{emailtmp_id}
+        DELETE FROM email
+        WHERE email_id = #{emailId}
     </delete>
     <select id="select" parameterType="String">
-        SELECT emailtmp_id AS emailtmpId, email, token, due
+        SELECT email_id AS emailId, address, token, due
         FROM email
-        WHERE email = #{email}
+        WHERE address = #{address}
     </select>
 </mapper>
