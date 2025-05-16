@@ -27,7 +27,7 @@ public class BoardPublicController {
 
 
     //board 상세 조회
-    @GetMapping("")
+    @GetMapping("/")
 
 
 

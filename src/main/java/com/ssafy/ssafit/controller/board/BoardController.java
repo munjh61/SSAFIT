@@ -16,7 +16,7 @@ public class BoardController {
     private final BoardService boardService;
 
     //board 등록
-    @PostMapping("")
+    @PostMapping("/")
 
     //board 수정
 
