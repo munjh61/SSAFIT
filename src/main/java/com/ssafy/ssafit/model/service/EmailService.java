@@ -1,6 +1,6 @@
 package com.ssafy.ssafit.model.service;
 
 public interface EmailService {
-    String SendCode(String email);
-    Boolean checkCode(String email);
+    Boolean SendCode(String email);
+    Boolean code(String email, String codeInput);
 }
