@@ -1,10 +1,11 @@
 package com.ssafy.ssafit.model.dao;
 
 import com.ssafy.ssafit.model.dto.Board;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
-
+@Mapper
 public interface BoardDao {
     //board 검색 조회
     List<Board> searchByKeyword(@Param("keyword") String keyword);

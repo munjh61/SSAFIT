@@ -3,6 +3,7 @@ package com.ssafy.ssafit.model.service;
 import com.ssafy.ssafit.model.dao.BoardDao;
 import com.ssafy.ssafit.model.dto.Board;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
 
+    @Autowired
     private BoardDao boardDao;
 
     @Override
