@@ -34,7 +34,7 @@ public class EmailServiceImpl implements EmailService{
     @Override
     public boolean sendCode(String address) {
         Email exist = emailDao.select(address);
-        if(exist != null){
+        if(exist != null||exist.getDue().isBefore(LocalDateTime.now())){
             emailDao.delete(exist.getEmailId());
         }
         // 테이블에 임시 코드 넣기
@@ -89,7 +89,7 @@ public class EmailServiceImpl implements EmailService{
         if(!email.isVerified()){
             return false;
         }
-        if(email.getDue().isBefore(LocalDateTime.now())){
+        if(email.getDue().isBefore(LocalDateTime.now().minusMinutes(5))){
             return false;
         }
         return true;

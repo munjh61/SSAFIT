@@ -4,7 +4,7 @@ import com.ssafy.ssafit.model.dto.User;
 
 public interface UserService {
     //create
-    int insert(User user);
+    boolean insert(User user);
     //read
     User select(String userId);
     //update
@@ -12,8 +12,9 @@ public interface UserService {
     //delete
     int delete(String userId);
 
-    //login
-    boolean login(User user);
-    //regist
-    boolean regist(User user);
+    //중복확인
+    boolean isExistingId(String userId);
+    boolean isExistingEmail(String email);
+    //아이디 찾기
+    String findUserIdByEmail(String email);
 }
