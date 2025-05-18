@@ -14,5 +14,5 @@ public interface CommentDao {
     //댓글 수정
     void modifyComment(Comment comment);
     //댓글 삭제
-    void deleteComment(int commentId);
+    boolean deleteComment(int commentId);
 }
