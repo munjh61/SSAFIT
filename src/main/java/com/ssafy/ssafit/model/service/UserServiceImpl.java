@@ -36,16 +36,16 @@ public class UserServiceImpl implements UserService {
     public int update(User user) {
         User tmp = select(user.getUserId());
         if (user.getUserName() != null) {
-            user.setUserName(tmp.getUserName());
+            tmp.setUserName(user.getUserName());
         }
         if (user.getPassword() != null) {
             String password = passwordEncoder.encode(user.getPassword());
-            user.setPassword(password);
+            tmp.setPassword(password);
         }
         if (user.getEmail() != null) {
-            user.setEmail(tmp.getEmail());
+            tmp.setEmail(user.getEmail());
         }
-        return userDao.update(user);
+        return userDao.update(tmp);
     }
 
     @Transactional

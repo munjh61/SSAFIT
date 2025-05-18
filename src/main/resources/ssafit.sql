@@ -4,10 +4,10 @@ USE ssafit;
 
 -- 계정
 CREATE TABLE user (
-    user_id     VARCHAR(30) PRIMARY KEY,
-    password    VARCHAR(50) NOT NULL,
-    user_name   VARCHAR(30) NOT NULL,
-    email       VARCHAR(30) NOT NULL,
+    user_id     VARCHAR(100) PRIMARY KEY,
+    password    VARCHAR(100) NOT NULL,
+    user_name   VARCHAR(100) NOT NULL,
+    email       VARCHAR(100),
 	  is_deleted  boolean DEFAULT false,
 		role        VARCHAR(20) NOT NULL DEFAULT "user",
     reg_date    TIMESTAMP DEFAULT CURRENT_TIMESTAMP

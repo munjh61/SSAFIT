@@ -4,4 +4,5 @@ public interface EmailService {
     boolean sendCode(String email);
     boolean checkCode(String email, String codeInput);
     boolean isVerifiedEmail(String address);
+    String verifiedUserId(String address);
 }

@@ -1,6 +1,7 @@
 package com.ssafy.ssafit.model.service;
 
 import com.ssafy.ssafit.model.dao.EmailDao;
+import com.ssafy.ssafit.model.dao.UserDao;
 import com.ssafy.ssafit.model.dto.Email;
 import lombok.*;
 import org.springframework.mail.MailSendException;
@@ -19,6 +20,7 @@ public class EmailServiceImpl implements EmailService{
 
     private final JavaMailSender javaMailSender;
     private final EmailDao emailDao;
+    private final UserDao userDao;
     private List<String> letters = Arrays.asList("ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789".split(""));
 
     public String createCode(){
@@ -93,6 +95,13 @@ public class EmailServiceImpl implements EmailService{
             return false;
         }
         return true;
+    }
+
+    public String verifiedUserId(String address){
+        if(!isVerifiedEmail(address)){
+            return null;
+        }
+        return userDao.selectByEmail(address).getUserId();
     }
 
 }
