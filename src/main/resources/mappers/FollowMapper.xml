@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.ssafit.model.dao.FollowDao">
+    <select id="selectOneByFollowerIdAndFollowingId" parameterType="int" resultType="Follow">
+    SELECT  follow_id AS followId,
+            follower_id AS followerId,
+            following_id AS followingId,
+            created_at AS createAt
+    FROM follow
+    WHERE follower_id = #{followerId}
+        AND following_id = #{followingId}
+    </select>
+    <select id="selectByFollowerId" parameterType="String" resultType="Follow">
+    SELECT  follow_id AS followId,
+            follower_id AS followerId,
+            following_id AS followingId,
+            created_at AS createAt
+    FROM follow
+    WHERE follower_id = #{followerId}
+    </select>
+    <select id="selectByFollowingId" parameterType="String" resultType="Follow">
+    SELECT  follow_id AS followId,
+            follower_id AS followerId,
+            following_id AS followingId,
+            created_at AS createAt
+    FROM follow
+    WHERE following_id = #{followingId}
+    </select>
+    <insert id="insert" parameterType="Follow">
+    INSERT INTO follow (follower_id, following_id, created_at)
+    VALUES (#{followerId},#{followingId}, #{createdAt})
+    </insert>
+    <delete id="delete" parameterType="int">
+    DELETE FROM follow
+    WHERE follow_id = #{followId}
+    </delete>
+</mapper>
