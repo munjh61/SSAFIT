@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.ssafit.model.dao.BucketDao">
+        <!--버킷리스트 추가-->
+        <insert id="insertBucket" parameterType="Bucket">
+            INSERT INTO bucket (board_id, user_id, done)
+            VALUES (#{boardId}, #{userId}, 1)
+        </insert>
+
+        <!--사용자의 버킷리스트 조회-->
+        <select id="selectBucketByUserId" parameterType="String" resultType="Bucket">
+            SELECT *
+            FROM bucket
+            WHERE user_id = #{userId}
+            ORDER BY bucket_id DESC
+        </select>
+
+        <!--버킷리스트 삭제-->
+        <delete id="deleteBucket" parameterType="long">
+            DELETE FROM bucket
+            WHERE board_id = #{boardId} and user_id = #{userId}
+        </delete>
+
+        <!--버킷리스트 체크-->
+        <update id="checkBucket" parameterType="long">
+            UPDATE bucket
+            SET done = 2,
+            done_date = NOW()
+            WHERE bucket_id = #{bucketId}
+        </update>
+    </mapper>
