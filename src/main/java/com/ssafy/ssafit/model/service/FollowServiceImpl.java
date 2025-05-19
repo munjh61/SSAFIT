@@ -18,14 +18,13 @@ public class FollowServiceImpl implements FollowService{
         if(followDao.selectOneByFollowerIdAndFollowingId(follow) != null){
             return false;
         }
-
         followDao.insert(follow);
         return true;
     }
 
     @Override
     public boolean delete(Follow follow) {
-        return true;
+        return followDao.delete(follow)>0;
     }
 
     @Override

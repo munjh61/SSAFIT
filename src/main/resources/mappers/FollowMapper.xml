@@ -32,8 +32,8 @@
     INSERT INTO follow (follower_id, following_id, created_at)
     VALUES (#{followerId},#{followingId}, #{createdAt})
     </insert>
-    <delete id="delete" parameterType="int">
+    <delete id="delete" parameterType="Follow">
     DELETE FROM follow
-    WHERE follow_id = #{followId}
+    WHERE follower_id = #{followerId} AND following_id = #{followingId}
     </delete>
 </mapper>
