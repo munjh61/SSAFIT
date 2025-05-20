@@ -5,8 +5,10 @@ import com.ssafy.ssafit.model.dto.Comment;
 import java.util.List;
 
 public interface CommentDao {
-    //댓글 조회
+    //댓글 전체 조회
     List<Comment> selectAllComment();
+    //댓글 하나 조회
+    Comment selectCommentByCommentId(long CommentId);
     //댓글 작성
     void insertComment(Comment comment);
     //댓글 수정

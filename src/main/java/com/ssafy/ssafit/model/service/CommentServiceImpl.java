@@ -24,15 +24,30 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void modifyComment(Comment comment) {
-        //여기
-        commentDao.updateComment(comment);
+    public boolean modifyComment(String userId, Comment comment) {
+        Comment tmp = commentDao.selectCommentByCommentId(comment.getCommentId());//수정 대상인 comment
+        //수정 대상인 comment가 null 값이면, false
+        if(tmp == null){
+            return false;
+        }
+        //로그인 된 유저랑 댓글 작성한 유저가 같은지 확인
+        if(!tmp.getUserId().equals(userId)){
+            return false;
+        }
+        commentDao.updateComment(comment); //수정해주기
+        return true;
     }
 
     @Override
-    public boolean removeComment(long commentId) {
-
-        commentDao.deleteComment(commentId);
+    public boolean removeComment(String userId, long commentId) {
+        Comment tmp = commentDao.selectCommentByCommentId(commentId);
+        if(tmp == null){
+            return false;
+        }
+        if(!tmp.getUserId().equals(userId)){
+            return false;
+        }
+        commentDao.deleteComment(commentId);//삭제해주기
         return true;
     }
 }

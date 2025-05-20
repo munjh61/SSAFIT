@@ -10,6 +10,12 @@
         WHERE is_deleted = FALSE
         ORDER BY reg_date ASC
     </select>
+    <!--댓글 하나 조회-->
+    <select id="selectCommentByCommentId" parameterType="long">
+        SELECT *
+        FROM comment
+        WHERE comment_id = #{commentId}
+    </select>
 
     <!-- 댓글 등록 -->
     <insert id="insertComment" parameterType="Comment">
