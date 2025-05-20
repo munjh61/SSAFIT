@@ -73,7 +73,7 @@ CREATE TABLE email (
 -- 모임
 CREATE TABLE guild (
     guild_id    BIGINT AUTO_INCREMENT PRIMARY KEY,
-    guild_name  VARCHAR(255),
+    guild_name  VARCHAR(255) UNIQUE,
     reg_date    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
