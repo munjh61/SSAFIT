@@ -32,7 +32,9 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public void createBoard(Board board) {
+        System.out.println(board.getBoardId()); //null
         boardDao.insertBoard(board);
+        System.out.println(board.getBoardId()); // 숫자
     }
 
     @Override
