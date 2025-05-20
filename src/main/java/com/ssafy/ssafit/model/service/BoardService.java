@@ -16,7 +16,7 @@ public interface BoardService {
     //board 등록
     boolean createBoard(Board board);
     //board 수정
-    boolean modifyBoard(@AuthenticationPrincipal CustomUserDetails customUserDetails, Board board);
+    boolean modifyBoard(String userId, Board board);
     //board 삭제
-    boolean removeBoard(@AuthenticationPrincipal CustomUserDetails customUserDetails, long boardId);
+    boolean removeBoard(String userId, long boardId);
 }
