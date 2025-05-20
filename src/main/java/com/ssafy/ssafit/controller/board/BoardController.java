@@ -27,21 +27,23 @@ public class BoardController {
 
     //board 수정
     @PutMapping("/{boardid}")
-    public ResponseEntity<?> update(@PathVariable int boardId, @RequestBody Board board){
+    public ResponseEntity<?> update(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable long boardId, @RequestBody Board board){
         board.setBoardId(boardId);
-        boardService.modifyBoard(boardId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        boolean isUpdated = boardService.modifyBoard(customUserDetails, board);
+        if(isUpdated){
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("failed");
     }
 
     //board 삭제
     @DeleteMapping("/{boardid}")
-    public ResponseEntity<?> delete(@PathVariable int boardId){
-        boolean isDeleted = boardService.removeBoard(boardId);
+    public ResponseEntity<?> delete(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable int boardId){
+        boolean isDeleted = boardService.removeBoard(customUserDetails, boardId);
 
         if(isDeleted){
             return ResponseEntity.status(HttpStatus.OK).body("board delete");
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("failed");
     }
-
 }

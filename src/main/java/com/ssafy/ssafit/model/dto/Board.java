@@ -8,12 +8,13 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 public class Board {
-    private int boardId;
+    private Long boardId;
     private String userId;
     private String title;
     private String content;
     private String regDate;
     private int viewCnt;
     private String tag;
+    private boolean isDeleted;
 
 }

@@ -24,7 +24,7 @@
         ORDER BY reg_date DESC
     </select>
     <!-- 상세 조회 -->
-    <select id="selectByBoardId" parameterType="int" resultType="Board">
+    <select id="selectByBoardId" parameterType="long" resultType="Board">
         SELECT *
         FROM board
         WHERE board_id = #{boardId} and is_deleted = false
@@ -40,9 +40,9 @@
     </update>
 
     <!-- 삭제 -->
-    <update id="deleteBoard" parameterType="int">
+    <delete id="deleteBoard" parameterType="long">
         UPDATE board
         SET is_deleted = TRUE
         WHERE board_id = #{boardId}
-    </update>
+    </delete>
 </mapper>
