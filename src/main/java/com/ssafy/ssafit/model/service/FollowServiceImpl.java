@@ -5,7 +5,9 @@ import com.ssafy.ssafit.model.dto.Follow;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -15,7 +17,7 @@ public class FollowServiceImpl implements FollowService{
 
     @Override
     public boolean insert(Follow follow) {
-        if(followDao.selectOneByFollowerIdAndFollowingId(follow) != null){
+        if(followDao.selectOne(follow) != null){
             return false;
         }
         followDao.insert(follow);
@@ -28,12 +30,14 @@ public class FollowServiceImpl implements FollowService{
     }
 
     @Override
-    public List<Follow> selectByFollowerId(String FollowerId) {
-        return List.of();
+    public Map<String, List<Follow>> followList(String userId) {
+        Map<String, List<Follow>> map = new HashMap<>();
+        // 없으면 size가 0 인 list임
+        map.put("mutual",followDao.selectMutualFollow(userId));
+        map.put("onlyMe", followDao.selectOnlyMe(userId));
+        map.put("onlyYou", followDao.selectOnlyYou(userId));
+        return map;
     }
 
-    @Override
-    public List<Follow> selectByFollowingId(String FollowingId) {
-        return List.of();
-    }
+
 }

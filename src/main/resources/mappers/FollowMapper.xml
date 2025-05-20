@@ -3,37 +3,54 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ssafy.ssafit.model.dao.FollowDao">
-    <select id="selectOneByFollowerIdAndFollowingId" parameterType="int" resultType="Follow">
-    SELECT  follow_id AS followId,
-            follower_id AS followerId,
-            following_id AS followingId,
-            created_at AS createAt
-    FROM follow
-    WHERE follower_id = #{followerId}
+    <insert id="insert" parameterType="Follow">
+        INSERT INTO follow (follower_id, following_id)
+        VALUES (#{followerId},#{followingId})
+    </insert>
+    <select id="selectOne" parameterType="Follow" resultType="Follow">
+        SELECT  follow_id AS followId,
+        follower_id AS followerId,
+        following_id AS followingId,
+        created_at AS createdAt
+        FROM follow
+        WHERE follower_id = #{followerId}
         AND following_id = #{followingId}
     </select>
-    <select id="selectByFollowerId" parameterType="String" resultType="Follow">
-    SELECT  follow_id AS followId,
-            follower_id AS followerId,
-            following_id AS followingId,
-            created_at AS createAt
-    FROM follow
-    WHERE follower_id = #{followerId}
-    </select>
-    <select id="selectByFollowingId" parameterType="String" resultType="Follow">
-    SELECT  follow_id AS followId,
-            follower_id AS followerId,
-            following_id AS followingId,
-            created_at AS createAt
-    FROM follow
-    WHERE following_id = #{followingId}
-    </select>
-    <insert id="insert" parameterType="Follow">
-    INSERT INTO follow (follower_id, following_id, created_at)
-    VALUES (#{followerId},#{followingId}, #{createdAt})
-    </insert>
     <delete id="delete" parameterType="Follow">
-    DELETE FROM follow
-    WHERE follower_id = #{followerId} AND following_id = #{followingId}
+        DELETE FROM follow
+        WHERE follower_id = #{followerId} AND following_id = #{followingId}
     </delete>
+    <!--서로 팔로우 함-->
+    <select id="selectMutualFollow" parameterType="String" resultType="Follow">
+    SELECT  f1.follow_id AS followId,
+            f1.following_id AS followingId,
+            f1.follower_id AS followerId,
+            f1.created_at AS createdAt
+    FROM follow AS f1
+        INNER JOIN follow AS f2
+        ON f1.follower_id = f2.following_id
+        AND f1.following_id = f2.follower_id
+    WHERE f1.follower_id = #{userId}
+    </select>
+    <!--나만 팔로우 함-->
+    <select id="selectOnlyMe" parameterType="String" resultType="Follow">
+        SELECT  f1.follow_id AS followId,
+                f1.following_id AS followingId,
+                f1.follower_id AS followerId,
+                f1.created_at AS createdAt
+        FROM follow f1
+        LEFT JOIN follow f2
+        ON f2.follower_id = f1.following_id AND f2.following_id = #{userId}
+        WHERE f1.follower_id = #{userId}
+        AND f2.follower_id IS NULL;
+    </select>
+    <!--상대만 팔로우 함-->
+    <select id="selectOnlyYou" parameterType="String" resultType="Follow">
+        SELECT f1.follow_id AS followId, f1.following_id AS followingId, f1.follower_id AS followerId
+        FROM follow f1
+        LEFT JOIN follow f2
+        ON f2.follower_id = #{userId} AND f2.following_id = f1.follower_id
+        WHERE f1.following_id = #{userId}
+        AND f2.follower_id IS NULL;
+    </select>
 </mapper>

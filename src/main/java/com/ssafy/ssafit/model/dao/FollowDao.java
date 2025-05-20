@@ -5,9 +5,13 @@ import com.ssafy.ssafit.model.dto.Follow;
 import java.util.List;
 
 public interface FollowDao {
-    List<Follow> selectByFollowerId(String FollowerId);
-    List<Follow> selectByFollowingId(String FollowingId);
-    Follow selectOneByFollowerIdAndFollowingId(Follow follow);
     int insert(Follow follow);
+    Follow selectOne(Follow follow);
     int delete(Follow follow);
+    // 서로 팔로우
+    List<Follow> selectMutualFollow(String userId);
+    // 나만 팔로우
+    List<Follow> selectOnlyMe(String userId);
+    // 상대만 팔로우
+    List<Follow> selectOnlyYou(String userId);
 }

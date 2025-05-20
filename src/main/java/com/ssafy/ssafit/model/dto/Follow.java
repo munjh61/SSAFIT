@@ -13,5 +13,5 @@ public class Follow {
     private int followID;
     private String followerId;
     private String followingId;
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
 }
