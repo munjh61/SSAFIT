@@ -8,8 +8,8 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 public class Comment {
-    private int commentId;
-    private int boardId;
+    private Long commentId;
+    private Long boardId;
     private String userId;
     private String content;
     private String regDate;

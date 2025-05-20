@@ -18,8 +18,9 @@ public class CommentPublicController {
     private final CommentService commentService;
 
     //댓글 조회
-    @GetMapping("/board/{boardid}")
-    public ResponseEntity<List<Comment>> getComment(@PathVariable int commentId){
+    @GetMapping("/board/{boardId}")
+    public ResponseEntity<List<Comment>> getComment(@PathVariable long boardId){
+        //board에 해당하는 댓글 조회
         List<Comment> list = commentService.getAllComment();
         return ResponseEntity.ok(list);
     }
@@ -27,6 +28,7 @@ public class CommentPublicController {
     //댓글 작성
     @PostMapping("")
     public ResponseEntity<?> create(@RequestBody Comment comment){
+        //입력받은 comment가 null 값인지 확인
         commentService.createComment(comment);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

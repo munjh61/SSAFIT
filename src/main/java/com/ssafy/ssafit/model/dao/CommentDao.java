@@ -10,7 +10,7 @@ public interface CommentDao {
     //댓글 작성
     void insertComment(Comment comment);
     //댓글 수정
-    void modifyComment(Comment comment);
+    void updateComment(Comment comment);
     //댓글 삭제
-    boolean deleteComment(int commentId);
+    void deleteComment(long commentId);
 }

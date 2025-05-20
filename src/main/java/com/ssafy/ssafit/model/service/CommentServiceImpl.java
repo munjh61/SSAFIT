@@ -24,13 +24,15 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void updateComment(Comment comment) {
+    public void modifyComment(Comment comment) {
         //여기
-        commentDao.modifyComment(comment);
+        commentDao.updateComment(comment);
     }
 
     @Override
-    public boolean removeComment(int commentId) {
-        return commentDao.deleteComment(commentId);
+    public boolean removeComment(long commentId) {
+
+        commentDao.deleteComment(commentId);
+        return true;
     }
 }
