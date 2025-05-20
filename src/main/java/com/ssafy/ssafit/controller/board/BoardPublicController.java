@@ -19,7 +19,7 @@ public class BoardPublicController {
 
     //board 검색 조회
     //검색어에 걸리는 모든 게시글 조회
-    @GetMapping("/{keyword}")
+    @GetMapping("/search/{keyword}")
     public ResponseEntity<List<Board>> searchBoard(@PathVariable String keyword){
         List<Board> result = boardService.searchBoard(keyword);
         return ResponseEntity.ok(result);
@@ -33,7 +33,7 @@ public class BoardPublicController {
     }
 
     //board 상세 조회
-    @GetMapping("/{boardid}")
+    @GetMapping("/{boardId}")
     public ResponseEntity<Board> getBoard(@PathVariable int boardId){
         Board board = boardService.getBoardByBoardId(boardId);
         if(board != null){

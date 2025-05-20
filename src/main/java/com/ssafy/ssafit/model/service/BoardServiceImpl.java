@@ -51,8 +51,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public boolean modifyBoard(@AuthenticationPrincipal CustomUserDetails customUserDetails, Board board) {
-        String userId = customUserDetails.getUsername(); //로그인된 유저
+    public boolean modifyBoard(String userId, Board board) {
         Board tmp = boardDao.selectByBoardId(board.getBoardId()); //수정 대상인 board
 
         //수정 대상인 board가 null 값이면, 실패
@@ -68,9 +67,11 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public boolean removeBoard(@AuthenticationPrincipal CustomUserDetails customUserDetails, long boardId) {
-        String userId = customUserDetails.getUsername(); //로그인된 유저
+    public boolean removeBoard(String userId, long boardId) {
         Board tmp = boardDao.selectByBoardId(boardId); //삭제 대상인 board
+        System.out.println("userId: "+userId);
+        System.out.println("tmp: "+tmp);
+
         if(tmp == null){
             return false;
         }

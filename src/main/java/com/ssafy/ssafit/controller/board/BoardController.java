@@ -26,24 +26,29 @@ public class BoardController {
     }
 
     //board 수정
-    @PutMapping("/{boardid}")
-    public ResponseEntity<?> update(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable long boardId, @RequestBody Board board){
+    @PutMapping("/{boardId}")
+    public ResponseEntity<?> update(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable("boardId") long boardId, @RequestBody Board board){
+//        log.info("요청 받은 board: {}", board);
+//        log.info("로그인 사용자: {}", customUserDetails.getUsername());
+//        board.setBoardId(boardId);
         board.setBoardId(boardId);
-        boolean isUpdated = boardService.modifyBoard(customUserDetails, board);
+        String userId = customUserDetails.getUsername();
+        boolean isUpdated = boardService.modifyBoard(userId, board);
         if(isUpdated){
             return new ResponseEntity<>(HttpStatus.OK);
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("failed");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("실패요");
     }
 
     //board 삭제
-    @DeleteMapping("/{boardid}")
-    public ResponseEntity<?> delete(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable int boardId){
-        boolean isDeleted = boardService.removeBoard(customUserDetails, boardId);
+    @DeleteMapping("/{boardId}")
+    public ResponseEntity<?> delete(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable long boardId){
+        String userId = customUserDetails.getUsername();
+        boolean isDeleted = boardService.removeBoard(userId, boardId);
 
         if(isDeleted){
             return ResponseEntity.status(HttpStatus.OK).body("board delete");
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("failed");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("실패요");
     }
 }
