@@ -1,6 +1,7 @@
 package com.ssafy.ssafit.model.service;
 
 import com.ssafy.ssafit.model.dao.FollowDao;
+import com.ssafy.ssafit.model.dao.UserDao;
 import com.ssafy.ssafit.model.dto.Follow;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,9 +15,12 @@ import java.util.Map;
 public class FollowServiceImpl implements FollowService{
 
     private final FollowDao followDao;
+    private final UserDao userDao;
 
     @Override
     public boolean insert(Follow follow) {
+        if(userDao.select(follow.getFollowingId())==null)
+            return false;
         if(followDao.selectOne(follow) != null){
             return false;
         }

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.ssafit.model.dao.GuildDao">
+    <insert id="insert" parameterType="Guild" keyProperty="guildId" useGeneratedKeys="true">
+        INSERT INTO guild (guild_name, description, user_id) VALUES
+        (guildName, description, userId)
+    </insert>
+    <!--길드 상세-->
+    <select id="select" parameterType="int" resultType="Guild">
+        SELECT  guild_id AS guildId,
+                guild_name AS guildName,
+                reg_date AS regDate,
+                head_count AS headCount,
+                user_id AS userId
+        FROM    guild
+        WHERE   guild_id = #{guildId}
+    </select>
+    <!--검색-->
+    <select id="search" parameterType="String" resultType="Guild">
+        SELECT  guild_id AS guildId,
+        guild_name AS guildName,
+        reg_date AS regDate,
+        head_count AS headCount
+        FROM    guild
+        WHERE   LOWER(guild_name) LIKE LOWER(CONCAT('%', #{guildName} , '%'))
+    </select>
+    <update id="update" parameterType="Guild">
+        UPDATE  guild
+        <!--SET 안에서 마지막 쉼표는 자동 제거 됨 굿굿-->
+        <trim prefix="SET" suffixOverrides=",">
+                <if test="guildName != null">
+                guild_name = #{guildName},
+                </if>
+                <if test="description != null">
+                description = #{description},
+                </if>
+                <if test="userId != null">
+                user_id = #{userId},
+                </if>
+        </trim>
+        WHERE   guild_id = #{guildId}
+    </update>
+    <delete id="delete">
+        DELETE FROM guild
+        WHERE guild_id = #{guildId}
+    </delete>
+    <select id="myGuilds" parameterType="String" resultType="Guild">
+        SELECT  guild_id AS guildId,
+                user_id AS userId
+        FROM    guild
+        WHERE   user_id = #{userId}
+    </select>
+</mapper>

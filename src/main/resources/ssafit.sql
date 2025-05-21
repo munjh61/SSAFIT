@@ -17,7 +17,7 @@ CREATE TABLE user (
 -- 게시판
 CREATE TABLE board (
     board_id    BIGINT AUTO_INCREMENT PRIMARY KEY,
-    user_id     VARCHAR(30),
+    user_id     VARCHAR(100),
     title       VARCHAR(50),
     content     VARCHAR(2000),
     reg_date    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -40,7 +40,7 @@ CREATE TABLE img (
 CREATE TABLE comment (
     comment_id  BIGINT AUTO_INCREMENT PRIMARY KEY,
     board_id    BIGINT,
-    user_id     VARCHAR(30),
+    user_id     VARCHAR(100),
     content     VARCHAR(3000),
     reg_date    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     update_date TIMESTAMP,
@@ -53,7 +53,7 @@ CREATE TABLE comment (
 CREATE TABLE bucket (
     bucket_id   BIGINT AUTO_INCREMENT PRIMARY KEY,
     board_id    BIGINT,
-    user_id     VARCHAR(30),
+    user_id     VARCHAR(100),
     done        TINYINT DEFAULT 0, -- 0 : 그냥 좋아요, 1 : 버킷리스트 추가, 2 : 버킷리스트 이행
     done_date   TIMESTAMP,
     FOREIGN KEY (board_id) REFERENCES board(board_id) ON DELETE CASCADE,
@@ -73,17 +73,21 @@ CREATE TABLE email (
 -- 모임
 CREATE TABLE guild (
     guild_id    BIGINT AUTO_INCREMENT PRIMARY KEY,
-    guild_name  VARCHAR(255),
-    reg_date    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    guild_name  VARCHAR(255) UNIQUE,
+    description VARCHAR(1000),
+    user_id     VARCHAR(100), -- owner
+    reg_date    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    head_count  BIGINT DEFAULT 1, -- 생성자
+    FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE SET NULL
 );
 
 -- 모임 구성원
 CREATE TABLE crew (
-    crew_id   BIGINT AUTO_INCREMENT PRIMARY KEY,
-    user_id     VARCHAR(30),
+    crew_id     BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id     VARCHAR(100),
     guild_id    BIGINT,
-    roll        VARCHAR(255),
-    status      TINYINT, -- 0: 신청, 1: 초대, 2: 멤버
+    status      TINYINT, -- 0: 멤버, 1: 초대, 2: 신청
+    join_date   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE,
     FOREIGN KEY (guild_id) REFERENCES guild(guild_id) ON DELETE CASCADE
 );
@@ -103,3 +107,9 @@ INSERT INTO `user` (user_id, user_name, password, email, role) VALUES
 ('user01', '김싸피', 'pw1234', 'kim@ssafy.com', 'admin'),
 ('user02', '이자바', 'java1234', 'lee@java.com', 'user'),
 ('user03', '박프론트', 'front1234', 'park@web.com', 'user');
+
+insert into follow (follower_id, following_id) values
+("user01", "user02"),
+("user01", "user03"),
+("user02", "user01"),
+("user03", "user02");

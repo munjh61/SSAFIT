@@ -12,7 +12,7 @@
     <select id="select" parameterType="String" resultType="User">
         SELECT user_id as userId, user_name as userName, password, email, role, reg_date as regDate, is_deleted as isDeleted
         FROM user
-        WHERE user_id = #{userId}
+        WHERE user_id = #{userId} AND is_deleted = false
     </select>
     <!-- UPDATE -->
     <update id="update" parameterType="User">
@@ -20,7 +20,7 @@
         SET user_name = #{userName},
         password = #{password},
         email = #{email}
-        WHERE user_id = #{userId}
+        WHERE user_id = #{userId} AND is_deleted = false
     </update>
     <!-- DELETE -->
     <delete id="delete" parameterType="String">
@@ -32,6 +32,6 @@
     <select id="selectByEmail" parameterType="String" resultType="User">
         SELECT user_id AS userId
         FROM user
-        WHERE email = #{email}
+        WHERE email = #{email} AND is_deleted = false
     </select>
 </mapper>

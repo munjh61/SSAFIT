@@ -42,8 +42,8 @@ public class FollowController {
         return new ResponseEntity<>("팔로우 삭제 성공", HttpStatus.CREATED);
     }
 
-    @GetMapping
-    public ResponseEntity<Map<String, List<Follow>>> followList(@AuthenticationPrincipal CustomUserDetails userDetails){
-        return new ResponseEntity<>(followService.followList(userDetails.getUsername()), HttpStatus.OK);
+    @GetMapping("/{userId}")
+    public ResponseEntity<Map<String, List<Follow>>> followList(@PathVariable("userId") String userId){
+        return new ResponseEntity<>(followService.followList(userId), HttpStatus.OK);
     }
 }
