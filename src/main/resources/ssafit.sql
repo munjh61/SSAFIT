@@ -17,7 +17,7 @@ CREATE TABLE user (
 -- 게시판
 CREATE TABLE board (
     board_id    BIGINT AUTO_INCREMENT PRIMARY KEY,
-    user_id     VARCHAR(30),
+    user_id     VARCHAR(100),
     title       VARCHAR(50),
     content     VARCHAR(2000),
     reg_date    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -40,7 +40,7 @@ CREATE TABLE img (
 CREATE TABLE comment (
     comment_id  BIGINT AUTO_INCREMENT PRIMARY KEY,
     board_id    BIGINT,
-    user_id     VARCHAR(30),
+    user_id     VARCHAR(100),
     content     VARCHAR(3000),
     reg_date    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     update_date TIMESTAMP,
@@ -53,7 +53,7 @@ CREATE TABLE comment (
 CREATE TABLE bucket (
     bucket_id   BIGINT AUTO_INCREMENT PRIMARY KEY,
     board_id    BIGINT,
-    user_id     VARCHAR(30),
+    user_id     VARCHAR(100),
     done        TINYINT DEFAULT 0, -- 0 : 그냥 좋아요, 1 : 버킷리스트 추가, 2 : 버킷리스트 이행
     done_date   TIMESTAMP,
     FOREIGN KEY (board_id) REFERENCES board(board_id) ON DELETE CASCADE,
@@ -74,13 +74,17 @@ CREATE TABLE email (
 CREATE TABLE guild (
     guild_id    BIGINT AUTO_INCREMENT PRIMARY KEY,
     guild_name  VARCHAR(255) UNIQUE,
-    reg_date    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    reg_date    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    description VARCHAR(1000),
+    user_id     VARCHAR(100), --owner
+    head_count  BIGINT DEFAULT 0,
+    FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE SET NULL
 );
 
 -- 모임 구성원
 CREATE TABLE crew (
     crew_id   BIGINT AUTO_INCREMENT PRIMARY KEY,
-    user_id     VARCHAR(30),
+    user_id     VARCHAR(100),
     guild_id    BIGINT,
     roll        VARCHAR(255),
     status      TINYINT, -- 0: 신청, 1: 초대, 2: 멤버

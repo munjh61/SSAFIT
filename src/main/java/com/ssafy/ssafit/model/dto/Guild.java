@@ -13,4 +13,5 @@ public class Guild {
     private int guildId;
     private String guildName;
     private LocalDateTime regDate;
+    private Long headCount;
 }
