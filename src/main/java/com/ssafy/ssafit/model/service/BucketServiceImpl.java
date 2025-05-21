@@ -24,12 +24,31 @@ public class BucketServiceImpl implements BucketService {
     }
 
     @Override
-    public void removeBucket(long bucketId) {
-        bucketDao.deleteBucket(bucketId);
+    public Bucket getOneBucket(long bucketId) {
+        return bucketDao.selectBucketByBucketId(bucketId);
     }
 
     @Override
-    public void checkBucket(long bucketId) {
-        bucketDao.checkBucket(bucketId);
+    public boolean removeBucket(String userId, long bucketId) {
+        //해당 버킷리스트 작성한 유저가 로그인 된 유저인지 확인
+        Bucket bucket = bucketDao.selectBucketByBucketId(bucketId);
+        String tmp = bucket.getUserId(); //버킷 추가한 유저
+        if(!userId.equals(tmp)){
+            return false;
+        }
+        bucketDao.deleteBucket(bucketId);
+        return true;
+    }
+
+    @Override
+    public boolean completeBucket(String userId, long bucketId) {
+        //해당 버킷이 로그인한 유저에게 해당하는 버킷인지 확인
+        Bucket bucket = bucketDao.selectBucketByBucketId(bucketId); //수정하려는 bucket
+        String tmp = bucket.getUserId(); //해당 버킷을 작성한 유저
+        if(!userId.equals(tmp)){
+            return false;
+        }
+        bucketDao.completeBucket(bucketId);
+        return true;
     }
 }

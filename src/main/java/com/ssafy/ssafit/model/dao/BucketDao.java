@@ -10,12 +10,14 @@ public interface BucketDao {
 
     //버킷리스트 추가
     void insertBucket(Bucket bucket);
-    //버킷리스트 조회
+    //버킷리스트 userId로 조회
     List<Bucket> selectBucketByUserId(String userId);
+    //버킷리스트 bucketId로 조회
+    Bucket selectBucketByBucketId(long bucketId);
     //버킷리스트 삭제
     void deleteBucket(long bucketId);
     //버킷리스트 체크
-    void checkBucket(long bucketId);
+    void completeBucket(long bucketId);
 
 
 }

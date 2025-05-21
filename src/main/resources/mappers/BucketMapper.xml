@@ -16,6 +16,12 @@
             WHERE user_id = #{userId}
             ORDER BY bucket_id DESC
         </select>
+        <!--버킷아이디로 버킷 조회-->
+        <select id="selectBucketByBucketId" parameterType="long">
+            SELECT *
+            FROM bucket
+            WHERE bucket_id = #{bucketId}
+        </select>
 
         <!--버킷리스트 삭제-->
         <delete id="deleteBucket" parameterType="long">
@@ -23,8 +29,9 @@
             WHERE board_id = #{boardId} and user_id = #{userId}
         </delete>
 
-        <!--버킷리스트 체크-->
-        <update id="checkBucket" parameterType="long">
+        <!--0 : 그냥 좋아요, 1 : 버킷리스트 추가, 2 : 버킷리스트 이행-->
+        <!--버킷리스트 이행 / 완료 상태 변경-->
+        <update id="completeBucket" parameterType="long">
             UPDATE bucket
             SET done = 2,
             done_date = NOW()
