@@ -14,12 +14,12 @@ public class CommentServiceImpl implements CommentService {
     private final CommentDao commentDao;
 
     @Override
-    public List<Comment> getAllComment() {
-        return commentDao.selectAllComment();
+    public List<Comment> getAllComment(long boardId) {
+        return commentDao.selectAllComment(boardId);
     }
 
     @Override
-    public void createComment(Comment comment) {
+    public void createComment(Comment comment, long boardId) {
         commentDao.insertComment(comment);
     }
 
