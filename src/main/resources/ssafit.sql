@@ -86,7 +86,8 @@ CREATE TABLE crew (
     crew_id     BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_id     VARCHAR(100),
     guild_id    BIGINT,
-    status      TINYINT, -- 0: 신청, 1: 초대, 2: 멤버
+    status      TINYINT, -- 0: 멤버, 1: 초대, 2: 신청
+    join_date   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE,
     FOREIGN KEY (guild_id) REFERENCES guild(guild_id) ON DELETE CASCADE
 );

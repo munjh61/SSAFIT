@@ -12,4 +12,5 @@ public interface GuildService {
     boolean deleteGuild(long guildId);
     String giveOwnershipOrDeleteGuild(Guild guild, String nextOwner, boolean quit, boolean delete);
     boolean quitSSAFIT(String userId);
+
 }
