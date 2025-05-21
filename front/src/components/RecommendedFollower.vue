@@ -38,21 +38,21 @@ const scrollRight = () => {
 <style scoped>
 .slider-container {
   position: relative;
-  display: flex;
-  align-items: center;
-  gap: 10px;
 }
 
-.left {
+.scroll-btn.left {
   left: 8px;
-  top: 90px;
+  top: 140px;
 }
-.right {
+.scroll-btn.right {
   right: 8px;
-  top: 90px;
+  top: 140px;
 }
 
 .scroll-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
   background-color: white;
   border: 1px solid #ccc;
   border-radius: 50%;
@@ -62,7 +62,6 @@ const scrollRight = () => {
   cursor: pointer;
   opacity: 0;
   transition: opacity 0.3s ease-in-out;
-  cursor: pointer;
   z-index: 2;
 }
 

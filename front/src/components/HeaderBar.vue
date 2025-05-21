@@ -2,10 +2,10 @@
     <header class="header">
         <div class="logo">SSAFIT</div>
             <nav class="nav">
-            <a href="#">마이페이지</a>
-            <a href="#">버킷리스트</a>
-            <a href="#">캘린더</a>
-            <a href="#">모임</a>
+              <a href="#">마이페이지</a>
+              <a href="#">버킷리스트</a>
+              <a href="#">캘린더</a>
+              <a href="#">모임</a>
             </nav>
         <div class="profile">
         <img src="@/assets/images/profile.jpg" alt="profile" />
@@ -27,13 +27,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px;
+  padding: 20px 60px;
   box-shadow: 0px 2px 8px #D9D9D9;
 }
 .nav a {
   margin: 0 10px;
   text-decoration: none;
-  font-weight: bold;
+  color: #000000;
+  /* font-weight: bold; */
 }
 .profile {
   display: flex;
@@ -44,5 +45,10 @@
   height: 40px;
   border-radius: 50%;
   margin-right: 8px;
+  /* border: 1px solid #000000; */
+}
+.logo{
+    font-weight: bold;
+    font-size: large;
 }
 </style>

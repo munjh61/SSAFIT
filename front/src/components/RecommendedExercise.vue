@@ -48,8 +48,6 @@ const exercises = [
 <style scoped>
 .slider-container {
   position: relative;
-  /* display: flex;
-  align-items: center; */
 }
 
 .scroll-btn {
@@ -78,6 +76,9 @@ const exercises = [
 .slider-container:hover .scroll-btn {
   opacity: 1;
 }
+.recommend-wrapper::-webkit-scrollbar {
+  display: none;
+}
 
 .recommend-wrapper {
   display: flex;
@@ -86,8 +87,5 @@ const exercises = [
   gap: 10px;
   scroll-behavior: smooth;
   flex: 1;
-}
-.recommend-wrapper::-webkit-scrollbar {
-  display: none;
 }
 </style>
