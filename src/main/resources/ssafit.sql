@@ -74,19 +74,18 @@ CREATE TABLE email (
 CREATE TABLE guild (
     guild_id    BIGINT AUTO_INCREMENT PRIMARY KEY,
     guild_name  VARCHAR(255) UNIQUE,
-    reg_date    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     description VARCHAR(1000),
     user_id     VARCHAR(100), -- owner
-    head_count  BIGINT DEFAULT 0,
+    reg_date    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    head_count  BIGINT DEFAULT 1, -- 생성자
     FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE SET NULL
 );
 
 -- 모임 구성원
 CREATE TABLE crew (
-    crew_id   BIGINT AUTO_INCREMENT PRIMARY KEY,
+    crew_id     BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_id     VARCHAR(100),
     guild_id    BIGINT,
-    roll        VARCHAR(255),
     status      TINYINT, -- 0: 신청, 1: 초대, 2: 멤버
     FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE,
     FOREIGN KEY (guild_id) REFERENCES guild(guild_id) ON DELETE CASCADE

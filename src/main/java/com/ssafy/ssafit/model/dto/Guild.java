@@ -12,6 +12,8 @@ import java.time.LocalDateTime;
 public class Guild {
     private int guildId;
     private String guildName;
+    private String description;
+    private String userId;
     private LocalDateTime regDate;
     private Long headCount;
 }
