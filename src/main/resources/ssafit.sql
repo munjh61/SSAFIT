@@ -76,7 +76,7 @@ CREATE TABLE guild (
     guild_name  VARCHAR(255) UNIQUE,
     reg_date    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     description VARCHAR(1000),
-    user_id     VARCHAR(100), --owner
+    user_id     VARCHAR(100), -- owner
     head_count  BIGINT DEFAULT 0,
     FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE SET NULL
 );
@@ -107,3 +107,9 @@ INSERT INTO `user` (user_id, user_name, password, email, role) VALUES
 ('user01', '김싸피', 'pw1234', 'kim@ssafy.com', 'admin'),
 ('user02', '이자바', 'java1234', 'lee@java.com', 'user'),
 ('user03', '박프론트', 'front1234', 'park@web.com', 'user');
+
+insert into follow (follower_id, following_id) values
+("user01", "user02"),
+("user01", "user03"),
+("user02", "user01"),
+("user03", "user02");
