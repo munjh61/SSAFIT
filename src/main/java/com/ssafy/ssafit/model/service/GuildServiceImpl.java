@@ -75,24 +75,25 @@ public class GuildServiceImpl implements GuildService {
         if (!tmp.getUserId().equalsIgnoreCase(guild.getUserId())) {
             return "모임장이 아닙니다.";
         }
-        // 삭제
-        if(delete){
+        // 모임을 삭제할래
+        if (delete) {
             guildDao.delete(guild.getGuildId());
             return "모임이 삭제되었습니다.";
         }
+        // 삭제는 안할래
         // crewDao 사용하기 위해 crew 객체 생성. 사실 guildId와 userId만 사용해서 dto 가 나은가?
         Crew crew = Crew.builder()
                 .guildId(guild.getGuildId())
                 .userId(guild.getUserId())
                 .build();
         // 탈퇴 안하고 권한 넘기기
-        if(!quit){
-            if(nextOwner==null || nextOwner.isEmpty()){
+        if (!quit) {
+            if (nextOwner == null || nextOwner.isEmpty()) {
                 return "권한을 넘기려하였으나, 다음 모임장 값을 전달 받지 못했습니다.";
             }
             guild.setUserId(nextOwner);
             Crew tmp2 = crewDao.selectByGuildIdAndUserId(crew);
-            if(tmp2 == null){
+            if (tmp2 == null) {
                 return "권한을 넘기려하였으나, 다음 모임장으로 받은 아이디가 모임에 참여하지 않은 아이디입니다.";
             }
             guildDao.update(guild);
@@ -120,7 +121,7 @@ public class GuildServiceImpl implements GuildService {
     public boolean quitSSAFIT(String userId) {
         List<Guild> guilds = guildDao.myGuilds(userId);
         for (Guild guild : guilds) {
-            giveOwnershipOrDeleteGuild(guild,null, true, false);
+            giveOwnershipOrDeleteGuild(guild, null, true, false);
         }
         return true;
     }
