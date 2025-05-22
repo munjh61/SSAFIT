@@ -24,13 +24,15 @@ defineProps({
     position: absolute;
     top: 0;
     right: 0;
-    width:130px;
+    width:140px;
     padding: 8px 16px;
     background-color: #ffffff;
     color: #10217D;
     border: 1px solid #10217D;
     border-radius: 4px;
     cursor: pointer;
+    font-weight: bold;
+    font-size: 15px;
 }
 .record-grid{
     display: grid;

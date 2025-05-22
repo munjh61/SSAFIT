@@ -4,6 +4,7 @@
         <div class="userProfile">
           <ProfileSection :stats="userStats" />
         </div>
+        <div class="divider"></div>
         <div class="userRecords">
           <RecordGrid :records="userRecords" />
         </div>
@@ -47,8 +48,13 @@ const userRecords = [
   justify-content: center;
   padding-top: 60px;
 }
+.divider {
+  width: 60%;
+  height: 1px;
+  background-color: #e2e2e2;
+  margin: 24px auto;
+}
 .userRecords{
-  padding-top: 100px;
   display: flex;
   justify-content: center;
   
