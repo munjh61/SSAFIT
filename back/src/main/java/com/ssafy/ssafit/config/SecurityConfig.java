@@ -1,6 +1,5 @@
 package com.ssafy.ssafit.config;
 
-import com.ssafy.ssafit.model.service.CustomOAuth2UserService;
 import com.ssafy.ssafit.security.JwtAuthenticationFilter;
 import lombok.*;
 import org.springframework.context.annotation.Bean;

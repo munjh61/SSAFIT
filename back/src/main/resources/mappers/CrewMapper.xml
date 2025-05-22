@@ -3,9 +3,17 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ssafy.ssafit.model.dao.CrewDao">
+    <select id="select" parameterType="long" resultType="Crew">
+        SELECT  crew_id AS crewId,
+                user_id AS userId,
+                guild_id AS guildId,
+                status
+        FROM    crew
+        WHERE   crew_id = #{crewId}
+    </select>
     <insert id="insert" parameterType="Crew" keyProperty="crewId" useGeneratedKeys="true">
         INSERT INTO crew (user_id, guild_id, status) VALUES
-        (${userId}, ${guildId}, ${status})
+        (#{userId}, #{guildId}, #{status})
     </insert>
     <!--모임장이 본인 제외한 인원을 보고 싶을 때-->
     <select id="myCrews" parameterType="Crew" resultType="Crew">
@@ -13,16 +21,16 @@
                 user_id AS userId,
                 guild_id AS guildId,
                 status
-        FROM crew
-        WHERE guild_id = #{guildId} AND user_id != #{userId} AND status = 0
+        FROM    crew
+        WHERE   guild_id = #{guildId} AND user_id != #{userId} AND status = 0
     </select>
     <select id="selectByGuildIdAndUserId" parameterType="Crew" resultType="Crew">
         SELECT  crew_id AS crewId,
                 user_id AS userId,
                 guild_id AS guildId,
                 status
-        FROM crew
-        WHERE guild_id = #{guildId} AND user_id = #{userId} AND status = 0
+        FROM    crew
+        WHERE   guild_id = #{guildId} AND user_id = #{userId} AND status = 0
         ORDER BY join_date DESC
     </select>
     <delete id="delete" parameterType="Crew">
@@ -34,7 +42,7 @@
         SET     status = #{status}
         WHERE   crew_id = #{crewId}
     </update>
-    <select id="search">
+    <select id="search" parameterType="Crew" resultType="Crew">
         SELECT  crew_id AS crewId,
                 user_id AS userId,
                 guild_id AS guildId,

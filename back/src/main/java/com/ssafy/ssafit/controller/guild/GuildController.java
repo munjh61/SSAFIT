@@ -53,15 +53,4 @@ public class GuildController {
         return new ResponseEntity<>(msg, HttpStatus.OK);
     }
 
-    // --- 인원 ---
-
-    // 신청
-
-    // 모임장 수락
-
-    // 초대
-
-    // 멤버 수락
-
-
 }

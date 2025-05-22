@@ -5,10 +5,10 @@
 <mapper namespace="com.ssafy.ssafit.model.dao.GuildDao">
     <insert id="insert" parameterType="Guild" keyProperty="guildId" useGeneratedKeys="true">
         INSERT INTO guild (guild_name, description, user_id) VALUES
-        (guildName, description, userId)
+        (#{guildName}, #{description}, #{userId})
     </insert>
     <!--길드 상세-->
-    <select id="select" parameterType="int" resultType="Guild">
+    <select id="select" parameterType="long" resultType="Guild">
         SELECT  guild_id AS guildId,
                 guild_name AS guildName,
                 reg_date AS regDate,
@@ -20,9 +20,9 @@
     <!--검색-->
     <select id="search" parameterType="String" resultType="Guild">
         SELECT  guild_id AS guildId,
-        guild_name AS guildName,
-        reg_date AS regDate,
-        head_count AS headCount
+                guild_name AS guildName,
+                reg_date AS regDate,
+                head_count AS headCount
         FROM    guild
         WHERE   LOWER(guild_name) LIKE LOWER(CONCAT('%', #{guildName} , '%'))
     </select>
