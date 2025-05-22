@@ -36,6 +36,9 @@ const scrollRight = () => {
 </script>
 
 <style scoped>
+button{
+  color: #10217D;
+}
 .slider-container {
   position: relative;
 }
@@ -56,7 +59,7 @@ const scrollRight = () => {
   background-color: white;
   border: 1px solid #ccc;
   border-radius: 50%;
-    width: 36px;
+  width: 36px;
   height: 36px;
   font-size: 18px;
   cursor: pointer;
@@ -70,7 +73,7 @@ const scrollRight = () => {
   overflow-x: auto;
   overflow-y: hidden;
   scroll-behavior: smooth;
-  gap: 10px;
+  gap: 22px;
   padding: 20px 0;
   flex: 1;
   height: 240px;
@@ -90,11 +93,15 @@ const scrollRight = () => {
 .card {
   flex: 0 0 auto;
   border: 1px solid #ddd;
-  padding: 16px;
+  padding: 20px;
   width: 150px;
   text-align: center;
   border-radius: 8px;
   background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
 }
 
 img {

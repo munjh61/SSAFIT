@@ -14,6 +14,11 @@ import { RouterView } from 'vue-router'
 * {
   box-sizing: border-box;
 }
+/* .container{
+  max-width: 2000px;
+  margin: 0 auto;
+  padding: 0 16px;
+} */
 body {
   margin: 0;
   padding: 0;
