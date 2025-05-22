@@ -7,6 +7,7 @@
         INSERT INTO crew (user_id, guild_id, status) VALUES
         (${userId}, ${guildId}, ${status})
     </insert>
+    <!--모임장이 본인 제외한 인원을 보고 싶을 때-->
     <select id="myCrews" parameterType="Crew" resultType="Crew">
         SELECT  crew_id AS crewId,
                 user_id AS userId,
@@ -33,4 +34,24 @@
         SET     status = #{status}
         WHERE   crew_id = #{crewId}
     </update>
+    <select id="search">
+        SELECT  crew_id AS crewId,
+                user_id AS userId,
+                guild_id AS guildId,
+                status
+        FROM crew
+        WHERE
+            guild_id = #{guildId}
+            <if test="userId != null">
+                AND user_id != #{userId}
+            </if>
+            <choose>
+                <when test="status != null">
+                    AND status = #{status}
+                </when>
+                <otherwise>
+                    AND status = 0
+                </otherwise>
+            </choose>
+    </select>
 </mapper>

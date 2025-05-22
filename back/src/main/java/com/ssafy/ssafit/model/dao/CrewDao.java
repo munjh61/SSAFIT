@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface CrewDao {
     int insert(Crew crew);
-    List<Crew> myCrew(Crew crew);
+    List<Crew> myCrews(Crew crew);
     Crew selectByGuildIdAndUserId(Crew Crew);
     int delete(Crew crew);
 }

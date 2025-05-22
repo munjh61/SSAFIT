@@ -9,8 +9,9 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Guild {
-    private int guildId;
+    private Long guildId;
     private String guildName;
     private String description;
     private String userId;

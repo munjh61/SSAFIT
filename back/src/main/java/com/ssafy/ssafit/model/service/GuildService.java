@@ -8,9 +8,9 @@ public interface GuildService {
 
     boolean createGuild(Guild guild);
     List<Guild> guildList(String search);
-    boolean updateGuild(Guild guild);
-    boolean deleteGuild(long guildId);
-    String giveOwnershipOrDeleteGuild(Guild guild, String nextOwner, boolean quit, boolean delete);
+    String updateGuild(Guild guild, String loginUser);
+    String deleteGuild(Guild guild);
+    String quitMasterGuild(Guild guild, String loginUser);
     boolean quitSSAFIT(String userId);
 
 }

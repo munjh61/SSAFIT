@@ -2,6 +2,7 @@ package com.ssafy.ssafit.controller.user;
 
 import com.ssafy.ssafit.model.dto.User;
 import com.ssafy.ssafit.model.service.EmailService;
+import com.ssafy.ssafit.model.service.GuildService;
 import com.ssafy.ssafit.model.service.UserService;
 import com.ssafy.ssafit.security.CustomUserDetails;
 import lombok.*;
@@ -17,6 +18,7 @@ public class UserController {
 
     private final UserService userService;
     private final EmailService emailService;
+    private final GuildService guildService;
 
     @GetMapping("/me")
     public ResponseEntity<?> getMyInfo(@AuthenticationPrincipal CustomUserDetails userDetails) {
@@ -42,7 +44,9 @@ public class UserController {
     // 회원 탈퇴
     @DeleteMapping
     public ResponseEntity<String> changeUserInfo(@AuthenticationPrincipal CustomUserDetails userDetails){
-        userService.delete(userDetails.getUsername());
+        String userId = userDetails.getUsername();
+        userService.delete(userId);
+        guildService.quitSSAFIT(userId);
         return new ResponseEntity<>("탈퇴 처리되었습니다.", HttpStatus.OK);
     }
 
