@@ -46,6 +46,11 @@ const router = createRouter({
       name:'guild',
       component:GuildView
     },
+    // {
+    //   path:'/settings',
+    //   name:'settings',
+    //   component:SettingView
+    // }
   ],
 })
 
