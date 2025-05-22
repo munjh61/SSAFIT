@@ -21,6 +21,8 @@
     <select id="search" parameterType="String" resultType="Guild">
         SELECT  guild_id AS guildId,
                 guild_name AS guildName,
+                description,
+                user_id AS userId,
                 reg_date AS regDate,
                 head_count AS headCount
         FROM    guild
@@ -42,7 +44,7 @@
         </trim>
         WHERE   guild_id = #{guildId}
     </update>
-    <delete id="delete">
+    <delete id="delete" parameterType="long">
         DELETE FROM guild
         WHERE guild_id = #{guildId}
     </delete>

@@ -48,18 +48,13 @@
                 guild_id AS guildId,
                 status
         FROM crew
-        WHERE
-            guild_id = #{guildId}
-            <if test="userId != null">
-                AND user_id != #{userId}
+        <where>
+            <if test="guildId != null">
+                guild_id = #{guildId}
             </if>
-            <choose>
-                <when test="status != null">
-                    AND status = #{status}
-                </when>
-                <otherwise>
-                    AND status = 0
-                </otherwise>
-            </choose>
+            <if test="userId != null">
+                AND user_id = #{userId}
+            </if>
+        </where>
     </select>
 </mapper>

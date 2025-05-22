@@ -29,7 +29,7 @@ public class GuildServiceImpl implements GuildService {
             Crew crew = Crew.builder()
                     .userId(userId)
                     .guildId(guildId)
-                    .status(2)
+                    .status(0)
                     .build();
             crewDao.insert(crew);
         } catch (DuplicateKeyException e) {
@@ -60,8 +60,7 @@ public class GuildServiceImpl implements GuildService {
         if (!tmp.getUserId().equalsIgnoreCase(loginUser)) {
             return "모임장이 아닙니다.";
         }
-
-        try {
+        if(guild.getUserId() != null){
             Crew crew = Crew.builder()
                     .guildId(guild.getGuildId())
                     .userId(guild.getUserId())
@@ -70,6 +69,9 @@ public class GuildServiceImpl implements GuildService {
             if (tmp2 == null) {
                 return "권한을 넘기려하였으나, 다음 모임장으로 받은 아이디가 모임에 참여하지 않은 아이디입니다.";
             }
+        }
+        try {
+
             guildDao.update(guild);
         } catch (DuplicateKeyException e) {
             return "이미 존재하는 모임명입니다";

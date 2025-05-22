@@ -106,6 +106,7 @@ public class CrewServiceImpl implements CrewService {
         if (tmp.isEmpty()) {
             return "신청, 초대 된적이 없음";
         }
+        crew.setCrewId(tmp.get(0).getCrewId());
         crew.setStatus(0);
         crewDao.update(crew);
         return "멤버가 되었습니다.";
@@ -116,33 +117,67 @@ public class CrewServiceImpl implements CrewService {
         if (tmp.isEmpty()) {
             return "신청, 초대 된적이 없음";
         }
+        crew.setCrewId(tmp.get(0).getCrewId());
         crewDao.delete(crew);
         return "신청 거부되어 table에서 삭제하였습니다.";
     }
 
     @Transactional
     @Override
-    public String quitCrew(long crewId, String userId) {
+    public String quitCrew(long crewId, String loginUser) {
         Crew crew = crewDao.select(crewId);
         if (crew == null) {
             return "잘못된 crewId";
         }
-        if (!crew.getUserId().equals(userId)) {
-            return "탈퇴 요청자가 본인이 아닙니다.";
-        }
         Guild guild = guildDao.select(crew.getGuildId());
-        if (crew.getUserId().equals(guild.getUserId())) {
-            guildService.quitMasterGuild(guild, guild.getUserId());
-            return "탈퇴하려는 자가 모임장임";
+        if (guild == null) {
+            return "잘못된 guildId";
         }
-        // 탈퇴 희망인이 본인 || 탈퇴 희망인이 모임장
-        if (crew.getUserId().equals(userId) || guild.getUserId().equals(userId)) {
-            crewDao.delete(crew);
-            guild.setHeadCount(guild.getHeadCount() - 1);
-            guildDao.update(guild);
-            return "탈퇴처리되었습니다.";
-        }
-        return "알수없는 예외";
 
+        String quitter = crew.getUserId();
+        String owner = guild.getUserId();
+
+        // 1. 로그인한 사람이 탈퇴되는 사람과 다를 경우, 로그인한 사람이 모임장이 아니라면 탈락
+        if (!quitter.equals(loginUser) && !loginUser.equals(owner))
+            return "로그인한 사람이 모임장 또는 탈퇴자 본인이 아닙니다.";
+
+        // 2. 로그인한 사람이 탈퇴하는 경우
+        if (quitter.equals(loginUser)) {
+            // 2.1 탈퇴자(=로그인한자)가 모임장이라면
+            if (quitter.equals(owner)) {
+                guildService.quitMasterGuild(guild, guild.getUserId());
+                return "모임장이 본인을 탈퇴처리하였습니다.";
+            }
+            // 2.2 탈퇴자가 모임장이 아닌 경우
+            // if (quitter.equals(loginUser)) {
+                crewDao.delete(crew);
+                guild.setHeadCount(guild.getHeadCount() - 1);
+                guildDao.update(guild);
+                return "탈퇴처리되었습니다.";
+            // }
+        }
+        // 3. 모임장이 탈퇴시키는 경우
+        // 여기까지 왔을 경우 항상 참
+        // if (owner.equals(loginUser)) {
+        crewDao.delete(crew);
+        guild.setHeadCount(guild.getHeadCount() - 1);
+        guildDao.update(guild);
+        // }
+        return "탈퇴 처리되었습니다.";
+
+    }
+
+    @Override
+    public List<Crew> getCrews(String userId, long guildId) {
+        Crew crew = Crew
+                .builder()
+                .guildId(guildId)
+                .userId(userId)
+                .build();
+        if (crewDao.selectByGuildIdAndUserId(crew) == null) {
+            return null;
+        }
+        crew.setUserId(null);
+        return crewDao.search(crew);
     }
 }

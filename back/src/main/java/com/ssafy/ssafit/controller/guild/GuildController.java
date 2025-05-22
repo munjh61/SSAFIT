@@ -21,6 +21,8 @@ public class GuildController {
     @PostMapping
     public ResponseEntity<String> createGuild(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody Guild guild) {
         guild.setUserId(userDetails.getUsername());
+        System.out.println(guild.getDescription());
+        System.out.println(guild.getUserId());
         if (guild.getGuildName() == null || guild.getGuildName().isEmpty()) {
             return new ResponseEntity<>("모임명을 입력하지 않았습니다.", HttpStatus.BAD_REQUEST);
         }

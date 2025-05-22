@@ -12,14 +12,13 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/guild/public")
+@RequestMapping("/api/public/guild")
 public class GuildPublicController {
 
     private final GuildService guildService;
 
     @GetMapping
-    public ResponseEntity<List<Guild>> guildList(@RequestBody Map<String, String> map){
-        String search = map.get("search");
+    public ResponseEntity<List<Guild>> guildList(@RequestParam(name = "q", required = false) String search) {
         List<Guild> list = guildService.guildList(search);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
