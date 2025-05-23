@@ -6,6 +6,7 @@ import MyPageView from '@/views/MyPageView.vue'
 import CalenderView from '@/views/CalenderView.vue'
 import GuildView from '@/views/GuildView.vue'
 import BucketListView from '@/views/BucketListView.vue'
+import JoonhoTestView from '@/views/JoonhoTestView.vue'
 
 // const isAuth = true; //로그인 됨
 const router = createRouter({
@@ -45,6 +46,12 @@ const router = createRouter({
       path:'/guild',
       name:'guild',
       component:GuildView
+    },
+    //------------------junho
+    {
+      path:'/joonhoTestView',
+      name:'joonhoTestView',
+      component:JoonhoTestView
     },
   ],
 })
