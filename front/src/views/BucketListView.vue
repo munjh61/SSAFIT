@@ -18,11 +18,28 @@ import HeaderBar from '@/components/HeaderBar.vue';
 import BucketItem from '@/components/BucketItem.vue';
 
 const bucketList = ref([])
+const serverUrl = import.meta.env.VITE_API_BASE_URL
 
 onMounted(async () => {
     try{
-        const response = await axios.get('/api/bucket/list')
+        console.log(sessionStorage.getItem('ssafit-login-token'))
+        const token = `Bearer ${sessionStorage.getItem('ssafit-login-token')}`
+        // const token = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoidXNlciIsInVzZXJOYW1lIjoi67CV7ZSE66Gg7Yq4IiwidXNlcklkIjoidXNlcjAzIiwiaWF0IjoxNzQ3NzIxMjYyLCJleHAiOjE3NDg5MzA4NjJ9.Au6-Ze8jG78wUgcEW0LEcdwno5t-Gzvw0GBC37MuomM"
+        console.log('토큰:', token);
+
+        const response = await axios.get(`${serverUrl}/api/bucket/list`,{
+            headers:{
+                Authorization: token
+            }
+        })
+        // const response = await axios.get('/api/bucket/list', {
+        //     headers:{
+        //         Authorization: `Bearer ${token}`
+        //     },
+        //     withCredentials: true
+        // })
         console.log('응답 데이터:', response.data)
+
         const{ bucketList: rawList, bucketImgs }= response.data
 
         bucketList.value = rawList.map(bucket => {
