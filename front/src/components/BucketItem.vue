@@ -22,22 +22,24 @@
 <script setup>
 import{ref} from 'vue'
 
-const done = ref(false)
-
-defineProps({
+const props = defineProps({
     date: String,
     imgUrl: String,
     title: String,
-    done: Boolean
+    done: Boolean,
 })
+
+const localDone = ref(props.done)
 
 const deleteItem = () => {
   alert('삭제 되었습니다.')
 }
 
 const mark = () => {
-  done.value = !done.vlaue
-  alert('버킷리스트 달성을 축하드립니다')
+  done.value = !done.value
+  if(localDone.value){
+    alert('버킷리스트 달성을 축하드립니다')
+  }
 }
 </script>
 
