@@ -33,7 +33,7 @@ const router = createRouter({
     },
     {
       path:'/bucketList',
-      name:'bucketlist',
+      name:'bucketList',
       component: BucketListView
     },
     {

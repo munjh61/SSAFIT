@@ -34,7 +34,6 @@ const userRecords = [
   { id: 9, img: new URL('@/assets/images/my9.jpg', import.meta.url).href, caption: '요가 처음 도전!' },
 ]
 
-
 </script>
 
 <style scoped>
