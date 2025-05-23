@@ -1,45 +1,76 @@
 <template>
     <div class="find">
-        <p>
-            <span :class="{ active: problem === 'id' }" @click="mode = 'id'">아이디 찾기</span> ｜
-            <span :class="{ active: problem === 'pw' }" @click="mode = 'pw'">비밀번호 재설정</span> ｜
-        </p>
+        <div class="problem">
+            <p>
+                <span :class="{ active: type === 'id' }" @click="problemType('id')">아이디 찾기</span> ｜
+                <span :class="{ active: type === 'pw' }" @click="problemType('pw')">비밀번호 재설정</span> ｜
+            </p>
+        </div>
         <div class="inputs">
-            <div class="input-container">
+            <div class="input-container" v-if="!isSend">
                 <fieldset>
                     <legend>인증 이메일</legend>
                     <input type="email" v-model="email">
                 </fieldset>
             </div>
-            <div class="input-container">
+            <div class="input-container" v-if="type == 'pw' && !isSend">
                 <fieldset>
-                    <legend>인증 이메일</legend>
-                    <input type="email" v-model="email">
+                    <legend>아이디</legend>
+                    <input type="userId" v-model="userId">
                 </fieldset>
             </div>
-            <div class="input-container">
+            <div class="input-container" v-if="isSend">
                 <fieldset>
                     <legend>인증코드</legend>
                     <input type="text" v-model="code">
                 </fieldset>
             </div>
-            <div>
-                <button class="find-button">메일 발송</button>
-                <button class="find-button">인증</button>
-            </div>
+        </div>
+        <div>
+            <button class="find-button" v-if="!isSend" @click="send">메일 발송</button>
+            <button class="find-button" v-if="isSend" @click="verify">인증</button>
         </div>
     </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
+import { useAuthFindStore } from "@/stores/authfind";
 const email = ref('')
 const code = ref('')
+const userId = ref('')
+const type = ref('id')
+const isSend = ref(false)
+const store = useAuthFindStore()
+
+const problemType = function(p){
+    type.value = p;
+    isSend.value = false;
+    store.verifiedEmail.value = '';
+}
+
+const send = () =>{
+    isSend.value = !isSend.value;
+}
+
+const verify = () =>{
+
+}
+
 </script>
 
 <style scoped>
+.find {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
 .inputs {
     margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: space-between;
 }
 
 .input-container {
@@ -76,7 +107,7 @@ const code = ref('')
 }
 
 .find-button {
-    width: 49%;
+    width: 100%;
     height: 40px;
     border: 0;
     border-radius: 8px;
@@ -86,5 +117,24 @@ const code = ref('')
 
 .find-button:hover {
     background-color: #357ABD;
+}
+
+.problem {
+    display: flex;
+    justify-content: center;
+}
+
+.problem p {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.problem span {
+    cursor: pointer;
+}
+
+.problem span.active {
+    font-weight: bold;
+    color: #4a90e2;
 }
 </style>

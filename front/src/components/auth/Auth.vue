@@ -6,23 +6,32 @@
                     <div class="logo">
                         <img src="/src/assets/images/SSAFIT.png" alt="">
                     </div>
+                    <div v-if="mode == 'login'">
+                        <p class="icon">🔐</p>
+                    </div>
+                    <div v-if="mode == 'find'">
+                        <p class="icon">🔍</p>
+                    </div>
+                    <div v-if="mode == 'join'">
+                        <p class="icon">🖊️</p>
+                    </div>
+                    <div class="mode">
+                        <div v-if="mode == 'login'">
+                            <AuthLogin @close="closeModal" />
+                        </div>
+                        <div v-if="mode == 'find'">
+                            <AuthFind />
+                        </div>
+                        <div v-if="mode == 'join'">
+
+                        </div>
+                    </div>
                     <div class="mode-list">
                         <p>
                             <span :class="{ active: mode === 'login' }" @click="mode = 'login'">로그인</span> ｜
                             <span :class="{ active: mode === 'join' }" @click="mode = 'join'">회원가입</span> ｜
                             <span :class="{ active: mode === 'find' }" @click="mode = 'find'">아이디/비밀번호 찾기</span>
                         </p>
-                    </div>
-                    <div class="mode">
-                        <div v-if="mode == 'login'">
-                            <AuthLogin @close="closeModal"/>
-                        </div>
-                        <div v-if="mode == 'find'">
-                            <AuthFind/>
-                        </div>
-                        <div v-if="mode == 'join'">
-
-                        </div>
                     </div>
                 </div>
             </div>
@@ -32,7 +41,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import {useAuthStore} from '@/stores/auth.js'
+import { useAuthStore } from '@/stores/auth.js'
 import AuthLogin from '@/components/auth/AuthLogin.vue'
 import AuthFind from '@/components/auth/AuthFind.vue'
 
@@ -103,7 +112,6 @@ onMounted(() => {
     flex: 1;
     display: flex;
     justify-content: center;
-    align-items: center;
     width: 100%;
 }
 
@@ -114,5 +122,10 @@ onMounted(() => {
 .mode-list span.active {
     font-weight: bold;
     color: #4a90e2;
+}
+
+.icon {
+    font-size: 40px;
+    margin: 10px 0;
 }
 </style>
