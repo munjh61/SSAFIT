@@ -2,6 +2,7 @@ package com.ssafy.ssafit.security;
 
 import com.ssafy.ssafit.model.dto.User;
 import lombok.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,13 +17,18 @@ public class AuthController {
     private final LoginService loginService;
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, String>> login(@RequestBody User user) {
-        String token = loginService.login(user.getUserId(), user.getPassword());
+    public ResponseEntity<String> login(@RequestBody User user) {
+        Map<String, Object> map = loginService.login(user.getUserId(), user.getPassword());
+        boolean success = (boolean) map.get("result");
+        String msg = (String)map.get("msg");
+        if(!success){
+            return new ResponseEntity<>(msg, HttpStatus.BAD_REQUEST);
+        }
 
-        Map<String, String> result = new HashMap<>();
-        result.put("token", token);
+        String token = (String) map.get("token");
+        map.put("token", token);
 
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(token);
     }
 }
 
