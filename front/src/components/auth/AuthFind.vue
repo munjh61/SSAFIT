@@ -1,61 +1,37 @@
 <template>
-    <div class="login">
+    <div class="find">
         <div class="inputs">
             <div class="input-container">
                 <fieldset>
-                    <legend>아이디</legend>
-                    <input type="text" v-model="userId">
+                    <legend>인증 이메일</legend>
+                    <input type="email" v-model="email">
                 </fieldset>
             </div>
             <div class="input-container">
                 <fieldset>
-                    <legend>비밀번호</legend>
-                    <input type="password" v-model="password" id="pw">
+                    <legend>인증코드</legend>
+                    <input type="text" v-model="code">
                 </fieldset>
             </div>
+            <div>
+                <button class="find-button">메일 발송</button>
+                <button class="find-button" @click="login">인증</button>
+            </div>
         </div>
-        <p>{{ store.msg }}</p>
-        <button class="login-button" @click="login">로그인</button>
     </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
-import { useAuthStore } from "@/stores/auth.js";
-import { useRouter } from "vue-router";
-
-const userId = ref('')
-const password = ref('')
-const store = useAuthStore()
-const router = useRouter();
-
-const emit = defineEmits([
-    "close",
-])
-
-const login = async () => {
-    let result = await store.login(userId.value, password.value);
-    if(result){
-        emit('close')
-        router.replace({name : 'main'})
-        alert('hi')
-    }
-}
-
+const email = ref('')
+const code = ref('')
 </script>
 
 <style scoped>
-.login {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-}
-.inputs{
+.inputs {
     margin-bottom: 30px;
 }
 
-/* 로그인 input 감싼 div*/
 .input-container {
     margin-bottom: 10px;
 }
@@ -89,9 +65,8 @@ const login = async () => {
     color: #333;
 }
 
-/* 넓이를 input container에만 줘서 나머지 %들이 맞춰짐 */
-.login-button {
-    width: 100%;
+.find-button {
+    width: 49%;
     height: 40px;
     border: 0;
     border-radius: 8px;
@@ -99,7 +74,7 @@ const login = async () => {
     background-color: #4a90e2;
 }
 
-.login-button:hover {
+.find-button:hover {
     background-color: #357ABD;
 }
 </style>

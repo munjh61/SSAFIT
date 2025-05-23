@@ -10,15 +10,15 @@
                         <p>
                             <span :class="{ active: mode === 'login' }" @click="mode = 'login'">로그인</span> ｜
                             <span :class="{ active: mode === 'join' }" @click="mode = 'join'">회원가입</span> ｜
-                            <span :class="{ active: mode === 'findAuth' }" @click="mode = 'findAuth'">아이디/비밀번호 찾기</span>
+                            <span :class="{ active: mode === 'find' }" @click="mode = 'find'">아이디/비밀번호 찾기</span>
                         </p>
                     </div>
                     <div class="mode">
                         <div v-if="mode == 'login'">
-                            <Login @close="closeModal"/>
+                            <AuthLogin @close="closeModal"/>
                         </div>
-                        <div v-if="mode == 'findAuth'">
-
+                        <div v-if="mode == 'find'">
+                            <AuthFind/>
                         </div>
                         <div v-if="mode == 'join'">
 
@@ -32,8 +32,9 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import Login from '@/components/auth/Login.vue'
 import {useAuthStore} from '@/stores/auth.js'
+import AuthLogin from '@/components/auth/AuthLogin.vue'
+import AuthFind from '@/components/auth/AuthFind.vue'
 
 const emit = defineEmits([
     "close",
