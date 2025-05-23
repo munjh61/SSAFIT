@@ -33,6 +33,11 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    public String getTitleByBoardId(long boardId) {
+        return boardDao.selectTitleByBoardId(boardId);
+    }
+
+    @Override
     public boolean createBoard(Board board) {
         //입력받은 값이 null 값이 아닌지 확인
         String userId = board.getUserId();

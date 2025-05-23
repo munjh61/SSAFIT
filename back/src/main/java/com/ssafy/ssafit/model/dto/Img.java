@@ -11,6 +11,7 @@ import lombok.*;
 public class Img {
     private Long imgId;
     private Long boardId;
+    private String title;
     private String orgName;
     private String name;
 }

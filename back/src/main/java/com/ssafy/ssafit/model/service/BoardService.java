@@ -13,6 +13,8 @@ public interface BoardService {
     List<Board> getAllBoards();
     //board 상세 조회, 댓글,좋아요 달 수 있는 페이지에 로드 할 것
     Board getBoardByBoardId(long boardId);
+    //title 조회
+    String getTitleByBoardId(long boardId);
     //board 등록
     boolean createBoard(Board board);
     //board 수정

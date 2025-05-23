@@ -31,6 +31,7 @@ CREATE TABLE board (
 CREATE TABLE img (
     img_id      BIGINT AUTO_INCREMENT PRIMARY KEY,
     board_id    BIGINT,
+    title		varchar(255),
     org_name    VARCHAR(255),
     name        VARCHAR(255),
     FOREIGN KEY (board_id) REFERENCES board(board_id) ON DELETE CASCADE
@@ -114,18 +115,18 @@ insert into follow (follower_id, following_id) values
 ("user02", "user01"),
 ("user03", "user02");
 
-INSERT INTO bucket (board_id, user_id, done, done_date)
-VALUES 
-(1, 'user01', 0, '2025-05-20 14:30:00'),                              -- 그냥 좋아요
-(2, 'user02', 1, '2025-05-20 14:30:00'),             -- 버킷리스트 추가
-(3, 'user03', 2, '2025-05-22 10:15:00');    
-
 -- board 테이블 더미 데이터 삽입
 INSERT INTO board (user_id, title, content, tag)
 VALUES
 ('user01', '암벽등반 도전기', '처음으로 암벽등반을 해봤는데 생각보다 재밌었어요!', '운동,등산'),
 ('user02', '스키 처음 탄 날', '처음 타보는 스키! 넘어졌지만 즐거웠던 하루', '운동,겨울스포츠'),
 ('user03', '버킷리스트: 마라톤 완주', '인생 첫 마라톤 완주! 도전하길 잘했다는 생각이 드네요.', '운동,마라톤');
+
+INSERT INTO bucket (board_id, user_id, done, done_date)
+VALUES 
+(1, 'user01', 0, '2025-05-20 14:30:00'),                              -- 그냥 좋아요
+(2, 'user02', 1, '2025-05-20 14:30:00'),             -- 버킷리스트 추가
+(3, 'user03', 2, '2025-05-22 10:15:00');    
 
 -- img 더미데이터
 insert into img (board_id, org_name, name) values

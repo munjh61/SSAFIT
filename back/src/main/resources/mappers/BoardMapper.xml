@@ -29,6 +29,11 @@
         FROM board
         WHERE board_id = #{boardId} and is_deleted = false
     </select>
+    <select id="selectTitleByBoardId" parameterType="Long">
+        SELECT title
+        FROM board
+        WHERE board_id = #{boardId}
+    </select>
 
     <!-- 수정 -->
     <update id="updateBoard" parameterType="Board">

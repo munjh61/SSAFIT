@@ -2,6 +2,7 @@ package com.ssafy.ssafit.controller.bucket;
 
 import com.ssafy.ssafit.model.dto.Bucket;
 import com.ssafy.ssafit.model.dto.Img;
+import com.ssafy.ssafit.model.service.BoardService;
 import com.ssafy.ssafit.model.service.BucketService;
 import com.ssafy.ssafit.model.service.ImgService;
 import com.ssafy.ssafit.security.CustomUserDetails;
@@ -23,6 +24,7 @@ import java.util.Map;
 public class BucketController {
      private final BucketService bucketService;
      private final ImgService imgService;
+     private final BoardService boardService;
 
      //버킷리스트 추가
      @PostMapping("")
@@ -64,12 +66,20 @@ public class BucketController {
 
           //1. 로그인된 유저의 버킷리스트 불러오기
           List<Bucket> bucketList = bucketService.getBucketByUserId(userId);
+
           //2. 불러와진 버킷리스트 별 이미지 묶기
+          //title에 값 넣어주기
           Map<Long, List<Img>> bucketImgs = new HashMap<>();
           for(Bucket bucket : bucketList){
                Long boardId = bucket.getBoardId();
-               System.out.println(boardId);
+               String title = boardService.getTitleByBoardId(boardId);
+
+//               System.out.println(boardId);
                List<Img> imgList = imgService.getImgByUserId(boardId);
+               for(Img img : imgList){
+                    img.setTitle(title);
+               }
+
                bucketImgs.put(bucket.getBucketId(), imgList);
           }
           map.put("bucketList", bucketList);

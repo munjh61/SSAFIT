@@ -26,7 +26,7 @@ const props = defineProps({
     date: String,
     imgUrl: String,
     title: String,
-    done: Boolean,
+    done: Number
 })
 
 const localDone = ref(props.done)

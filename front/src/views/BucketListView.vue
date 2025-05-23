@@ -4,7 +4,7 @@
     <h2>✨나의 버킷리스트✨</h2>
         <BucketItem v-for="item in bucketList" 
         :key="item.bucketId" 
-        :date="item.date"
+        :date="item.doneDate"
         :imgUrl="item.imgUrl"
         :title="item.title"
         :done="item.done" />
@@ -16,6 +16,8 @@ import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import HeaderBar from '@/components/HeaderBar.vue';
 import BucketItem from '@/components/BucketItem.vue';
+
+// console.log('imgList with title:', response.data.bucketImgs)
 
 const bucketList = ref([])
 const serverUrl = import.meta.env.VITE_API_BASE_URL
@@ -30,14 +32,10 @@ onMounted(async () => {
         const response = await axios.get(`${serverUrl}/api/bucket/list`,{
             headers:{
                 Authorization: token
-            }
+            },
+            withCredentials: true
         })
-        // const response = await axios.get('/api/bucket/list', {
-        //     headers:{
-        //         Authorization: `Bearer ${token}`
-        //     },
-        //     withCredentials: true
-        // })
+
         console.log('응답 데이터:', response.data)
 
         const{ bucketList: rawList, bucketImgs }= response.data
@@ -53,22 +51,6 @@ onMounted(async () => {
         console.error('버킷리스트 불러오기 실패: ', err)
     }
 })
-
-// const bucketList = [{
-//     id: 1,
-//     date: '2025-05-09',
-//     img: new URL('@/assets/images/exercise1.jpg', import.meta.url).href,
-//     title: '암벽 등반',
-//     done: false
-// },
-// {
-//     id: 2,
-//     date: '2025-05-10',
-//     img: new URL('@/assets/images/exercise6.jpg', import.meta.url).href,
-//     title: '스키',
-//     done: false
-//   }
-// ]
 </script>
 
 <style scoped>
