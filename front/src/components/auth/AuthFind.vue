@@ -1,6 +1,16 @@
 <template>
     <div class="find">
+        <p>
+            <span :class="{ active: problem === 'id' }" @click="mode = 'id'">아이디 찾기</span> ｜
+            <span :class="{ active: problem === 'pw' }" @click="mode = 'pw'">비밀번호 재설정</span> ｜
+        </p>
         <div class="inputs">
+            <div class="input-container">
+                <fieldset>
+                    <legend>인증 이메일</legend>
+                    <input type="email" v-model="email">
+                </fieldset>
+            </div>
             <div class="input-container">
                 <fieldset>
                     <legend>인증 이메일</legend>
@@ -15,7 +25,7 @@
             </div>
             <div>
                 <button class="find-button">메일 발송</button>
-                <button class="find-button" @click="login">인증</button>
+                <button class="find-button">인증</button>
             </div>
         </div>
     </div>
