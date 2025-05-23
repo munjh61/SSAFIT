@@ -40,7 +40,6 @@ const login = async () => {
         router.replace({name : 'main'})
     }
 }
-
 </script>
 
 <style scoped>
