@@ -1,7 +1,9 @@
 package com.ssafy.ssafit.controller.bucket;
 
 import com.ssafy.ssafit.model.dto.Bucket;
+import com.ssafy.ssafit.model.dto.Img;
 import com.ssafy.ssafit.model.service.BucketService;
+import com.ssafy.ssafit.model.service.ImgService;
 import com.ssafy.ssafit.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -18,6 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BucketController {
      private final BucketService bucketService;
+     private final ImgService imgService;
 
      //버킷리스트 추가
      @PostMapping("")
@@ -53,8 +58,22 @@ public class BucketController {
 
      //버킷리스트 출력
      @GetMapping("/list")
-     public ResponseEntity<List<Bucket>> getAllBucket(@AuthenticationPrincipal CustomUserDetails customUserDetails){
+     public ResponseEntity<Map<String, Object>> getAllBucket(@AuthenticationPrincipal CustomUserDetails customUserDetails){
           String userId = customUserDetails.getUsername();
-          return ResponseEntity.ok(bucketService.getBucketByUserId(userId));
+          Map<String, Object> map = new HashMap<>();
+
+          //1. 로그인된 유저의 버킷리스트 불러오기
+          List<Bucket> bucketList = bucketService.getBucketByUserId(userId);
+          //2. 불러와진 버킷리스트 별 이미지 묶기
+          Map<Long, List<Img>> bucketImgs = new HashMap<>();
+          for(Bucket bucket : bucketList){
+               Long boardId = bucket.getBoardId();
+               System.out.println(boardId);
+               List<Img> imgList = imgService.getImgByUserId(boardId);
+               bucketImgs.put(bucket.getBucketId(), imgList);
+          }
+          map.put("bucketList", bucketList);
+          map.put("bucketImgs", bucketImgs);
+          return ResponseEntity.ok(map);
      }
 }
