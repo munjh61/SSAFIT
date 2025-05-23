@@ -34,7 +34,7 @@ const router = createRouter({
     },
     {
       path:'/bucketList',
-      name:'bucketlist',
+      name:'bucketList',
       component: BucketListView
     },
     {
@@ -47,6 +47,11 @@ const router = createRouter({
       name:'guild',
       component:GuildView
     },
+    // {
+    //   path:'/settings',
+    //   name:'settings',
+    //   component:SettingView
+    // }
     //------------------junho
     {
       path:'/joonhoTestView',

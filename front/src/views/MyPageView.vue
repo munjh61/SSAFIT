@@ -4,8 +4,10 @@
         <div class="userProfile">
           <ProfileSection :stats="userStats" />
         </div>
-        
-        <RecordGrid :records="userRecords" />
+        <div class="divider"></div>
+        <div class="userRecords">
+          <RecordGrid :records="userRecords" />
+        </div>
     </div>
 </template>
 
@@ -21,17 +23,16 @@ const userStats = {
 }
 
 const userRecords = [
-  { id: 1, img: '/images/my1.jpg', caption: '오전 조깅 완료' },
-  { id: 2, img: '/images/my2.jpg', caption: '요가 처음 도전!' },
-  { id: 3, img: '/images/my3.jpg', caption: '요가 처음 도전!' },
-  { id: 4, img: '/images/my4.jpg', caption: '요가 처음 도전!' },
-  { id: 5, img: '/images/my5.jpg', caption: '요가 처음 도전!' },
-  { id: 6, img: '/images/my6.jpg', caption: '요가 처음 도전!' },
-  { id: 7, img: '/images/my7.jpg', caption: '요가 처음 도전!' },
-  { id: 8, img: '/images/my8.jpg', caption: '요가 처음 도전!' },
-  { id: 9, img: '/images/my9.jpg', caption: '요가 처음 도전!' },
+   { id: 1, img: new URL('@/assets/images/my1.jpg', import.meta.url).href, caption: '오전 조깅 완료' },
+  { id: 2, img: new URL('@/assets/images/my2.jpg', import.meta.url).href, caption: '요가 처음 도전!' },
+  { id: 3, img: new URL('@/assets/images/my3.jpg', import.meta.url).href, caption: '요가 처음 도전!' },
+  { id: 4, img: new URL('@/assets/images/my4.jpg', import.meta.url).href, caption: '요가 처음 도전!' },
+  { id: 5, img: new URL('@/assets/images/my5.jpg', import.meta.url).href, caption: '요가 처음 도전!' },
+  { id: 6, img: new URL('@/assets/images/my6.jpg', import.meta.url).href, caption: '요가 처음 도전!' },
+  { id: 7, img: new URL('@/assets/images/my7.jpg', import.meta.url).href, caption: '요가 처음 도전!' },
+  { id: 8, img: new URL('@/assets/images/my8.jpg', import.meta.url).href, caption: '요가 처음 도전!' },
+  { id: 9, img: new URL('@/assets/images/my9.jpg', import.meta.url).href, caption: '요가 처음 도전!' },
 ]
-
 
 </script>
 
@@ -44,7 +45,18 @@ const userRecords = [
 .userProfile{
   display: flex;
   justify-content: center;
-  padding-top: 50px;
+  padding-top: 60px;
+}
+.divider {
+  width: 60%;
+  height: 1px;
+  background-color: #e2e2e2;
+  margin: 24px auto;
+}
+.userRecords{
+  display: flex;
+  justify-content: center;
+  
 }
 
 
