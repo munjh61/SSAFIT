@@ -5,9 +5,10 @@
             <div class="recommend-wrapper" ref="sliderRef">
                 <ExerciseCard
                 v-for="(exercise, index) in exercises"
-                :key="index"
+                :key="exercise.boardId"
                 :imgUrl="exercise.img"
                 :title="exercise.title"
+                :boardId="exercise.boardId"
                 />
             </div>
         <button class="scroll-btn right" @click="scrollRight">›</button>
@@ -15,8 +16,14 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import ExerciseCard from './ExerciseCard.vue'
+import axios from 'axios'
+
+const serverUrl = import.meta.env.VITE_API_BASE_URL
+const exercises = ref([])
+
+
 
 const sliderRef = ref(null)
 
@@ -34,14 +41,19 @@ const scrollRight = () => {
   })
 }
 
-const exercises = [
-    { img: '/src/assets/images/exercise1.jpg', title: '암벽등반' },
-    { img: '/src/assets/images/exercise2.jpg', title: '필라테스' },
-    { img: '/src/assets/images/exercise3.jpg', title: '크로스핏' },
-    { img: '/src/assets/images/exercise4.jpg', title: '요가' },
-    { img: '/src/assets/images/exercise5.jpg', title: '사이클' },
-    { img: '/src/assets/images/exercise6.jpg', title: '스키' },
-]
+onMounted(async () => {
+  try {
+    const response = await axios.get(`${serverUrl}/api/public/board`)
+    console.log('운동 게시글 목록:', response.data)
+    exercises.value = response.data.map(item => ({
+      boardId: item.boardId,
+      img: `/images/${item.imgName}`, // 또는 item.imgUrl 등 구조에 따라
+      title: item.title
+    }))
+  } catch (err) {
+    console.error('운동 목록 불러오기 실패', err)
+  }
+})
 
 </script>
 

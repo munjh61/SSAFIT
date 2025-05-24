@@ -5,7 +5,9 @@ import com.ssafy.ssafit.model.dto.Bucket;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -14,8 +16,8 @@ public class BucketServiceImpl implements BucketService {
     private final BucketDao bucketDao;
 
     @Override
-    public void addBucket(Bucket bucket) {
-        bucketDao.insertBucket(bucket);
+    public boolean addBucket(Bucket bucket) {
+        return bucketDao.insertBucket(bucket);
     }
 
     @Override
@@ -29,15 +31,29 @@ public class BucketServiceImpl implements BucketService {
     }
 
     @Override
-    public boolean removeBucket(String userId, long bucketId) {
-        //해당 버킷리스트 작성한 유저가 로그인 된 유저인지 확인
+    public boolean removeBucket(long bucketId, String userId) {
         Bucket bucket = bucketDao.selectBucketByBucketId(bucketId);
-        String tmp = bucket.getUserId(); //버킷 추가한 유저
+        //1. 해당 버킷이 진짜 있는지 확인
+        if(bucket == null){
+            return false;
+        }
+        String tmp = bucket.getUserId(); //버킷에 할당된 유저값
+        System.out.println("bucket.userId=" + tmp + ", 로그인 userId=" + userId);
+        //2. 로그인 된 유저의 버킷인지 확인
         if(!userId.equals(tmp)){
             return false;
         }
-        bucketDao.deleteBucket(bucketId);
-        return true;
+        //3. 삭제 실행
+        int deleted = bucketDao.deleteBucket(bucketId, userId);
+        System.out.println("실제 삭제된 row 수: " + deleted);
+        //4. 파라미터 전달
+        return deleted>0;
+    }
+
+    @Override
+    public boolean removeByBoardId(String userId, long boardId) {
+        System.out.println("🧾 삭제 시도 - userId: " + userId + ", boardId: " + boardId);
+        return bucketDao.deleteByBoardId(userId, boardId) > 0;
     }
 
     @Override
@@ -48,7 +64,23 @@ public class BucketServiceImpl implements BucketService {
         if(!userId.equals(tmp)){
             return false;
         }
-        bucketDao.completeBucket(bucketId);
-        return true;
+        return bucketDao.completeBucket(bucketId) > 0;
     }
+
+    @Override
+    public Map<String, Object> getBucketStats(String userId) {
+        int total = bucketDao.countByUserId(userId);
+        int done = bucketDao.countDoneByUserId(userId);
+        int doing = total - done;
+        int rate = total == 0 ? 0 : (done * 100) / total;
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("total", total);
+        result.put("done", done);
+        result.put("doing", doing);
+        result.put("rate", rate);
+        return result;
+    }
+
+
 }

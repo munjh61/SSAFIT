@@ -16,6 +16,8 @@ public interface BoardDao {
     Board selectByBoardId(long boardId);
     //boardId로 title 조회
     String selectTitleByBoardId(long boardId);
+    //boardId로 tag 조회
+    String selectTagByBoardId(long boardId);
     
     //board 등록
     void insertBoard(Board board);

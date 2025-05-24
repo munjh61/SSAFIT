@@ -34,6 +34,11 @@
         FROM board
         WHERE board_id = #{boardId}
     </select>
+    <select id="selectTagByBoardId" parameterType="Long">
+        SELECT tag
+        FROM board
+        WHERE board_id = #{boardId}
+    </select>
 
     <!-- 수정 -->
     <update id="updateBoard" parameterType="Board">

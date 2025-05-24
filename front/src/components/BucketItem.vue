@@ -1,6 +1,6 @@
 <template>
     <div class="bucket-card">
-        <div v-if="done" class="overlay">
+        <div v-if="localDone === 2" class="overlay">
             ✔️
         </div>
         <div class="card-header">
@@ -12,7 +12,7 @@
 
             <div class="card-bottom">
                 <div class="title">{{ title }}</div>
-                <button class="done-btn" @click="mark">완료</button>
+                <button class="done-btn" @click="mark" :disabled="localDone === 2">완료</button>
             </div>
             
     </div>
@@ -20,26 +20,32 @@
 </template>
 
 <script setup>
-import{ref} from 'vue'
+import{ref, watch} from 'vue'
 
 const props = defineProps({
     date: String,
     imgUrl: String,
     title: String,
-    done: Number
+    done: Number,
+    bucketId: Number
 })
 
 const localDone = ref(props.done)
 
+const emit = defineEmits(['delete', 'mark']) // 삭제 요청
+
 const deleteItem = () => {
-  alert('삭제 되었습니다.')
+  if(confirm('정말 삭제하시겠습니까?')){
+    emit('delete', props.bucketId)
+  }
 }
 
+watch(() => props.done, (newVal) => {
+  localDone.value = newVal
+})
+
 const mark = () => {
-  done.value = !done.value
-  if(localDone.value){
-    alert('버킷리스트 달성을 축하드립니다')
-  }
+  emit('mark', props.bucketId)
 }
 </script>
 

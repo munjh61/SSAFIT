@@ -15,6 +15,8 @@ public interface BoardService {
     Board getBoardByBoardId(long boardId);
     //title 조회
     String getTitleByBoardId(long boardId);
+    //tag 조회
+    String getTagByBoardId(long boardId);
     //board 등록
     boolean createBoard(Board board);
     //board 수정

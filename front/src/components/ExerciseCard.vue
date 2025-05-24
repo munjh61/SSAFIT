@@ -9,17 +9,51 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
 
-defineProps({
+const props = defineProps({
   imgUrl: String,
-  title: String
+  title: String,
+  boardId: Number
 })
 
 const isBucketmarked = ref(false)
+const serverUrl = import.meta.env.VITE_API_BASE_URL
 
-const addBucketmark = () => {
-  isBucketmarked.value = !isBucketmarked.value
+
+const token = `Bearer ${sessionStorage.getItem('ssafit-login-token')}`
+
+const addBucketmark = async() => {
+  console.log("🧪 버튼 클릭됨, isBucketmarked:", isBucketmarked.value)
+  console.log("🧪 boardId:", props.boardId)
+  try{
+    if(!isBucketmarked.value) {
+      await axios.post(`${serverUrl}/api/bucket`, {
+        boardId: props.boardId,
+        done: 1
+      }, {
+        headers: {
+          Authorization: token
+        },
+        withCredentials: true
+      })
+  
+      isBucketmarked.value = true
+      alert('버킷리스트에 등록되었습니다')
+    }else{
+      await axios.delete(`${serverUrl}/api/bucket/main/${props.boardId}`, {
+        headers: { Authorization: token },
+        withCredentials: true
+      })
+      isBucketmarked.value = false
+      alert('버킷리스트에서 삭제되었습니다.')
+    }
+  }catch (err) {
+    console.error('처리 실패패', err)
+    alert('처리에 실패했습니다.')
+  }
+
 }
 </script>
 
