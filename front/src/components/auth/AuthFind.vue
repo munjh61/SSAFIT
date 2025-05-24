@@ -10,7 +10,7 @@
             <div class="input-container" v-if="!isSend">
                 <fieldset>
                     <legend>인증 이메일</legend>
-                    <input type="email" v-model="email">
+                    <input type="email" v-model="address">
                 </fieldset>
             </div>
             <div class="input-container" v-if="type == 'pw' && !isSend">
@@ -36,7 +36,7 @@
 <script setup>
 import { ref } from "vue";
 import { useAuthFindStore } from "@/stores/authfind";
-const email = ref('')
+const address = ref('')
 const code = ref('')
 const userId = ref('')
 const type = ref('id')
@@ -46,11 +46,12 @@ const store = useAuthFindStore()
 const problemType = function(p){
     type.value = p;
     isSend.value = false;
-    store.verifiedEmail.value = '';
+    store.resetVerifiedEmail()
 }
 
 const send = () =>{
-    isSend.value = !isSend.value;
+    store.send(address.value)
+    isSend.value = true;
 }
 
 const verify = () =>{

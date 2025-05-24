@@ -7,28 +7,29 @@ const serverUrl = import.meta.env.VITE_API_BASE_URL
 export const useAuthFindStore = defineStore('authFind', ()=>{
     const verifiedEmail = ref('')
 
-    const sendFindId = () => {
+    const send = function (address) {
         return axios({
-            url: `${serverUrl}/api/public/user/email/request}`,
+            url: `${serverUrl}/api/public/user/email/request`,
             method: "POST",
             data:{
                 address
             }
         })
-    }
-
-    const sendResetPw = () => {
-        return axios({
-            url: `${serverUrl}/api/public/user/email/request}`,
-            method: "POST",
-            data:{
-                address,
-                userId,
-            }
+        .then((res)=>{
+            console.log(res)
+            return true;
+        })
+        .catch((err)=>{
+            console.log(err.response.data)
+            return false;
         })
     }
 
+    const resetVerifiedEmail = function(){
+        verifiedEmail.value = ''
+    }
+    
     return {
-        verifiedEmail,        
+        verifiedEmail, send, resetVerifiedEmail
     }
 })
