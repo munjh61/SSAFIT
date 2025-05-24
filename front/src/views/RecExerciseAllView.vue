@@ -21,18 +21,43 @@
 </template>
 
 <script setup>
+import {ref, onMounted } from 'vue';
+import axios from 'axios';
 import HeaderBar from '@/components/HeaderBar.vue';
 import SearchBar from '@/components/SearchBar.vue';
 
-const exercises = [
-    { img: new URL('../assets/images/exercise1.jpg', import.meta.url).href, title: '암벽등반' },
-    { img: new URL('../assets/images/exercise2.jpg', import.meta.url).href, title: '필라테스' },
-    { img: new URL('../assets/images/exercise3.jpg', import.meta.url).href, title: '크로스핏' },
-    { img: new URL('../assets/images/exercise4.jpg', import.meta.url).href, title: '요가' },
-    { img: new URL('../assets/images/exercise5.jpg', import.meta.url).href, title: '사이클' },
-    { img: new URL('../assets/images/exercise6.jpg', import.meta.url).href, title: '스키' },
-]
+const exercises = ref([]);
+const serverUrl = import.meta.env.VITE_API_BASE_URL
 
+
+onMounted(async () => {
+  try {
+    const token = `Bearer ${sessionStorage.getItem('ssafit-login-token')}`
+    const response = await axios.get(`${serverUrl}/api/board/recommend`, {
+      headers: {
+        Authorization: token
+      },
+      withCredentials: true
+    })
+
+    console.log('응답 데이터:', response.data);
+
+    const boards = response.data.boards;
+    const images = response.data.images;
+
+    exercises.value = boards.map(board => {
+      const imgList = images[board.boardId];
+      const firstImg = imgList && imgList.length > 0 ? imgList[0].name : 'default.jpg';
+      
+      return {
+        title: board.title,
+        img: `/images/${firstImg}`
+      };
+    });
+  } catch (error) {
+    console.error('추천 운동 목록 불러오기 실패', error);
+  }
+})
 </script>
 
 <style scoped>

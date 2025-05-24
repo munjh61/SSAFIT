@@ -21,8 +21,9 @@ const props = defineProps({
 const isBucketmarked = ref(false)
 const serverUrl = import.meta.env.VITE_API_BASE_URL
 
-
 const token = `Bearer ${sessionStorage.getItem('ssafit-login-token')}`
+
+console.log('🧩 받은 props:', props)
 
 const addBucketmark = async() => {
   console.log("🧪 버튼 클릭됨, isBucketmarked:", isBucketmarked.value)
@@ -65,6 +66,7 @@ const addBucketmark = async() => {
   height: 250px;
   margin: 10px;
   flex-direction: column;
+  overflow: visible;
 }
 img {
   width: 100%;
@@ -90,6 +92,7 @@ img {
   cursor: pointer;
   color: #ccc;
   transition: color 0.3s ease;
+  z-index: 10;
 }
 .bucket-btn:hover {
   color: gold;

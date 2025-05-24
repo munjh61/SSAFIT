@@ -17,8 +17,10 @@ public class ImgServiceImpl implements ImgService{
 //    public List<Img> getImgByUserId(String userId) {
 //        return imgDao.selectImgByUserId(userId);
 //    }
+
+
     @Override
-    public List<Img> getImgByUserId(Long boardId) {
-        return imgDao.selectImgByUserId(boardId);
+    public List<Img> getImgByBoardId(Long boardId) {
+        return imgDao.selectImgByBoardId(boardId);
     }
 }

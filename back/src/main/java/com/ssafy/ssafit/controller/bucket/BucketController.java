@@ -96,7 +96,7 @@ public class BucketController {
                long boardId = bucket.getBoardId();
                String title = boardService.getTitleByBoardId(boardId);
 
-               List<Img> imgList = imgService.getImgByUserId(boardId);
+               List<Img> imgList = imgService.getImgByBoardId(boardId);
                for (Img img : imgList) {
                     img.setTitle(title);
                }

@@ -5,8 +5,8 @@
             <div class="recommend-wrapper" ref="sliderRef">
                 <ExerciseCard
                 v-for="(exercise, index) in exercises"
-                :key="exercise.boardId"
-                :imgUrl="exercise.img"
+                :key="index"
+                :img-url="exercise.img"
                 :title="exercise.title"
                 :boardId="exercise.boardId"
                 />
@@ -23,9 +23,13 @@ import axios from 'axios'
 const serverUrl = import.meta.env.VITE_API_BASE_URL
 const exercises = ref([])
 
-
-
 const sliderRef = ref(null)
+
+const props = defineProps({
+  imgUrl: String,
+  title: String,
+  boardId: Number
+})
 
 const scrollLeft = () => {
   sliderRef.value.scrollBy({
@@ -43,13 +47,32 @@ const scrollRight = () => {
 
 onMounted(async () => {
   try {
-    const response = await axios.get(`${serverUrl}/api/public/board`)
+    const token = `Bearer ${sessionStorage.getItem('ssafit-login-token')}`
+    const response = await axios.get(`${serverUrl}/api/board/recommend`,{
+      headers: {
+        Authorization: token
+      },
+      withCredentials: true
+    })
+
     console.log('운동 게시글 목록:', response.data)
-    exercises.value = response.data.map(item => ({
-      boardId: item.boardId,
-      img: `/images/${item.imgName}`, // 또는 item.imgUrl 등 구조에 따라
+
+    const boardList = response.data.boards || response.data
+    const images = response.data.images
+
+    exercises.value = boardList.map(item => {
+      const boardId = item.boardId
+      const imgList = images[boardId]
+      const imgName = imgList?.[0]?.name || 'default.jpg'
+      // const imgPath = `/images/${item.name}`
+      console.log('이미지 경로:', `/images/${imgName}`)
+
+      return{
+      boardId,
+      img: `/images/${imgName}`,
       title: item.title
-    }))
+      }
+    })
   } catch (err) {
     console.error('운동 목록 불러오기 실패', err)
   }

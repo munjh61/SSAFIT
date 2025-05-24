@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface ImgService {
 //    List<Img> getImgByUserId(String userId);
-    List<Img> getImgByUserId(Long boardId);
+    List<Img> getImgByBoardId(Long boardId);
 }

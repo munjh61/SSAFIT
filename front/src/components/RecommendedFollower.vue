@@ -3,10 +3,10 @@
     <button class="scroll-btn left" @click="scrollLeft">‹</button>
 
     <div class="scroll-wrapper" ref="sliderRef">
-      <div v-for="n in 8" :key="n" class="card">
-        <img src="@/assets/images/follower.jpg" alt="user" />
-        <div class="userName">Bird {{ n }}</div>
-        <div class="info">Cardiac Surgeon, India</div>
+      <div v-for="user in followers" :key="user.userId" class="card">
+        <img :src="user.imgUrl" alt="user" />
+        <div class="userName">{{ user.name }}</div>
+        <!-- <div class="info">{{ user.intro }}</div> -->
         <button>Follow</button>
       </div>
     </div>
@@ -16,8 +16,11 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
 
+const serverUrl = import.meta.env.VITE_API_BASE_URL
+const followers = ref([])
 const sliderRef = ref(null)
 
 const scrollLeft = () => {
@@ -33,6 +36,17 @@ const scrollRight = () => {
     behavior: 'smooth',
   })
 }
+
+// onMounted(async () => {
+//   try {
+//     //유저 추천 컨트롤러 만들어야 됨됨
+//     const response = await axios.get(`${serverUrl}/api/public/user/recommend`)
+//     console.log('팔로우 추천 목록:', response.data)
+//     followers.value = response.data
+//   } catch (error) {
+//     console.error('팔로우 추천 목록 불러오기 실패', error)
+//   }
+// })
 </script>
 
 <style scoped>

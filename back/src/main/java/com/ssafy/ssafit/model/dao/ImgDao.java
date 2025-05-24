@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface ImgDao {
 //    List<Img> selectImgByUserId(String userId);
-    List<Img> selectImgByUserId(Long boardId);
+    List<Img> selectImgByBoardId(Long boardId);
 }
