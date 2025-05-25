@@ -23,17 +23,26 @@
         FROM board
         ORDER BY reg_date DESC
     </select>
+    <!--로그인 한 유저가 쓴 보드만 조회-->
+    <select id="selectByUserId" parameterType="String" resultType="Board">
+        SELECT *
+        FROM board
+        WHERE user_id = #{userId}
+    </select>
     <!-- 상세 조회 -->
     <select id="selectByBoardId" parameterType="long" resultType="Board">
         SELECT *
         FROM board
         WHERE board_id = #{boardId} and is_deleted = false
     </select>
+
+    <!-- 타이틀 조회-->
     <select id="selectTitleByBoardId" parameterType="Long">
         SELECT title
         FROM board
         WHERE board_id = #{boardId}
     </select>
+    <!--태그 조회-->
     <select id="selectTagByBoardId" parameterType="Long">
         SELECT tag
         FROM board

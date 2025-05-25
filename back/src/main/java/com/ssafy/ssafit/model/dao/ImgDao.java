@@ -8,4 +8,6 @@ import java.util.List;
 public interface ImgDao {
 //    List<Img> selectImgByUserId(String userId);
     List<Img> selectImgByBoardId(Long boardId);
+    //이미지 저장
+    void insertImg(Img img);
 }

@@ -1,21 +1,30 @@
 package com.ssafy.ssafit.model.service;
 
 import com.ssafy.ssafit.model.dao.BoardDao;
+import com.ssafy.ssafit.model.dao.ImgDao;
 import com.ssafy.ssafit.model.dto.Board;
+import com.ssafy.ssafit.model.dto.Img;
+import com.ssafy.ssafit.model.util.FileUploadUtil;
 import com.ssafy.ssafit.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
 
-    @Autowired
     private final BoardDao boardDao;
+    private final ImgDao imgDao;
+    @Autowired
+    private FileUploadUtil fileUploadUtil;
+
+
 
     @Override
     public List<Board> searchBoard(String keyword) {
@@ -25,6 +34,11 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public List<Board> getAllBoards() {
         return boardDao.selectAll();
+    }
+
+    @Override
+    public List<Board> getBoardByUserId(String userId) {
+        return boardDao.selectByUserId(userId);
     }
 
     @Override
@@ -43,21 +57,22 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public boolean createBoard(Board board) {
-        //입력받은 값이 null 값이 아닌지 확인
-        String userId = board.getUserId();
-        String title = board.getTitle();
-        String content = board.getContent();
-        String tag = board.getTag();
-        //입력 받은 board 중 null 값이 있으면 false
-        if(userId==null || title==null || content==null || tag==null){
-            return false;
-        }
-        return true;
-//        System.out.println(board.getBoardId()); //null
-//        boardDao.insertBoard(board);
-//        System.out.println(board.getBoardId()); // 숫자
+    public void createBoard(String content, MultipartFile image, String userId) {
+        Board board = new Board();
+        board.setUserId(userId);
+        board.setContent(content);
+        board.setRegDate(LocalDateTime.now());
 
+        boardDao.insertBoard(board);
+        //이미지 저장
+        if (image != null && !image.isEmpty()) {
+            String fileName = fileUploadUtil.save(image); // 예: 고유 파일명 생성 + 저장
+            Img img = new Img();
+            img.setBoardId(board.getBoardId()); // 방금 생성된 board PK
+            img.setName(fileName);
+            img.setOrgName(image.getOriginalFilename());
+            imgDao.insertImg(img);
+        }
     }
 
     @Override

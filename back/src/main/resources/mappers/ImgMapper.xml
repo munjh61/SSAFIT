@@ -11,6 +11,11 @@
         WHERE board_id = #{boardId}
     </select>
 
+    <insert id="insertImg" parameterType="Img" useGeneratedKeys="true" keyProperty="imgId">
+        INSERT INTO img (board_id, org_name, name)
+        VALUES (#{boardId}, #{orgName}, #{name})
+    </insert>  
+
     <!--    <select id="selectImgByUserId" parameterType="String">-->
 <!--        SELECT *-->
 <!--        FROM img-->

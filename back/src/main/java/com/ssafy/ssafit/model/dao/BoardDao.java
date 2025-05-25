@@ -12,6 +12,8 @@ public interface BoardDao {
     List<Board> searchByKeyword(@Param("keyword") String keyword);
     //board 전체 조회
     List<Board> selectAll();
+    //로그인 된 유저가 쓴 보드 조회
+    List<Board> selectByUserId(@Param("userId") String userId);
     //board 상세 조회
     Board selectByBoardId(long boardId);
     //boardId로 title 조회

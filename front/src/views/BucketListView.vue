@@ -28,6 +28,7 @@ import HeaderBar from '@/components/HeaderBar.vue';
 import BucketItem from '@/components/BucketItem.vue';
 
 // console.log('imgList with title:', response.data.bucketImgs)
+const serverUrl = import.meta.env.VITE_API_BASE_URL
 
 const bucketList = ref([])
 const bucketStats = ref({
@@ -36,7 +37,6 @@ const bucketStats = ref({
   doing: 0,
   rate: 0
 })
-const serverUrl = import.meta.env.VITE_API_BASE_URL
 
 //화면 출력, 통계 출력력
 onMounted(async () => {

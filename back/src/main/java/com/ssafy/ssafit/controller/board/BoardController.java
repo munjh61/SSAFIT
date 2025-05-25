@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +25,26 @@ import java.util.Map;
 public class BoardController {
     private final BoardService boardService;
     private final ImgService imgService;
+
+    //로그인 유저가 작성한 보드만 조회 - 마이페이지용
+    @GetMapping("")
+    public ResponseEntity<Map<String, Object>> getBoardByUserId(@AuthenticationPrincipal CustomUserDetails customUserDetails){
+        String loginUser = customUserDetails.getUsername();
+        Map<String, Object> result = new HashMap<>();
+
+        //1. 로그인 된 유저가 쓴 보드 불러오기
+        List<Board> boardList = boardService.getBoardByUserId(loginUser);
+        result.put("boards", boardList);
+        //2. 불러와진 보드 별 이미지 묶기
+        Map<Long, List<Img>> boardImgs = new HashMap<>();
+        for(Board board : boardList){
+            List<Img> imgList = imgService.getImgByBoardId(board.getBoardId());
+            boardImgs.put(board.getBoardId(), imgList);
+        }
+        result.put("images", boardImgs);
+
+        return ResponseEntity.ok(result);
+    }
 
     //추천 board 조회
     @GetMapping("/recommend")
@@ -49,8 +70,11 @@ public class BoardController {
 
     //board 등록
     @PostMapping("")
-    public ResponseEntity<?> create(@RequestBody Board board){
-        boardService.createBoard(board);
+    public ResponseEntity<?> create(@RequestPart("content") String content,
+                                    @RequestPart(value = "image", required = false) MultipartFile image,
+                                    @AuthenticationPrincipal CustomUserDetails userDetails){
+        String userId = userDetails.getUsername();
+        boardService.createBoard(content, image, userId);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
