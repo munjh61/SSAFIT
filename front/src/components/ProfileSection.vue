@@ -3,7 +3,7 @@
     <div class="profile-box">
       <img class="avatar" src="@/assets/images/profile.jpg" />
       <div class="info">
-        <h2>문준호 <RouterLink to="/settings" class="settings">⚙️</RouterLink></h2>
+        <h2>문준호 <!--<RouterLink to="/settings" class="settings">⚙️</RouterLink>--></h2>
         <div class="status">
           <p>배드민턴 제일 좋아함.</p>
           <p>꾸준히 운동 즐기기</p>

@@ -1,6 +1,6 @@
 <template>
     <div class="record-container">
-        <button class="record-btn">기록하기</button>
+        <button class="record-btn" @click="emit('write')">기록하기</button>
         <div class="record-grid">
             <div class="record" v-for="record in records" :key="record.id">
                 <img :src="record.img" :alt="record.caption" />
@@ -13,6 +13,8 @@
 defineProps({
     records: Array
 })
+
+const emit = defineEmits(['write'])
 </script>
 
 <style scoped>
