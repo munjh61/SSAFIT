@@ -20,10 +20,10 @@
                             <AuthLogin @close="closeModal" />
                         </div>
                         <div v-if="mode == 'find'">
-                            <AuthFind />
+                            <AuthFind @close="closeModal"/>
                         </div>
                         <div v-if="mode == 'join'">
-
+                            <AuthNew @close="closeModal"></AuthNew>
                         </div>
                     </div>
                     <div class="mode-list">
@@ -44,6 +44,7 @@ import { ref, onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth.js'
 import AuthLogin from '@/components/auth/AuthLogin.vue'
 import AuthFind from '@/components/auth/AuthFind.vue'
+import AuthNew from '@/components/auth/AuthNew.vue'
 
 const emit = defineEmits([
     "close",

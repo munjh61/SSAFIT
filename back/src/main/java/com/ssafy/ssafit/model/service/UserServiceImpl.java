@@ -72,23 +72,7 @@ public class UserServiceImpl implements UserService {
         if(tmp == null){
             return null;
         }
-        String transformId = tmp.getUserId();
-        StringBuilder sb = new StringBuilder();
-        int length = transformId.length();
-        for(int i = 0 ; i < length; i++){
-            if(transformId.charAt(i)=='@'){
-                for(int j = 0; j < 2 ; j++){
-                    sb.append(transformId.charAt(j));
-                }
-                sb.append("******");
-                for(int j = i -2 ; j < length ; j++){
-                    if(j >= 0){
-                        sb.append(transformId.charAt(j));
-                    }
-                }
-            }
-        }
-        return sb.toString();
+        return tmp.getUserId();
     }
 
 }

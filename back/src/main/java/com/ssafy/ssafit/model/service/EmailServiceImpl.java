@@ -38,7 +38,7 @@ public class EmailServiceImpl implements EmailService{
         Email exist = emailDao.select(address);
         if(exist != null){
             if(exist.getDue().isAfter(LocalDateTime.now())){
-                return false;
+                return true;
             }
             emailDao.delete(exist.getEmailId());
         }
