@@ -11,7 +11,7 @@
             <div class="input-container">
                 <fieldset>
                     <legend>비밀번호</legend>
-                    <input type="password" v-model="password">
+                    <input type="password" v-model="password" @keydown.enter="login">
                 </fieldset>
             </div>
             <p>{{ store.msg }}</p>
