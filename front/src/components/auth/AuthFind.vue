@@ -85,7 +85,6 @@ const problemType = function (p) {
     isSending.value = false;
     isVerified.value = false;
     findIdResult.value = ''
-    userId.value = ''
     password.value = ''
     isChanging.value = false
     store.reset()

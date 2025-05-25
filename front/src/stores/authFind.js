@@ -18,7 +18,8 @@ export const useAuthFindStore = defineStore('authFind', ()=>{
             url: `${serverUrl}/api/public/user/email/request`,
             method: "POST",
             data:{
-                address
+                address,
+                type : "find"
             }
         })
         .then((res)=>{

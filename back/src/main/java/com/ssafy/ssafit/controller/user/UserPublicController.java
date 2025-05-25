@@ -24,11 +24,12 @@ public class UserPublicController {
     @PostMapping("/email/request")
     public ResponseEntity<String> emailRequest(@RequestBody Map<String, String> body) {
         String address = body.get("address");
+        String type = body.getOrDefault("type","new");
         if (address == null || address.isBlank()) {
             return new ResponseEntity<>("요청에 이메일 항목이 없습니다.", HttpStatus.BAD_REQUEST);
         }
         String tmpId = userService.findUserIdByEmail(address);
-        if (tmpId == null) {
+        if (tmpId == null && !type.equals("new")) {
             return new ResponseEntity<>("해당 이메일을 사용하는 계정이 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
         }
         if (!emailService.sendCode(address)) {
@@ -57,7 +58,7 @@ public class UserPublicController {
     // 중복된 이메일 확인
     @GetMapping("/email/{email}")
     public ResponseEntity<String> existingEmail(@PathVariable("email") String address) {
-        if (userService.isExistingId(address)) {
+        if (userService.isExistingEmail(address)) {
             return new ResponseEntity<>("이미 존재하는 이메일 계정입니다..", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>("사용할 수 있는 이메일 계정입니다.", HttpStatus.OK);
