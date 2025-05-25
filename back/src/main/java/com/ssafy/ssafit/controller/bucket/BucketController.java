@@ -115,5 +115,10 @@ public class BucketController {
           return ResponseEntity.ok(stats);
      }
 
-
+     //버킷 갯수 세기
+     @GetMapping("/count/{boardId}")
+     public ResponseEntity<Integer> getBucketCount(@PathVariable Long boardId) {
+          int count = bucketService.countByBoardId(boardId);
+          return ResponseEntity.ok(count);
+     }
 }

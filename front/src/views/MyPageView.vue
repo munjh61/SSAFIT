@@ -6,38 +6,54 @@
         </div>
         <div class="divider"></div>
         <div class="userRecords">
-          <RecordGrid :records="userRecords" @write="WriteClick"/>
+          <RecordGrid :records="userRecords" @write="WriteClick" @open-detail="openDetail"/>
         </div>
     </div>
     <PostWriteBoard v-if="isWriting" @close="isWriting = false"/>
+
+    <BoardDetail
+      v-if="showDetail"
+      :boardId="selectBoardId"
+      @close="showDetail = false"
+    />
 </template>
 
 <script setup>
 import HeaderBar from '@/components/HeaderBar.vue'
 import ProfileSection from '@/components/ProfileSection.vue'
 import RecordGrid from '@/components/RecordGrid.vue'
-import PostWriteBoard from '@/components/icons/PostWriteBoard.vue'
+import PostWriteBoard from '@/components/PostWriteBoard.vue'
+import BoardDetail from '@/components/BoardDetail.vue'
 
 import {ref, onMounted} from 'vue'
 import axios from 'axios'
 
 const serverUrl = import.meta.env.VITE_API_BASE_URL
 const isWriting = ref(false)
+const showDetail = ref(false)
+const selectBoardId = ref(null)
 const userStats = ref({
   posts: 0,
   followers: 0,
   following: 0
 })
+const userRecords = ref([])
+const editingBoard = ref(null)
+const isEditing = ref(false)
 
 const WriteClick = () => {
   isWriting.value = true
 }
 
-defineProps({
-  records: Array
-})
+const openDetail = (boardId) => {
+  selectBoardId.value = boardId
+  showDetail.value = true
+}
 
-const userRecords = ref([])
+const openEdit = (board) => {
+  editingBoard.value = board
+  isEditing.value = true
+}
 
 onMounted(async () => {
   const token = `Bearer ${sessionStorage.getItem('ssafit-login-token')}`
@@ -78,7 +94,7 @@ onMounted(async () => {
   } catch (error) {
     console.error('마이페이지 데이터 불러오기 실패:', error)
     console.log('응답 코드:', error.response.status)
-      console.log('응답 데이터:', error.response.data)
+    console.log('응답 데이터:', error.response.data)
   }
 })
 

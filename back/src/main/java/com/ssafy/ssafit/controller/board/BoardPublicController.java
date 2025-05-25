@@ -1,13 +1,17 @@
 package com.ssafy.ssafit.controller.board;
 
 import com.ssafy.ssafit.model.dto.Board;
+import com.ssafy.ssafit.model.dto.Img;
 import com.ssafy.ssafit.model.service.BoardService;
+import com.ssafy.ssafit.model.service.ImgService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -16,6 +20,7 @@ import java.util.List;
 //로그인 안해도 할 수 있는 기능
 public class BoardPublicController {
     private final BoardService boardService;
+    private final ImgService imgService;
 
     //board 검색 조회
     //검색어에 걸리는 모든 게시글 조회
@@ -34,12 +39,18 @@ public class BoardPublicController {
 
     //board 상세 조회
     @GetMapping("/{boardId}")
-    public ResponseEntity<Board> getBoard(@PathVariable int boardId){
+    public ResponseEntity<Map<String, Object>> getBoard(@PathVariable long boardId){
         Board board = boardService.getBoardByBoardId(boardId);
-        if(board != null){
-            return ResponseEntity.ok(board);
-        }
-        return ResponseEntity.notFound().build();
+        List<Img> imgList = imgService.getImgByBoardId(boardId);
+
+        Map<Long, List<Img>> imagesMap = new HashMap<>();
+        imagesMap.put(boardId, imgList);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("board", board);
+        result.put("images", imagesMap);
+
+        return ResponseEntity.ok(result);
     }
 
 

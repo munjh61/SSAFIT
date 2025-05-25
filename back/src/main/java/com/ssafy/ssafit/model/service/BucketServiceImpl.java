@@ -67,6 +67,7 @@ public class BucketServiceImpl implements BucketService {
         return bucketDao.completeBucket(bucketId) > 0;
     }
 
+    //버킷리스트 통계
     @Override
     public Map<String, Object> getBucketStats(String userId) {
         int total = bucketDao.countByUserId(userId);
@@ -80,6 +81,11 @@ public class BucketServiceImpl implements BucketService {
         result.put("doing", doing);
         result.put("rate", rate);
         return result;
+    }
+
+    @Override
+    public int countByBoardId(Long boardId) {
+        return bucketDao.countByBoardId(boardId);
     }
 
 

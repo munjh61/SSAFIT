@@ -2,7 +2,7 @@
     <div class="record-container">
         <button class="record-btn" @click="emit('write')">기록하기</button>
         <div class="record-grid">
-            <div class="record" v-for="record in records" :key="record.id">
+            <div class="record" v-for="record in records" :key="record.id" @click="emit('open-detail', record.id)">
                 <img :src="record.img" :alt="record.caption" />
             </div>
         </div>
@@ -14,7 +14,7 @@ defineProps({
     records: Array
 })
 
-const emit = defineEmits(['write'])
+const emit = defineEmits(['write', 'open-detail'])
 </script>
 
 <style scoped>

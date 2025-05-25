@@ -8,4 +8,7 @@ import java.util.List;
 public interface ImgService {
 //    List<Img> getImgByUserId(String userId);
     List<Img> getImgByBoardId(Long boardId);
+
+    //수정
+    void updateImg(Long boardId, String fileName);
 }

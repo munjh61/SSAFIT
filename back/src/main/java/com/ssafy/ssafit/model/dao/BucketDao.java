@@ -26,4 +26,7 @@ public interface BucketDao {
     int countByUserId(String userId);
     int countDoneByUserId(String userId);
 
+    //버킷 갯수
+    int countByBoardId(Long boardId);
+
 }

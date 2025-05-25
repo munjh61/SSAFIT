@@ -10,4 +10,6 @@ public interface ImgDao {
     List<Img> selectImgByBoardId(Long boardId);
     //이미지 저장
     void insertImg(Img img);
+    //이미지 수정
+    void updateImage(Long boardId, String fileName);
 }

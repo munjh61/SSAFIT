@@ -21,6 +21,7 @@ public class BoardServiceImpl implements BoardService {
 
     private final BoardDao boardDao;
     private final ImgDao imgDao;
+
     @Autowired
     private FileUploadUtil fileUploadUtil;
 
@@ -57,9 +58,11 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public void createBoard(String content, MultipartFile image, String userId) {
+    public void createBoard(String title, String tag, String content, MultipartFile image, String userId) {
         Board board = new Board();
         board.setUserId(userId);
+        board.setTitle(title);
+        board.setTag(tag);
         board.setContent(content);
         board.setRegDate(LocalDateTime.now());
 
@@ -76,19 +79,21 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public boolean modifyBoard(String userId, Board board) {
-        Board tmp = boardDao.selectByBoardId(board.getBoardId()); //수정 대상인 board
+    public void updateBoard(Long boardId, String userId, String title, String content, String tag, MultipartFile image) {
+        Board board = boardDao.selectByBoardId(boardId);
+        if (!board.getUserId().equals(userId)) {
+            throw new RuntimeException("작성자만 수정할 수 있습니다.");
+        }
 
-        //수정 대상인 board가 null 값이면, 실패
-        if(tmp == null){
-            return false;
+        board.setTitle(title);
+        board.setContent(content);
+        board.setTag(tag);
+        boardDao.updateBoard(board);
+
+        if (image != null && !image.isEmpty()) {
+            fileUploadUtil.save(image); // 이미지 저장
+            imgDao.updateImage(boardId, image.getOriginalFilename());
         }
-        //해당 board의 작성자가 현재 로그인된 유저와 같은지 확인
-        if(!tmp.getUserId().equals(userId)){
-            return false;
-        }
-        boardDao.updateBoard(board);//수정해주기
-        return true;
     }
 
     @Override

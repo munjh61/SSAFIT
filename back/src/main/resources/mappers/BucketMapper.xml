@@ -55,4 +55,11 @@
             FROM bucket
             WHERE user_id = #{userId} AND done = 2
         </select>
+
+        <!--버킷 갯수-->
+        <select id="countByBoardId" parameterType="Long" resultType="int">
+            SELECT COUNT(*)
+            FROM bucket
+            WHERE board_id = #{boardId} AND done >= 1
+        </select>
     </mapper>

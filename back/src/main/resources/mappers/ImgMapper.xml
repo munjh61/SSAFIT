@@ -14,7 +14,14 @@
     <insert id="insertImg" parameterType="Img" useGeneratedKeys="true" keyProperty="imgId">
         INSERT INTO img (board_id, org_name, name)
         VALUES (#{boardId}, #{orgName}, #{name})
-    </insert>  
+    </insert>
+
+    <!--수정-->
+    <update id="updateImg" parameterType="map">
+        UPDATE img
+        SET name = #{fileName}
+        WHERE board_id = #{boardId}
+    </update>
 
     <!--    <select id="selectImgByUserId" parameterType="String">-->
 <!--        SELECT *-->

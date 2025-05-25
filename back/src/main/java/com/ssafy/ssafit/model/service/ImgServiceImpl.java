@@ -26,4 +26,8 @@ public class ImgServiceImpl implements ImgService{
         return imgDao.selectImgByBoardId(boardId);
     }
 
+    @Override
+    public void updateImg(Long boardId, String fileName) {
+        imgDao.updateImage(boardId, fileName);
+    }
 }

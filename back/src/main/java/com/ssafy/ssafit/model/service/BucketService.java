@@ -20,4 +20,6 @@ public interface BucketService {
     boolean completeBucket(String userId, long bucketId);
     //버킷리스트 통계
     Map<String, Object> getBucketStats(String userId);
+    //버킷 갯수
+    int countByBoardId(Long boardId);
 }

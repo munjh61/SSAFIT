@@ -70,27 +70,30 @@ public class BoardController {
 
     //board 등록
     @PostMapping("")
-    public ResponseEntity<?> create(@RequestPart("content") String content,
+    public ResponseEntity<?> create(@RequestPart("title") String title,
+                                    @RequestPart("tag") String tag, @RequestPart("content") String content,
                                     @RequestPart(value = "image", required = false) MultipartFile image,
                                     @AuthenticationPrincipal CustomUserDetails userDetails){
         String userId = userDetails.getUsername();
-        boardService.createBoard(content, image, userId);
+        boardService.createBoard(title, tag, content, image, userId);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     //board 수정
     @PutMapping("/{boardId}")
-    public ResponseEntity<?> update(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable("boardId") long boardId, @RequestBody Board board){
+    public ResponseEntity<?> update(@PathVariable Long boardId,
+                                    @RequestParam String title,
+                                    @RequestParam String content,
+                                    @RequestParam(required = false) MultipartFile image,
+                                    @RequestParam(required = false) String tag,
+                                    @AuthenticationPrincipal CustomUserDetails customUserDetails){
 //        log.info("요청 받은 board: {}", board);
 //        log.info("로그인 사용자: {}", customUserDetails.getUsername());
 //        board.setBoardId(boardId);
-        board.setBoardId(boardId);
         String userId = customUserDetails.getUsername();
-        boolean isUpdated = boardService.modifyBoard(userId, board);
-        if(isUpdated){
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("실패요");
+        boardService.updateBoard(boardId, userId, title, content, tag, image);
+
+        return ResponseEntity.ok().build();
     }
 
     //board 삭제
