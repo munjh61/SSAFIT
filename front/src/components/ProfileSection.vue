@@ -11,102 +11,126 @@
       </div>
     </div>
     <div class="stats">
-      <div class="outer">
-        <div class="num">
-          <span class="big">{{ stats.posts }}</span>
-          <span>기록</span>
-        </div>
+      <div class="stat">
+        <p class="big">{{ stats.posts }}</p>
+        <span>기록</span>
       </div>
-      <div class="outer">
-        <div class="follower">
-          <span class="big">{{ stats.followers }}</span>
-          <span>팔로워</span>
-        </div>
+      <div class="stat">
+        <p class="big">{{ store.followerCnt }}</p>
+        <span @click="openFollowModal('follower')">팔로워</span>
       </div>
-      <div class="outer">
-        <div class="following">
-          <span class="big">{{ stats.following }}</span>
-          <span>팔로잉</span>
-        </div>
+      <div class="stat">
+        <p class="big">{{ store.followingCnt }}</p>
+        <span @click="openFollowModal('following')">팔로잉</span>
       </div>
     </div>
-  </div>
+  </div>  
+  <!-- 로그인/라우팅 연결되면 userId 직접 전달되도록 수정 예정 -->
+  <Follow v-if="showFollowModal" :mode="mode" :userId="'user01'" @close="closeFollowModal" @changeMode="changeMode" />
 </template>
 
 <script setup>
-defineProps({
-  stats: Object
+import { onMounted, ref } from 'vue'
+import { useFollowStore } from '@/stores/follow'
+import Follow from '@/components/follow/Follow.vue'
+const store = useFollowStore()
+const props = defineProps({
+  stats: Object,
+})
+
+const showFollowModal = ref(false)
+const mode = ref('follower')
+
+const openFollowModal = (selectedMode) => {
+  mode.value = selectedMode
+  showFollowModal.value = true
+}
+
+const closeFollowModal = () => {
+  showFollowModal.value = false
+}
+
+const changeMode = function (q) {
+  mode.value = q
+}
+
+const followerCnt = ref(0)
+const followingCnt = ref(0)
+
+onMounted(async () => {
+    // 로그인/라우팅 연결되면 userId 직접 전달되도록 수정 예정
+    await store.getFollowData('user01')
+    followerCnt.value = store.followerCnt
+    followingCnt.value = store.followingCnt
 })
 </script>
 
 <style scoped>
-.outer{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.top{
+.top {
   display: flex;
   justify-content: center;
   align-content: center;
   gap: 140px;
   margin-bottom: 40px;
 }
-.num, .follower, .following {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-content: center;
-  align-items: center;
-  gap: 8px;
-}
-.big{
+
+.big {
   font-size: x-large;
   font-weight: bold;
 }
+
 .profile-box {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.settings{
+
+.settings {
   background: none;
   border: none;
   font-size: 24px;
   text-decoration: none;
 }
+
 .avatar {
   width: 100px;
   height: 100px;
   border-radius: 50%;
 }
+
 .info {
   display: flex;
   flex-direction: column;
   margin-left: 40px;
   gap: 15px;
 }
-.info h2, .info p{
+
+.info h2,
+.info p {
   margin: 0;
 }
+
 .status {
   font-size: 18px;
   color: #666;
 }
-.outer span {
-  margin-right: 20px;
-  /* font-weight: bold; */
-}
-.stats{
+
+.stats {
   display: flex;
-  justify-content: flex-start;
-  gap: 25px;
+  justify-content: space-evenly;
+
 }
-.record-btn {
-  border: 1px solid #000;
-  background: white;
-  padding: 8px 16px;
-  border-radius: 4px;
+
+.stat {
+  min-width: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.stats span:hover{
+  color: #4a90e2;
   cursor: pointer;
 }
 </style>

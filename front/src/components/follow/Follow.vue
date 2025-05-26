@@ -76,7 +76,10 @@ const followingCnt = ref(0)
 
 const isLoginUser = computed(() => authstore.userId === props.userId)
 
-const closeModal = () => emit('close')
+const closeModal = () => {
+    store.getFollowData(props.userId)
+    emit('close')
+}
 
 const changeMode = (mode) => {
     emit('changeMode', mode)
