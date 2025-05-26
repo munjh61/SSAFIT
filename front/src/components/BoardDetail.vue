@@ -70,7 +70,7 @@ import { useAuthStore } from '@/stores/auth'
 const store = useAuthStore()
 
 const props = defineProps({ boardId: Number })
-const emit = defineEmits(['close', 'created'])
+const emit = defineEmits(['close', 'created', 'deleted'])
 
 const serverUrl = import.meta.env.VITE_API_BASE_URL
 const token = `Bearer ${sessionStorage.getItem('ssafit-login-token')}`
@@ -181,6 +181,8 @@ const deletePost = async () => {
     }
 
     alert('삭제되었습니다.')
+    emit('deleted')
+    window.location.reload()
     emit('close')
   } catch (err) {
     console.error('삭제 중 에러:', err)

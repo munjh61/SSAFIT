@@ -15,6 +15,7 @@
       v-if="showDetail"
       :boardId="selectBoardId"
       @close="showDetail = false"
+      @deleted="handlePostDeleted"
     />
 </template>
 
@@ -66,9 +67,23 @@ const handlePostCreated = (postData) => {
     img: `http://localhost:5173/images/${postData.imgName}`
   })
 
+  // 게시글 수 증가
+  userStats.value = {
+    ...userStats.value,
+    posts: userStats.value.posts + 1
+  }
+
   // BoardDetail 자동 표시 제거
   if (!postData.boardId) {
     console.error('❌ boardId가 undefined입니다!', postData)
+  }
+}
+
+const handlePostDeleted = () => {
+  // 게시글 수 감소
+  userStats.value = {
+    ...userStats.value,
+    posts: Math.max(0, userStats.value.posts - 1)
   }
 }
 
@@ -87,6 +102,12 @@ onMounted(async () => {
 
     const boards = recordsResponse.data.boards
     const images = recordsResponse.data.images
+
+    // 게시글 수 업데이트
+    userStats.value = {
+      ...userStats.value,
+      posts: boards.length
+    }
 
     userRecords.value = boards.map(board => {
       const imageArray = images[board.boardId];
