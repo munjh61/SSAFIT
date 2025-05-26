@@ -18,7 +18,7 @@ CREATE TABLE user (
 CREATE TABLE board (
     board_id    BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_id     VARCHAR(100),
-    title       VARCHAR(50),
+    title       VARCHAR(100),
     content     VARCHAR(2000),
     reg_date    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     view_cnt    INT DEFAULT 0,
@@ -96,8 +96,8 @@ CREATE TABLE crew (
 -- 팔로우
 CREATE TABLE follow (
     follow_id     BIGINT AUTO_INCREMENT PRIMARY KEY,
-    follower_id   VARCHAR(30),
-    following_id  VARCHAR(30),
+    follower_id     VARCHAR(100),
+    following_id    VARCHAR(100),
     created_at    DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (follower_id) REFERENCES user(user_id) ON DELETE CASCADE,
     FOREIGN KEY (following_id) REFERENCES user(user_id) ON DELETE CASCADE,
@@ -107,13 +107,23 @@ CREATE TABLE follow (
 INSERT INTO `user` (user_id, user_name, password, email, role) VALUES
 ('user01', '김싸피', 'pw1234', 'kim@ssafy.com', 'admin'),
 ('user02', '이자바', 'java1234', 'lee@java.com', 'user'),
-('user03', '박프론트', 'front1234', 'park@web.com', 'user');
+('user03', '박프론트', 'front1234', 'park@web.com', 'user'),
+('user04', '문싸피', 'pw1234', 'moon@ssafy.com', 'user'),
+('user05', '주싸피', 'pw1234', 'joo@ssafy.com', 'user'),
+('user06', '이싸피', 'pw1234', 'lee@ssafy.com', 'user'),
+('user07', '변싸피', 'pw1234', 'byun@ssafy.com', 'user');
 
 insert into follow (follower_id, following_id) values
 ("user01", "user02"),
 ("user01", "user03"),
+("user01", "user04"),
+("user01", "user05"),
+("user01", "user06"),
 ("user02", "user01"),
-("user03", "user02");
+("user03", "user01"),
+("user04", "user01"),
+("user05", "user01"),
+("user07", "user01");
 
 -- board 테이블 더미 데이터 삽입
 INSERT INTO board (user_id, title, content, tag)

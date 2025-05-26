@@ -19,8 +19,10 @@ public class FollowServiceImpl implements FollowService{
 
     @Override
     public boolean insert(Follow follow) {
-        if(userDao.select(follow.getFollowingId())==null)
+        if(userDao.select(follow.getFollowingId())==null){
             return false;
+        }
+        // follower, following 으로 찾아서 이미 존재하는지 확인
         if(followDao.selectOne(follow) != null){
             return false;
         }
@@ -30,7 +32,11 @@ public class FollowServiceImpl implements FollowService{
 
     @Override
     public boolean delete(Follow follow) {
-        return followDao.delete(follow)>0;
+        Follow tmp = followDao.selectOne(follow);
+        if(tmp == null){
+            return false;
+        }
+        return followDao.delete(tmp)>0;
     }
 
     @Override

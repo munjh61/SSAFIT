@@ -5,7 +5,7 @@
     <button @click="openFollowModal('following')">팔로잉</button>
   </div>
 
-  <Follow v-if="showFollowModal" :mode="mode" @close="closeFollowModal" @changeMode="changeMode"/>
+  <Follow v-if="showFollowModal" :mode="mode" :userId="'user01'" @close="closeFollowModal" @changeMode="changeMode"/>
 </template>
 
 <script setup>
