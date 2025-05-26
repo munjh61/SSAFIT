@@ -57,7 +57,7 @@ const emit = defineEmits(['close'])
 
 const serverUrl = import.meta.env.VITE_API_BASE_URL
 const token = `Bearer ${sessionStorage.getItem('ssafit-login-token')}`
-// const loginUserId = sessionStorage.getItem('ssafit-login-userId')
+const loginUserId = sessionStorage.getItem('ssafit-login-userId')
 
 const board = ref(null)
 const imageUrl = ref('')
