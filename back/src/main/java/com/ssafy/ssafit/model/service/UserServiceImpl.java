@@ -45,6 +45,12 @@ public class UserServiceImpl implements UserService {
         if (user.getEmail() != null) {
             tmp.setEmail(user.getEmail());
         }
+        if (user.getStatusMsg1() != null){
+            tmp.setStatusMsg1(user.getStatusMsg1());
+        }
+        if (user.getStatusMsg2() != null){
+            tmp.setStatusMsg2(user.getStatusMsg2());
+        }
         return userDao.update(tmp);
     }
 

@@ -20,6 +20,18 @@ public class UserPublicController {
     private final UserService userService;
     private final EmailService emailService;
 
+    @GetMapping("/{you}")
+    public ResponseEntity<?> getMyInfo(@PathVariable("you")String userId) {
+        User tmp = userService.select(userId);
+        if(tmp == null){
+            return ResponseEntity.badRequest().build();
+        }
+        tmp.setPassword(null);
+        tmp.setEmail(null);
+        tmp.setRole(null);
+        return ResponseEntity.ok(tmp);
+    }
+
     // 이메일 인증 요청
     @PostMapping("/email/request")
     public ResponseEntity<String> emailRequest(@RequestBody Map<String, String> body) {
@@ -114,4 +126,5 @@ public class UserPublicController {
         userService.update(user);
         return new ResponseEntity<>("회원 정보가 변경되었습니다", HttpStatus.OK);
     }
+
 }

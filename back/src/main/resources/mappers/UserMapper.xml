@@ -10,7 +10,7 @@
     </insert>
     <!-- READ -->
     <select id="select" parameterType="String" resultType="User">
-        SELECT user_id as userId, user_name as userName, password, email, role, reg_date as regDate, is_deleted as isDeleted
+        SELECT user_id as userId, user_name as userName, password, email, role, reg_date as regDate, is_deleted as isDeleted, status_msg1 as statusMsg1, status_msg2 as statusMsg2
         FROM user
         WHERE user_id = #{userId} AND is_deleted = false
     </select>
@@ -19,7 +19,9 @@
         UPDATE user
         SET user_name = #{userName},
         password = #{password},
-        email = #{email}
+        email = #{email},
+        status_msg1 = #{statusMsg1},
+        status_msg2 = #{statusMsg2}
         WHERE user_id = #{userId} AND is_deleted = false
     </update>
     <!-- DELETE -->

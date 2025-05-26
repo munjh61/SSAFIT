@@ -4,16 +4,20 @@
       <img class="avatar" src="@/assets/images/profile.jpg" />
       <div class="info">
         <div class="title">
-          <h2>문준호</h2>
+          <h2>{{ otherStore.otherName }}</h2>
           <button v-if="!isFollowed && canFollow" @click="add">팔로우</button>
           <button v-if="isFollowed && canFollow" @click="del">언팔로우</button>
         </div>
-        <div class="status">
-          <p>배드민턴 제일 좋아함.</p>
-          <p>꾸준히 운동 즐기기</p>
+        <div class="status-container">
+          <span v-if="canModify" @click="modify" :class="{ active: canModify}">⚙️</span>
+          <div class="status">
+            <input v-model="otherStore.otherMsg1" :readonly="!canModify" />
+            <input v-model="otherStore.otherMsg2" :readonly="!canModify" />
+          </div>
         </div>
       </div>
     </div>
+
     <div class="stats">
       <div class="stat">
         <p class="big">{{ stats.posts }}</p>
@@ -28,9 +32,9 @@
         <span @click="openFollowModal('following')">팔로잉</span>
       </div>
     </div>
-  </div>
 
-  <Follow v-if="showFollowModal" :mode="mode" :userId="userId" @close="closeFollowModal" @changeMode="changeMode" />
+    <Follow v-if="showFollowModal" :mode="mode" :userId="userId" @close="closeFollowModal" @changeMode="changeMode" />
+  </div>
 </template>
 
 <script setup>
@@ -38,6 +42,8 @@ import { onMounted, ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useFollowStore } from '@/stores/follow'
 import { useAuthStore } from '@/stores/auth'
+import { useOtherStore } from '@/stores/otherUser'
+import { useAuthNewStore } from '@/stores/authNew'
 import Follow from '@/components/follow/Follow.vue'
 
 const route = useRoute()
@@ -49,8 +55,10 @@ const props = defineProps({
 
 const followStore = useFollowStore()
 const authStore = useAuthStore()
+const otherStore = useOtherStore()
+const authNewStore = useAuthNewStore()
 
-// 모달 관련
+// 모달 상태
 const showFollowModal = ref(false)
 const mode = ref('follower')
 const openFollowModal = (selectedMode) => {
@@ -67,12 +75,11 @@ const changeMode = (q) => {
 // 상태값
 const isFollowed = ref(false)
 const canFollow = ref(false)
+const canModify = ref(false)
 
-// store의 followerCnt, followingCnt를 직접 computed로 연결
 const followerCnt = computed(() => followStore.followerCnt)
 const followingCnt = computed(() => followStore.followingCnt)
 
-// 팔로우/언팔로우 액션
 const add = async () => {
   const success = await followStore.addFollow(userId.value)
   if (success) {
@@ -89,29 +96,33 @@ const del = async () => {
   }
 }
 
+const modify = async () => {
+  const success = await authNewStore.update(null, null, null, otherStore.otherMsg1, otherStore.otherMsg2)
+  if (success) {
+    alert('상태 메시지가 저장되었습니다.')
+  } else {
+    alert('저장에 실패했습니다.')
+  }
+}
+
 onMounted(async () => {
+  await otherStore.you(userId.value)
+
+  if (!sessionStorage.getItem('ssafit-login-token')) {
+    return isFollowed.value = false
+  }
+
   if (!authStore.userId) {
-    console.log(1)
     await authStore.me()
   }
 
-  if (!sessionStorage.getItem('ssafit-login-token')) {
-    console.log(2)
-    isFollowed.value = false
-    return
-  }
-
   if (authStore.userId === userId.value) {
-    console.log(3)
+    canModify.value = true
     canFollow.value = false
   } else {
-    console.log(4)
-    console.log(`loginUser ${authStore.userId}`)
-    console.log(`targetUser ${userId.value}`)
+    canModify.value = false
     canFollow.value = true
     isFollowed.value = await followStore.isFollowed(userId.value)
-    const msg = isFollowed.value ? "이미" : "아직"
-    console.log(msg)
   }
 
   await followStore.getFollowData(userId.value)
@@ -169,9 +180,30 @@ onMounted(async () => {
   margin: 0;
 }
 
+.status-container {
+  display: flex;
+  align-items: center;
+}
+
 .status {
+  display: flex;
+  flex-direction: column;
+  max-width: 700px;
+}
+
+.active {
+  cursor: pointer;
+}
+
+.status input {
   font-size: 18px;
   color: #666;
+  width: 600px;
+  border: 0;
+}
+
+.status input:focus-within {
+  outline: none;
 }
 
 .stats {

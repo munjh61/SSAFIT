@@ -8,10 +8,11 @@ CREATE TABLE user (
     password    VARCHAR(100) NOT NULL,
     user_name   VARCHAR(100) NOT NULL,
     email       VARCHAR(100),
-	  is_deleted  boolean DEFAULT false,
-		role        VARCHAR(20) NOT NULL DEFAULT "user",
-    reg_date    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-
+    is_deleted  boolean DEFAULT false,
+    role        VARCHAR(20) NOT NULL DEFAULT "user",
+    reg_date    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status_msg1  VARCHAR(300) DEFAULT "운동은 끝나고 먹는 것까지가 운동이다.",
+    status_msg2  VARCHAR(300) DEFAULT "거울은 거짓말 하지 않는다."
 );
 
 -- 게시판

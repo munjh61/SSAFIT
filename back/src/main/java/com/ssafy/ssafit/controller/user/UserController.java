@@ -27,6 +27,7 @@ public class UserController {
     // 회원정보 변경
     @PutMapping
     public ResponseEntity<String> changeUserInfo(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody User user){
+        System.out.println(user);
         String email = user.getEmail();
         if(email != null){
             if(!emailService.isVerifiedEmail(email)){

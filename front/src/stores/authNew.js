@@ -4,32 +4,32 @@ import axios from "axios";
 
 const serverUrl = import.meta.env.VITE_API_BASE_URL
 
-export const useAuthNewStore = defineStore('authNew', ()=>{
+export const useAuthNewStore = defineStore('authNew', () => {
     const msg = ref('SSAFIT에 오신것을 환영합니다.')
     const inputEmail = ref('')
     const reset = () => {
         inputEmail.value = ''
         msg.value = 'SSAFIT에 오신것을 환영합니다.'
     }
-    
-    const checkUserId =  async (userId) =>{
+
+    const checkUserId = async (userId) => {
         return axios({
-            url:`${serverUrl}/api/public/user/id/${userId}`,
-            method:"GET"
+            url: `${serverUrl}/api/public/user/id/${userId}`,
+            method: "GET"
         })
-        .then((res)=>{
-            msg.value = res.data
-            return true
-        })
-        .catch((err)=>{
-            msg.value = err.response.data
-            return false
-        })
+            .then((res) => {
+                msg.value = res.data
+                return true
+            })
+            .catch((err) => {
+                msg.value = err.response.data
+                return false
+            })
     }
 
     const isValidPassword = (password) => {
         const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,20}$/;
-        if(regex.test(password)){
+        if (regex.test(password)) {
             msg.value = ""
             return true;
         }
@@ -38,98 +38,100 @@ export const useAuthNewStore = defineStore('authNew', ()=>{
 
     const checkEmail = async (email) => {
         return axios({
-            url:`${serverUrl}/api/public/user/email/${email}`,
-            method:'GET'
+            url: `${serverUrl}/api/public/user/email/${email}`,
+            method: 'GET'
         })
-        .then((res)=>{
-            msg.value = res.data
-            return true
-        })
-        .catch((err)=>{
-            msg.value = err.response.data
-            return false
-        })
+            .then((res) => {
+                msg.value = res.data
+                return true
+            })
+            .catch((err) => {
+                msg.value = err.response.data
+                return false
+            })
     }
 
     const send = function (address) {
         return axios({
             url: `${serverUrl}/api/public/user/email/request`,
             method: "POST",
-            data:{
+            data: {
                 address,
-                type:"new"
+                type: "new"
             }
         })
-        .then((res)=>{
-            msg.value = res.data
-            inputEmail.value = address
-            return true;
-        })
-        .catch((err)=>{
-            console.log(err)
-            msg.value = err.response.data
-            return false;
-        })
+            .then((res) => {
+                msg.value = res.data
+                inputEmail.value = address
+                return true;
+            })
+            .catch((err) => {
+                console.log(err)
+                msg.value = err.response.data
+                return false;
+            })
     }
 
-    const verify = function (code){
+    const verify = function (code) {
         return axios({
-            url:`${serverUrl}/api/public/user/email/verify`,
-            method:"POST",
-            data:{
-                address : inputEmail.value,
+            url: `${serverUrl}/api/public/user/email/verify`,
+            method: "POST",
+            data: {
+                address: inputEmail.value,
                 code,
             }
         })
-        .then((res)=>{
-            msg.value = res.data
-            return true
-        })
-        .catch((err)=>{
-            msg.value = err.response.data
-            return false
-        })
+            .then((res) => {
+                msg.value = res.data
+                return true
+            })
+            .catch((err) => {
+                msg.value = err.response.data
+                return false
+            })
     }
 
-    const regist = function(userId, password, email, userName){
+    const regist = function (userId, password, email, userName) {
         return axios({
-            url:`${serverUrl}/api/public/user`,
-            method:"POST",
-            data:{
+            url: `${serverUrl}/api/public/user`,
+            method: "POST",
+            data: {
                 userId,
                 password,
                 email,
                 userName
             }
         })
-        .then((res)=>{
-            msg.value = res.data
-            return true
-        })
-        .catch((err)=>{
-            msg.value = err.response.data
-        })
+            .then((res) => {
+                msg.value = res.data
+                return true
+            })
+            .catch((err) => {
+                msg.value = err.response.data
+            })
     }
 
-    const update = function(password, email, userName){
+    const update = function (password, email, userName, statusMsg1, statusMsg2) {
         return axios({
-            url:`${serverUrl}/api/user`,
-            method:"PUT",
-            data:{
+            url: `${serverUrl}/api/user`,
+            method: "PUT",
+            data: {
                 password,
                 email,
-                userName
+                userName,
+                statusMsg1,
+                statusMsg2
             },
-            headers:{
-                Authorization:`Bearer ${sessionStorage.getItem('ssafit-login-token')}`
+            headers: {
+                Authorization: `Bearer ${sessionStorage.getItem('ssafit-login-token')}`
             }
         })
-        .then((res)=>{
-            return true
-        })
-        .catch((err)=>{
-            return false
-        })
+            .then((res) => {
+                return true
+            })
+            .catch((err) => {
+                return false
+            })
     }
 
     return {

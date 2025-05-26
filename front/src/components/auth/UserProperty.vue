@@ -78,11 +78,6 @@ const verify = async () => {
     if (success) checkEmail.value = true
 }
 
-// 비밀번호 체크
-const validatePassword = () => {
-    checkPassword.value = store.isValidPassword(password.value)
-}
-
 // 서버로 정보 변경 요청
 const update = async () => {
     // 수정 여부 판단
@@ -102,7 +97,9 @@ const update = async () => {
         return
     }
 
-    const success = await store.update(newPassword, newEmail, newName)
+    // const success = await store.update({password : newPassword, email: newEmail, userName: newName})
+    const success = await store.update(newPassword, newEmail, newName, null, null)
+
     if (success) {
         alert("회원 정보가 변경되었습니다.")
         emit('close')

@@ -17,4 +17,7 @@ public class User {
     private LocalDateTime regDate;
     private String role;
     private boolean isDeleted;
+    //
+    private String statusMsg1;
+    private String statusMsg2;
 }
