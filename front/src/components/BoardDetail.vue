@@ -28,7 +28,21 @@
 
         <div class="comments">
           <div v-for="comment in comments" :key="comment.commentId" class="comment">
-            <strong>{{ comment.userId }}</strong> {{ comment.content }}
+            <strong>{{ comment.userId }}</strong>
+            
+            <div v-if="editCommentId !== comment.commentId">
+              {{ comment.content }}
+            </div>
+            <div v-else>
+              <input v-model="editContent" />
+              <button @click="editComment(comment.commentId)">💾 저장</button>
+              <button @click="cancelEdit">취소</button>
+            </div>
+
+            <div v-if="comment.userId === store.userId">
+              <button @click="startEdit(comment)">✏️</button>
+              <button @click="deleteComment(comment.commentId)">❌</button>
+            </div>
             <div class="time">{{ formatDate(comment.regDate) }}</div>
           </div>
         </div>
@@ -71,9 +85,29 @@ const newComment = ref('')
 const bucketCount = ref(0)
 const showEdit = ref(false)
 
+const editCommentId = ref(null)
+const editContent = ref('')
+
+const startEdit = (comment) => {
+  editCommentId.value = comment.commentId
+  editContent.value = comment.content
+}
+
+const cancelEdit = () => {
+  editCommentId.value = null
+  editContent.value = ''
+}
+
 watch(board, () => {
   console.log('📌 board.userId:', board.value?.userId)
   console.log('👤 로그인한 ID:', loginUserId)
+})
+
+watch(comments, () => {
+  console.log('💬 댓글 목록:', comments.value)
+  comments.value.forEach(c => {
+    console.log('🧑 댓글 작성자:', c.userId, '👤 로그인 유저:', loginUserId, '→ 같나?', c.userId === loginUserId)
+  })
 })
 
 const formatDate = (date) => {
@@ -114,6 +148,33 @@ onMounted(async () => {
   comments.value = await commentRes.json()
 })
 
+// 게시글 삭제
+const deletePost = async () => {
+  if (!confirm('정말 삭제하시겠습니까?')) return
+
+  try {
+    const res = await fetch(`${serverUrl}/api/board/${props.boardId}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: token
+      },
+      credentials: 'include'
+    })
+
+    if (!res.ok) {
+      console.error('❌ 삭제 실패', res.status)
+      alert('삭제에 실패했습니다.')
+      return
+    }
+
+    alert('삭제되었습니다.')
+    emit('close')
+  } catch (err) {
+    console.error('삭제 중 에러:', err)
+    alert('에러가 발생했습니다.')
+  }
+}
+
 // const toggleLike = async () => {
 //   const res = await fetch(`${serverUrl}/like/${props.boardId}`, {
 //     method: 'POST',
@@ -125,6 +186,7 @@ onMounted(async () => {
 //   likeCount.value += liked ? 1 : -1
 // }
 
+//버킷리스트 추가 버튼튼
 const toggleBucket = async () => {
   await fetch(`${serverUrl}/api/bucket`, {
     method: 'POST',
@@ -144,7 +206,7 @@ const toggleBucket = async () => {
   })
   bucketCount.value = await bucketRes.json()
 }
-
+//댓글 작성성
 const submitComment = async () => {
   const res = await fetch(`${serverUrl}/api/public/comment/board/${props.boardId}`, {
     method: 'POST',
@@ -176,32 +238,62 @@ const submitComment = async () => {
   }
   comments.value = await commentRes.json()
 }
-
-const deletePost = async () => {
-  if (!confirm('정말 삭제하시겠습니까?')) return
-
-  try {
-    const res = await fetch(`${serverUrl}/api/board/${props.boardId}`, {
-      method: 'DELETE',
-      headers: {
-        Authorization: token
-      },
-      credentials: 'include'
+//댓글 수정
+const editComment = async (commentId) => {
+  const res = await fetch(`${serverUrl}/api/comment/${commentId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: token
+    },
+    credentials: 'include',
+    body: JSON.stringify({
+      commentId, // 👈 필요함!
+      content: editContent.value
     })
+  })
 
-    if (!res.ok) {
-      console.error('❌ 삭제 실패', res.status)
-      alert('삭제에 실패했습니다.')
-      return
-    }
-
-    alert('삭제되었습니다.')
-    emit('close')
-  } catch (err) {
-    console.error('삭제 중 에러:', err)
-    alert('에러가 발생했습니다.')
+  if (!res.ok) {
+    alert('댓글 수정 실패')
+    return
   }
+
+  await fetchComments()
+  cancelEdit()
 }
+
+//댓글 삭제
+const deleteComment = async (commentId) => {
+  if (!confirm('댓글을 삭제할까요?')) return
+
+  const res = await fetch(`${serverUrl}/api/comment/${commentId}`, {
+    method: 'DELETE',
+    headers: { Authorization: token },
+    credentials: 'include'
+  })
+
+  if (!res.ok) {
+    alert('댓글 삭제 실패')
+    return
+  }
+
+  await fetchComments()
+}
+
+const fetchComments = async () => {
+  const res = await fetch(`${serverUrl}/api/public/comment/board/${props.boardId}`, {
+    headers: { Authorization: token },
+    credentials: 'include'
+  })
+
+  if (!res.ok) {
+    console.error('❌ 댓글 목록 다시 불러오기 실패:', res.status)
+    return
+  }
+
+  comments.value = await res.json()
+}
+
 
 
 </script>
