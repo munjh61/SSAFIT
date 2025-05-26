@@ -9,6 +9,12 @@
         VALUES (#{followerId}, #{followingId})
     </insert>
 
+
+    <select id="selectFollowingUserIds" resultType="string">
+        SELECT followee_id
+        FROM follow
+        WHERE follower_id = #{userId}
+    </select>
     <select id="selectOne" parameterType="Follow" resultType="Follow">
         SELECT  f.follow_id AS followId,
                 f.follower_id AS followerId,

@@ -21,14 +21,7 @@
       
       <div v-else class="results-grid">
         <div v-for="board in searchStore.searchResults" :key="board.boardId" class="board-card">
-          <RouterLink 
-            :to="{ 
-              name: 'board-detail', 
-              params: { 
-                id: board.boardId 
-              }
-            }"
-          >
+          <div class="card-wrapper" @click="openDetail(board.boardId)">
             <div class="card-image" v-if="board.images && board.images.length > 0">
               <img :src="`/images/${board.images[0].name}`" :alt="board.title">
             </div>
@@ -48,21 +41,32 @@
                 <span class="date">{{ formatDate(board.regDate) }}</span>
               </div>
             </div>
-          </RouterLink>
+          </div>
         </div>
       </div>
     </div>
+
+    <BoardDetail
+      v-if="showDetail"
+      :boardId="selectedBoardId"
+      @close="showDetail = false"
+      @deleted="handlePostDeleted"
+    />
   </div>
 </template>
 
 <script setup>
-import { onMounted, computed } from 'vue'
+import { onMounted, computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useSearchStore } from '@/stores/searchStore'
 import HeaderBar from '@/components/HeaderBar.vue'
+import BoardDetail from '@/components/BoardDetail.vue'
 
 const route = useRoute()
 const searchStore = useSearchStore()
+
+const showDetail = ref(false)
+const selectedBoardId = ref(null)
 
 const keyword = computed(() => route.query.keyword || '')
 const searchType = computed(() => route.query.field || 'title')
@@ -75,6 +79,22 @@ const getSearchTypeText = computed(() => {
   }
   return types[searchType.value] || '제목'
 })
+
+const openDetail = (boardId) => {
+  selectedBoardId.value = boardId
+  showDetail.value = true
+}
+
+const handlePostDeleted = () => {
+  showDetail.value = false
+  // 게시글이 삭제되면 검색 결과를 다시 불러옵니다
+  if (keyword.value) {
+    searchStore.searchBoards({
+      keyword: keyword.value,
+      field: searchType.value
+    })
+  }
+}
 
 onMounted(async () => {
   if (keyword.value) {
@@ -136,6 +156,7 @@ h2 {
   overflow: hidden;
   transition: transform 0.2s, box-shadow 0.2s;
   background-color: white;
+  cursor: pointer;
 }
 
 .board-card:hover {
@@ -143,7 +164,7 @@ h2 {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.board-card a {
+.card-wrapper {
   text-decoration: none;
   color: inherit;
 }

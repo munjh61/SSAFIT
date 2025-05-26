@@ -4,9 +4,11 @@ import com.ssafy.ssafit.model.dto.Board;
 import com.ssafy.ssafit.model.dto.Img;
 import com.ssafy.ssafit.model.service.BoardService;
 import com.ssafy.ssafit.model.service.ImgService;
+import com.ssafy.ssafit.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -22,6 +24,26 @@ import java.util.stream.Collectors;
 public class BoardPublicController {
     private final BoardService boardService;
     private final ImgService imgService;
+
+    //유저의 게시물 조회
+    @GetMapping("/{userId}")
+    public ResponseEntity<Map<String, Object>> getBoardByUserId(@PathVariable String userId) {
+        Map<String, Object> result = new HashMap<>();
+
+        //1. 해당 유저가 쓴 보드 불러오기
+        List<Board> boardList = boardService.getBoardByUserId(userId);
+        result.put("boards", boardList);
+        //2. 불러와진 보드 별 이미지 묶기
+        Map<Long, List<Img>> boardImgs = new HashMap<>();
+        for (Board board : boardList) {
+            List<Img> imgList = imgService.getImgByBoardId(board.getBoardId());
+            boardImgs.put(board.getBoardId(), imgList);
+        }
+        result.put("images", boardImgs);
+
+        return ResponseEntity.ok(result);
+    }
+
 
     //board 검색 조회
     //검색어에 걸리는 모든 게시글 조회
