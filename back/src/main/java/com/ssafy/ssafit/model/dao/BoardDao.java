@@ -9,7 +9,7 @@ import java.util.List;
 @Mapper
 public interface BoardDao {
     //board 검색 조회
-    List<Board> searchByKeyword(@Param("keyword") String keyword);
+    List<Board> searchByKeyword(@Param("keyword") String keyword, @Param("field") String field);
     //board 전체 조회
     List<Board> selectAll();
     //로그인 된 유저가 쓴 보드 조회

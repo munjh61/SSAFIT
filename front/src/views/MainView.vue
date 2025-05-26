@@ -12,7 +12,7 @@
             <h2>추천 운동</h2>
             <RecommendedExercise />
             <RouterLink class="more-link" to="/exercise/all">전체보기</RouterLink>
-        </section>
+        </section>=
 
         <section class="followers">
             <h2>팔로우 추천</h2>

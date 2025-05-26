@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,5 +31,12 @@ public class ImgServiceImpl implements ImgService{
     @Override
     public void updateImg(Long boardId, String fileName) {
         imgDao.updateImage(boardId, fileName);
+    }
+
+    @Override
+    public Map<Long, List<Img>> getImgListByBoardId(List<Long> boardIds) {
+        List<Img> allImages = imgDao.selectImgListByBoardId(boardIds);
+
+        return allImages.stream().collect(Collectors.groupingBy(Img::getBoardId));
     }
 }

@@ -25,11 +25,10 @@ public class BoardServiceImpl implements BoardService {
     @Autowired
     private FileUploadUtil fileUploadUtil;
 
-
-
+    //검색
     @Override
-    public List<Board> searchBoard(String keyword) {
-        return boardDao.searchByKeyword(keyword);
+    public List<Board> searchBoard(String keyword, String field) {
+        return boardDao.searchByKeyword(keyword, field);
     }
 
     @Override
