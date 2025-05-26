@@ -24,7 +24,7 @@
       <div v-if="!store.isLoggedIn">
         <button @click="toggleAuthModal" class="auth-button">
           <span style="color: #20C997;">로그인</span>
-          <img src="/src/assets/images/login.png" @click="store.logout" class="auth-icon">
+          <img src="/src/assets/images/login.png" class="auth-icon">
         </button>
         <Auth v-if="showAuth" @close="toggleAuthModal"></Auth>
       </div>

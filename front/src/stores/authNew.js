@@ -38,7 +38,7 @@ export const useAuthNewStore = defineStore('authNew', ()=>{
 
     const checkEmail = async (email) => {
         return axios({
-            url:`${serverUrl}/api/public/email/${email}`,
+            url:`${serverUrl}/api/public/user/email/${email}`,
             method:'GET'
         })
         .then((res)=>{
