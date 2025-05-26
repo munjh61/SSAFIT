@@ -49,5 +49,10 @@ public class FollowServiceImpl implements FollowService{
         return map;
     }
 
+    @Override
+    public List<String> getFollowingUserIds(String userId) {
+        return followDao.selectFollowingUserIds(userId);
+    }
+
 
 }
