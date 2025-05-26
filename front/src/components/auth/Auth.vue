@@ -1,42 +1,40 @@
 <template>
-    <div>
-        <Teleport to="body">
-            <div class="modal-overlay" @click.self="closeModal">
-                <div class="modal">
-                    <div class="logo">
-                        <img src="/src/assets/images/SSAFIT.png" alt="">
-                    </div>
+    <Teleport to="body">
+        <div class="modal-overlay" @click.self="closeModal">
+            <div class="modal">
+                <div class="logo">
+                    <img src="/src/assets/images/SSAFIT.png" alt="">
+                </div>
+                <div v-if="mode == 'login'">
+                    <p class="icon">🔐</p>
+                </div>
+                <div v-if="mode == 'find'">
+                    <p class="icon">🔍</p>
+                </div>
+                <div v-if="mode == 'join'">
+                    <p class="icon">🖊️</p>
+                </div>
+                <div class="mode">
                     <div v-if="mode == 'login'">
-                        <p class="icon">🔐</p>
+                        <AuthLogin @close="closeModal" />
                     </div>
                     <div v-if="mode == 'find'">
-                        <p class="icon">🔍</p>
+                        <AuthFind @close="closeModal" />
                     </div>
                     <div v-if="mode == 'join'">
-                        <p class="icon">🖊️</p>
-                    </div>
-                    <div class="mode">
-                        <div v-if="mode == 'login'">
-                            <AuthLogin @close="closeModal" />
-                        </div>
-                        <div v-if="mode == 'find'">
-                            <AuthFind @close="closeModal"/>
-                        </div>
-                        <div v-if="mode == 'join'">
-                            <AuthNew @close="closeModal"></AuthNew>
-                        </div>
-                    </div>
-                    <div class="mode-list">
-                        <p>
-                            <span :class="{ active: mode === 'login' }" @click="mode = 'login'">로그인</span> ｜
-                            <span :class="{ active: mode === 'join' }" @click="mode = 'join'">회원가입</span> ｜
-                            <span :class="{ active: mode === 'find' }" @click="mode = 'find'">아이디/비밀번호 찾기</span>
-                        </p>
+                        <AuthNew @close="closeModal"></AuthNew>
                     </div>
                 </div>
+                <div class="mode-list">
+                    <p>
+                        <span :class="{ active: mode === 'login' }" @click="mode = 'login'">로그인</span> ｜
+                        <span :class="{ active: mode === 'join' }" @click="mode = 'join'">회원가입</span> ｜
+                        <span :class="{ active: mode === 'find' }" @click="mode = 'find'">아이디/비밀번호 찾기</span>
+                    </p>
+                </div>
             </div>
-        </Teleport>
-    </div>
+        </div>
+    </Teleport>
 </template>
 
 <script setup>

@@ -9,4 +9,5 @@ public interface FollowService {
     boolean insert(Follow follow);
     boolean delete(Follow follow);
     Map<String,List<Follow>> followList(String userId);
+    boolean isFollowed(String targetUserId,String loginUserId);
 }

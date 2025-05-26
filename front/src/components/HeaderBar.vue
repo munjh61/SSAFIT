@@ -8,27 +8,40 @@
       <RouterLink to="/guild" class="guild">모임</RouterLink>
     </nav>
     <div class="auth">
-      <div class="isLoggedIn" v-if="store.isLoggedIn">
-        <div class="profile">
-          <img src="@/assets/images/profile.jpg" alt="profile" />
-          <div class="info">
-            <div class="userName">{{ store.userName }}</div>
-            <div class="userId">{{ store.userId }}</div>
+      <div class="isLoggedIn-wrapper" v-if="store.isLoggedIn">
+        <div class="isLoggedIn">
+          <div class="profile">
+            <img src="@/assets/images/profile.jpg" alt="profile" />
+            <div class="info">
+              <div class="userName">{{ store.userName }}</div>
+              <div class="userId">{{ store.userId }}</div>
+            </div>
           </div>
         </div>
-        <button @click="store.logout" class="auth-button">
-          <span style="color: #FA5252;">로그아웃</span>
-          <img src="/src/assets/images/logout.png" class="auth-icon">
-        </button>
+        <div class="hide">
+          <button @click="store.logout" class="auth-button">
+            <img src="/src/assets/images/logout.png" class="auth-icon">
+            <span style="color: #FA5252;">로그아웃</span>
+          </button>
+          <button @click="toggleUserPropertyModal" class="auth-button">
+            <img src="/src/assets/images/usersetting.png" class="auth-icon">
+            <span>회원 정보 변경</span>
+          </button>
+          <button class="auth-button">
+            <img src="/src/assets/images/deleteuser.png" class="auth-icon">
+            <span>탈퇴</span>
+          </button> 
+        </div>
       </div>
       <div v-if="!store.isLoggedIn">
         <button @click="toggleAuthModal" class="auth-button">
           <span style="color: #20C997;">로그인</span>
           <img src="/src/assets/images/login.png" class="auth-icon">
         </button>
-        <Auth v-if="showAuth" @close="toggleAuthModal"></Auth>
       </div>
     </div>
+    <Auth v-if="showAuth" @close="toggleAuthModal"/>
+    <UserProperty v-if="showUserProperty" @close="toggleUserPropertyModal"/>
   </header>
 </template>
 
@@ -36,11 +49,17 @@
 import { ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import Auth from '@/components/auth/Auth.vue'
+import UserProperty from '@/components/auth/UserProperty.vue'
 const store = useAuthStore()
+// 로그인, 회원가입, 아이디찾기, 비밀번호재설정
 const showAuth = ref(false)
-
 const toggleAuthModal = function () {
   showAuth.value = !showAuth.value
+}
+// 로그인 후, 회원 정보 변경
+const showUserProperty = ref(false)
+const toggleUserPropertyModal = function(){
+  showUserProperty.value = !showUserProperty.value
 }
 
 </script>
@@ -48,31 +67,49 @@ const toggleAuthModal = function () {
 <style scoped>
 .header {
   width: 100%;
-  max-width: 100%;
+  margin: 0 auto;
+  padding: 20px 40px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  background-color: white;
+  min-height: 80px;
   position: relative;
   z-index: 10;
+}
+
+
+/* 로고 */
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #1BA9B5;
+}
+
+/* 네비게이션 */
+.nav {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 30px 10px;
-  /* box-shadow: 0px 2px 8px #D9D9D9; */
+  gap: 30px;
 }
 
 .nav a {
-  margin: 0 18px;
-  text-decoration: none;
-  color: #000000;
   position: relative;
-  /* font-weight: bold; */
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  font-size: 16px;
+  padding: 4px 0;
 }
 
 .nav a::after {
   content: "";
   position: absolute;
-  bottom: -6px;
+  bottom: -4px;
   left: 0;
   width: 0%;
-  height: 4px;
+  height: 2px;
   background-color: #1BA9B5;
   transition: width 0.3s ease-in-out;
 }
@@ -81,65 +118,90 @@ const toggleAuthModal = function () {
   width: 100%;
 }
 
-/* 프로필 정보 */
+/* 로그인 영역 */
+.auth {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* 로그인 상태 */
 .isLoggedIn {
   display: flex;
-  justify-content: space-evenly;
+  align-items: center;
+  cursor: pointer;
 }
 
 .profile {
+  width: 150px;
   display: flex;
+  justify-content: space-evenly;
   align-items: center;
-  padding-right: 100px;
 }
 
 .profile img {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  /* img랑 info 사이 간격 */
-  margin-right: 15px;
+  margin-right: 10px;
 }
 
 .profile .info {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  gap: 2px;
   line-height: 1.2;
-  /* info끼리 간격 */
-  gap: 4px;
 }
 
 .userName {
-  font-weight: bold;
-  font-size: 17px;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .userId {
-  font-size: 14px;
-  color: #666;
+  font-size: 12px;
+  color: #888;
 }
 
+/* 드롭다운 메뉴 */
+.isLoggedIn-wrapper {
+  position: relative;
+}
+
+.hide {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+  background-color: white;
+  padding: 10px;
+  z-index: 10;
+  width: 150px;
+}
+
+.isLoggedIn-wrapper:hover .hide {
+  display: flex;
+}
+
+/* 로그인 버튼 */
 .auth-button {
   display: flex;
-  justify-content: center;
   align-items: center;
-  border: 0;
-  background-color: transparent ;
+  gap: 6px;
+  background: none;
+  border: none;
   cursor: pointer;
+  font-size: 14px;
+}
+
+.auth-button:hover{
+  font-weight: 500;
 }
 
 .auth-icon {
-  width: 40px;
-  height: 30px;
-}
-
-/* 로고 */
-.logo {
-  font-weight: bold;
-  font-size: x-large;
-  color: #000000;
-  text-decoration: none;
-  padding-left: 100px;
+  width: 20px;
+  height: 20px;
 }
 </style>

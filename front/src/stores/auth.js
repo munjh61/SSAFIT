@@ -35,8 +35,10 @@ export const useAuthStore = defineStore('auth', () => {
     const userId = ref('')
     const userName = ref('')
 
-    const me = function () {
-        axios({
+    const me = async function () {
+        if (!sessionStorage.getItem('ssafit-login-token'))
+            return
+        await axios({
             url: `${serverUrl}/api/user/me`,
             method: "GET",
             headers: { Authorization: `Bearer ${sessionStorage.getItem("ssafit-login-token")}` }

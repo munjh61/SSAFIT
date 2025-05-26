@@ -111,7 +111,28 @@ export const useAuthNewStore = defineStore('authNew', ()=>{
         })
     }
 
+    const update = function(password, email, userName){
+        return axios({
+            url:`${serverUrl}/api/user`,
+            method:"PUT",
+            data:{
+                password,
+                email,
+                userName
+            },
+            headers:{
+                Authorization:`Bearer ${sessionStorage.getItem('ssafit-login-token')}`
+            }
+        })
+        .then((res)=>{
+            return true
+        })
+        .catch((err)=>{
+            return false
+        })
+    }
+
     return {
-        msg, inputEmail, reset, checkUserId, checkEmail, isValidPassword, regist, send, verify
+        msg, inputEmail, reset, checkUserId, checkEmail, isValidPassword, regist, send, verify, update
     }
 })

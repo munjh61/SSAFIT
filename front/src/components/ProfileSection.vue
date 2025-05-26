@@ -3,7 +3,11 @@
     <div class="profile-box">
       <img class="avatar" src="@/assets/images/profile.jpg" />
       <div class="info">
-        <h2>문준호 <!--<RouterLink to="/settings" class="settings">⚙️</RouterLink>--></h2>
+        <div class="title">
+          <h2>문준호</h2>
+          <button v-if="!isFollowed && canFollow" @click="add">팔로우</button>
+          <button v-if="isFollowed && canFollow" @click="del">언팔로우</button>
+        </div>
         <div class="status">
           <p>배드민턴 제일 좋아함.</p>
           <p>꾸준히 운동 즐기기</p>
@@ -16,52 +20,101 @@
         <span>기록</span>
       </div>
       <div class="stat">
-        <p class="big">{{ store.followerCnt }}</p>
+        <p class="big" @click="openFollowModal('follower')">{{ followerCnt }}</p>
         <span @click="openFollowModal('follower')">팔로워</span>
       </div>
       <div class="stat">
-        <p class="big">{{ store.followingCnt }}</p>
+        <p class="big" @click="openFollowModal('following')">{{ followingCnt }}</p>
         <span @click="openFollowModal('following')">팔로잉</span>
       </div>
     </div>
-  </div>  
-  <!-- 로그인/라우팅 연결되면 userId 직접 전달되도록 수정 예정 -->
-  <Follow v-if="showFollowModal" :mode="mode" :userId="'user01'" @close="closeFollowModal" @changeMode="changeMode" />
+  </div>
+
+  <Follow v-if="showFollowModal" :mode="mode" :userId="userId" @close="closeFollowModal" @changeMode="changeMode" />
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
+import { useRoute } from 'vue-router'
 import { useFollowStore } from '@/stores/follow'
+import { useAuthStore } from '@/stores/auth'
 import Follow from '@/components/follow/Follow.vue'
-const store = useFollowStore()
+
+const route = useRoute()
+const userId = computed(() => route.params.userId)
+
 const props = defineProps({
   stats: Object,
 })
 
+const followStore = useFollowStore()
+const authStore = useAuthStore()
+
+// 모달 관련
 const showFollowModal = ref(false)
 const mode = ref('follower')
-
 const openFollowModal = (selectedMode) => {
   mode.value = selectedMode
   showFollowModal.value = true
 }
-
 const closeFollowModal = () => {
   showFollowModal.value = false
 }
-
-const changeMode = function (q) {
+const changeMode = (q) => {
   mode.value = q
 }
 
-const followerCnt = ref(0)
-const followingCnt = ref(0)
+// 상태값
+const isFollowed = ref(false)
+const canFollow = ref(false)
+
+// store의 followerCnt, followingCnt를 직접 computed로 연결
+const followerCnt = computed(() => followStore.followerCnt)
+const followingCnt = computed(() => followStore.followingCnt)
+
+// 팔로우/언팔로우 액션
+const add = async () => {
+  const success = await followStore.addFollow(userId.value)
+  if (success) {
+    isFollowed.value = true
+    await followStore.getFollowData(userId.value)
+  }
+}
+
+const del = async () => {
+  const success = await followStore.deleteFollow(userId.value)
+  if (success) {
+    isFollowed.value = false
+    await followStore.getFollowData(userId.value)
+  }
+}
 
 onMounted(async () => {
-    // 로그인/라우팅 연결되면 userId 직접 전달되도록 수정 예정
-    await store.getFollowData('user01')
-    followerCnt.value = store.followerCnt
-    followingCnt.value = store.followingCnt
+  if (!authStore.userId) {
+    console.log(1)
+    await authStore.me()
+  }
+
+  if (!sessionStorage.getItem('ssafit-login-token')) {
+    console.log(2)
+    isFollowed.value = false
+    return
+  }
+
+  if (authStore.userId === userId.value) {
+    console.log(3)
+    canFollow.value = false
+  } else {
+    console.log(4)
+    console.log(`loginUser ${authStore.userId}`)
+    console.log(`targetUser ${userId.value}`)
+    canFollow.value = true
+    isFollowed.value = await followStore.isFollowed(userId.value)
+    const msg = isFollowed.value ? "이미" : "아직"
+    console.log(msg)
+  }
+
+  await followStore.getFollowData(userId.value)
 })
 </script>
 
@@ -105,8 +158,14 @@ onMounted(async () => {
   gap: 15px;
 }
 
-.info h2,
-.info p {
+.title {
+  min-width: 100px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.title h2,
+.title p {
   margin: 0;
 }
 
@@ -129,8 +188,29 @@ onMounted(async () => {
   align-items: center;
 }
 
-.stats span:hover{
+.stats p:hover {
   color: #4a90e2;
   cursor: pointer;
+}
+
+.stats span:hover {
+  color: #4a90e2;
+  cursor: pointer;
+}
+
+.title button {
+  padding: 6px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  background-color: #4a90e2;
+  color: white;
+}
+
+.title button:hover {
+  background-color: #357ab8;
 }
 </style>

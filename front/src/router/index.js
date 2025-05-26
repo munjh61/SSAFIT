@@ -28,7 +28,7 @@ const router = createRouter({
       component: RecFollowerAllView
     },
     {
-      path:'/myPage',
+      path:'/myPage/:userId',
       name:'mypage',
       component: MyPageView
     },

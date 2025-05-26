@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Follow {
     private int followId;
     private String followerId;

@@ -3,6 +3,7 @@ package com.ssafy.ssafit.controller.follow;
 import com.ssafy.ssafit.model.dto.Follow;
 import com.ssafy.ssafit.model.service.FollowService;
 import com.ssafy.ssafit.security.CustomUserDetails;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,9 @@ public class FollowController {
 
     @PostMapping("/{followingId}")
     public ResponseEntity<String> addFollow(@AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable("followingId") String followingId) {
+        if(followingId.equals(userDetails.getUsername())){
+            return new ResponseEntity<>("자신을 팔로우할 수 없습니다.", HttpStatus.BAD_REQUEST);
+        }
         Follow follow = new Follow();
         // 내가 팔로우를 걸면, 내가 팔로워가 되는 거고, 상대가 팔로잉이 된다.
         follow.setFollowingId(followingId);
@@ -41,5 +45,20 @@ public class FollowController {
         }
         return new ResponseEntity<>("팔로우 삭제 성공", HttpStatus.CREATED);
     }
+
+    @GetMapping("/{targetId}")
+    public ResponseEntity<Boolean> isFollowed(@AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable("targetId") String targetId){
+        String loginUserId = userDetails.getUsername();
+
+        if (targetId.equals(loginUserId)) {
+            return new ResponseEntity<>(false, HttpStatus.OK);
+        }
+
+        if (!followService.isFollowed(loginUserId, targetId)) {
+            return new ResponseEntity<>(false, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(true, HttpStatus.OK);
+    }
+
 
 }
