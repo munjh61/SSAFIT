@@ -76,33 +76,30 @@ const submitPost = async () => {
   }
 
   for (const pair of formData.entries()) {
-  console.log(pair[0] + ': ' + pair[1])
-}
+    console.log(pair[0] + ': ' + pair[1])
+  }
 
   try {
-    // if(props.editMode && props.board?.boardId){
-    //   //글 수정
-    //   await axios.put(`${serverUrl}/api/board/${props.board.boardId}`, formData, {
-    //     headers: {
-    //       Authorization: token,
-    //       'Content-Type': 'multipart/form-data'
-    //     },
-    //     withCredentials: true
-    //   })
-    //   alert('수정 완료!')
-    // }else{
+    if(props.editMode && props.board?.boardId){
+      //글 수정
+      await axios.put(`${serverUrl}/api/board/${props.board.boardId}`, formData, {
+        headers: {
+          Authorization: token,
+        },
+        withCredentials: true
+      })
+      alert('수정 완료!')
+    }else{
       //글 등록
       await axios.post(`${serverUrl}/api/board`, formData, {
         headers: {
           Authorization: token,
-          // 'Content-Type': 'multipart/form-data'
         },
         withCredentials: true
       })
       alert('게시글이 등록되었습니다!')
-      close()
-    // }
-    // emit('close')
+    }
+    close()
   } catch (err) {
     console.error('실패:', err)
     alert('에러 발생생')

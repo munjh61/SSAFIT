@@ -82,15 +82,15 @@ public class BoardController {
     //board 수정
     @PutMapping("/{boardId}")
     public ResponseEntity<?> update(@PathVariable Long boardId,
-                                    @RequestParam String title,
-                                    @RequestParam String content,
-                                    @RequestParam(required = false) MultipartFile image,
-                                    @RequestParam(required = false) String tag,
-                                    @AuthenticationPrincipal CustomUserDetails customUserDetails){
+                                    @RequestPart("title") String title,
+                                    @RequestPart("tag") String tag,
+                                    @RequestPart("content") String content,
+                                    @RequestPart(value = "image", required = false) MultipartFile image,
+                                    @AuthenticationPrincipal CustomUserDetails userDetails){
 //        log.info("요청 받은 board: {}", board);
 //        log.info("로그인 사용자: {}", customUserDetails.getUsername());
 //        board.setBoardId(boardId);
-        String userId = customUserDetails.getUsername();
+        String userId = userDetails.getUsername();
         boardService.updateBoard(boardId, userId, title, content, tag, image);
 
         return ResponseEntity.ok().build();

@@ -15,6 +15,15 @@
           <!-- <span @click="toggleLike" :class="{ liked: isLiked }">❤️</span> {{ likeCount }} -->
           <span class="bucket-count">{{ bucketCount }}</span>
           <button @click="toggleBucket">⭐ 버킷 추가</button>
+
+          <button v-if="board?.userId === loginUserId" @click="showEdit = true">✏️ 수정</button>
+
+          <!-- <button
+            v-if="board?.userId === loginUserId"
+            @click="deletePost"
+          >
+            ❌ 삭제
+          </button> -->
         </div>
 
         <div class="comments">
@@ -31,24 +40,33 @@
       </div>
     </div>
   </div>
+  <PostWriteBoard
+    v-if="showEdit"
+    :board="board"
+    :editMode="true"
+    @close="showEdit = false"
+  />
 </template>
 
 <script setup>
 import { ref, onMounted, watch } from 'vue'
+import PostWriteBoard from './PostWriteBoard.vue'
 
 const props = defineProps({ boardId: Number })
 const emit = defineEmits(['close'])
 
 const serverUrl = import.meta.env.VITE_API_BASE_URL
 const token = `Bearer ${sessionStorage.getItem('ssafit-login-token')}`
+// const loginUserId = sessionStorage.getItem('ssafit-login-userId')
 
 const board = ref(null)
 const imageUrl = ref('')
 const comments = ref([])
-const likeCount = ref(0)
+// const likeCount = ref(0)
 // const isLiked = ref(false)
 const newComment = ref('')
 const bucketCount = ref(0)
+const showEdit = ref(false)
 
 watch(board, () => {
   console.log('📌 board.userId:', board.value?.userId)
