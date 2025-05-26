@@ -1,6 +1,7 @@
 <template>
     <div class="login">
         <div class="inputs">
+            <p class="title">로그인</p>
             <div class="input-container">
                 <fieldset>
                     <legend>아이디</legend>
@@ -10,12 +11,14 @@
             <div class="input-container">
                 <fieldset>
                     <legend>비밀번호</legend>
-                    <input type="password" v-model="password">
+                    <input type="password" v-model="password" @keydown.enter="login">
                 </fieldset>
             </div>
+            <p>{{ store.msg }}</p>
         </div>
-        <p>{{ store.msg }}</p>
-        <button class="login-button" @click="login">로그인</button>
+        <div>
+            <button class="login-button" @click="login">로그인</button>
+        </div>
     </div>
 </template>
 
@@ -35,9 +38,9 @@ const emit = defineEmits([
 
 const login = async () => {
     let result = await store.login(userId.value, password.value);
-    if(result){
+    if (result) {
         emit('close')
-        router.replace({name : 'main'})
+        router.replace({ name: 'main' })
     }
 }
 </script>
@@ -46,14 +49,15 @@ const login = async () => {
 .login {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 20px;
+    justify-content: space-between;
+    height: 100%;
 }
-
-.inputs{
-    margin-bottom: 30px;
+.title{
+    margin-top: 0 ;
+    text-align: center;
+    font-weight: bold;
+    color: #4a90e2;
 }
-
 .input-container {
     margin-bottom: 10px;
 }

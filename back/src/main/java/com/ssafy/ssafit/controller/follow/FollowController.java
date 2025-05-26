@@ -42,8 +42,4 @@ public class FollowController {
         return new ResponseEntity<>("팔로우 삭제 성공", HttpStatus.CREATED);
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<Map<String, List<Follow>>> followList(@PathVariable("userId") String userId){
-        return new ResponseEntity<>(followService.followList(userId), HttpStatus.OK);
-    }
 }

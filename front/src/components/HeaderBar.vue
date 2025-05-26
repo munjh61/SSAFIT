@@ -7,29 +7,42 @@
       <RouterLink to="/calender" class="calender">캘린더</RouterLink>
       <RouterLink to="/guild" class="guild">모임</RouterLink>
     </nav>
-    <div class="profile">
-      <img src="@/assets/images/profile.jpg" alt="profile" />
-      <div class="info">
-        <div class="userName">문준호</div>
-        <div class="userId">@munhealth</div>
-      </div>
-    </div>
     <div class="auth">
-      <button @click="toggleAuthModal">로그인</button>
-      <Auth v-if="showAuth" @close="toggleAuthModal"></Auth>
+      <div class="isLoggedIn" v-if="store.isLoggedIn">
+        <div class="profile">
+          <img src="@/assets/images/profile.jpg" alt="profile" />
+          <div class="info">
+            <div class="userName">{{ store.userName }}</div>
+            <div class="userId">{{ store.userId }}</div>
+          </div>
+        </div>
+        <button @click="store.logout" class="auth-button">
+          <span style="color: #FA5252;">로그아웃</span>
+          <img src="/src/assets/images/logout.png" class="auth-icon">
+        </button>
+      </div>
+      <div v-if="!store.isLoggedIn">
+        <button @click="toggleAuthModal" class="auth-button">
+          <span style="color: #20C997;">로그인</span>
+          <img src="/src/assets/images/login.png" class="auth-icon">
+        </button>
+        <Auth v-if="showAuth" @close="toggleAuthModal"></Auth>
+      </div>
     </div>
   </header>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import { useAuthStore } from '@/stores/auth'
 import Auth from '@/components/auth/Auth.vue'
-
+const store = useAuthStore()
 const showAuth = ref(false)
 
 const toggleAuthModal = function () {
   showAuth.value = !showAuth.value
 }
+
 </script>
 
 <style scoped>
@@ -69,6 +82,11 @@ const toggleAuthModal = function () {
 }
 
 /* 프로필 정보 */
+.isLoggedIn {
+  display: flex;
+  justify-content: space-evenly;
+}
+
 .profile {
   display: flex;
   align-items: center;
@@ -100,6 +118,20 @@ const toggleAuthModal = function () {
 .userId {
   font-size: 14px;
   color: #666;
+}
+
+.auth-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 0;
+  background-color: transparent ;
+  cursor: pointer;
+}
+
+.auth-icon {
+  width: 40px;
+  height: 30px;
 }
 
 /* 로고 */
