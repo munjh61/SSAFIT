@@ -25,5 +25,5 @@ public interface BoardService {
     //board 수정
     void updateBoard(Long boardId, String userId, String title, String content, String tag, MultipartFile image);
     //board 삭제
-    boolean removeBoard(String userId, long boardId);
+    void removeBoard(String userId, long boardId);
 }

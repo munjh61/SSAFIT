@@ -97,18 +97,15 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public boolean removeBoard(String userId, long boardId) {
-        Board tmp = boardDao.selectByBoardId(boardId); //삭제 대상인 board
+    public void removeBoard(String userId, long boardId) {
+        Board board = boardDao.selectByBoardId(boardId); //삭제 대상인 board
         System.out.println("userId: "+userId);
-        System.out.println("tmp: "+tmp);
+        System.out.println("board: "+board);
 
-        if(tmp == null){
-            return false;
+        if (!board.getUserId().equals(userId)) {
+            throw new RuntimeException("삭제 권한 없음");
         }
-        if(!tmp.getUserId().equals(userId)){
-            return false;
-        }
+
         boardDao.deleteBoard(boardId); //삭제해주기
-        return true;
     }
 }

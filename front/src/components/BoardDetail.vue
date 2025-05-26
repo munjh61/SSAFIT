@@ -16,14 +16,14 @@
           <span class="bucket-count">{{ bucketCount }}</span>
           <button @click="toggleBucket">⭐ 버킷 추가</button>
 
-          <button v-if="board?.userId === loginUserId" @click="showEdit = true">✏️ 수정</button>
+          <button v-if="board?.userId === store.userId" @click="showEdit = true">✏️ 수정</button>
 
-          <!-- <button
-            v-if="board?.userId === loginUserId"
+          <button
+            v-if="board?.userId === store.userId"
             @click="deletePost"
           >
             ❌ 삭제
-          </button> -->
+          </button>
         </div>
 
         <div class="comments">
@@ -51,13 +51,16 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue'
 import PostWriteBoard from './PostWriteBoard.vue'
+import { useAuthStore } from '@/stores/auth'
+const store = useAuthStore()
 
 const props = defineProps({ boardId: Number })
 const emit = defineEmits(['close'])
 
 const serverUrl = import.meta.env.VITE_API_BASE_URL
 const token = `Bearer ${sessionStorage.getItem('ssafit-login-token')}`
-const loginUserId = sessionStorage.getItem('ssafit-login-userId')
+
+store.userId
 
 const board = ref(null)
 const imageUrl = ref('')
@@ -162,21 +165,45 @@ const submitComment = async () => {
     alert('댓글 등록에 실패했습니다.')
     return
   }
-
   newComment.value = ''
-
   const commentRes = await fetch(`${serverUrl}/api/public/comment/board/${props.boardId}`, {
     headers: { Authorization: token },
     credentials: 'include'
   })
-
   if (!commentRes.ok) {
     console.error('❌ 댓글 목록 가져오기 실패:', commentRes.status)
     return
   }
-
   comments.value = await commentRes.json()
 }
+
+const deletePost = async () => {
+  if (!confirm('정말 삭제하시겠습니까?')) return
+
+  try {
+    const res = await fetch(`${serverUrl}/api/board/${props.boardId}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: token
+      },
+      credentials: 'include'
+    })
+
+    if (!res.ok) {
+      console.error('❌ 삭제 실패', res.status)
+      alert('삭제에 실패했습니다.')
+      return
+    }
+
+    alert('삭제되었습니다.')
+    emit('close')
+  } catch (err) {
+    console.error('삭제 중 에러:', err)
+    alert('에러가 발생했습니다.')
+  }
+}
+
+
 </script>
 
 <style scoped>

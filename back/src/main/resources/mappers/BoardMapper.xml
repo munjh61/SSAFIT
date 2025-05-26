@@ -27,7 +27,7 @@
     <select id="selectByUserId" parameterType="String" resultType="Board">
         SELECT *
         FROM board
-        WHERE user_id = #{userId}
+        WHERE user_id = #{userId} and is_deleted = false
     </select>
     <!-- 상세 조회 -->
     <select id="selectByBoardId" parameterType="long" resultType="Board">

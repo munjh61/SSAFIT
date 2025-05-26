@@ -28,7 +28,7 @@ public class BoardController {
 
     //로그인 유저가 작성한 보드만 조회 - 마이페이지용
     @GetMapping("")
-    public ResponseEntity<Map<String, Object>> getBoardByUserId(@AuthenticationPrincipal CustomUserDetails customUserDetails){
+    public ResponseEntity<Map<String, Object>> getBoardByUserId(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         String loginUser = customUserDetails.getUsername();
         Map<String, Object> result = new HashMap<>();
 
@@ -37,7 +37,7 @@ public class BoardController {
         result.put("boards", boardList);
         //2. 불러와진 보드 별 이미지 묶기
         Map<Long, List<Img>> boardImgs = new HashMap<>();
-        for(Board board : boardList){
+        for (Board board : boardList) {
             List<Img> imgList = imgService.getImgByBoardId(board.getBoardId());
             boardImgs.put(board.getBoardId(), imgList);
         }
@@ -73,7 +73,7 @@ public class BoardController {
     public ResponseEntity<?> create(@RequestPart("title") String title,
                                     @RequestPart("tag") String tag, @RequestPart("content") String content,
                                     @RequestPart(value = "image", required = false) MultipartFile image,
-                                    @AuthenticationPrincipal CustomUserDetails userDetails){
+                                    @AuthenticationPrincipal CustomUserDetails userDetails) {
         String userId = userDetails.getUsername();
         boardService.createBoard(title, tag, content, image, userId);
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -86,7 +86,7 @@ public class BoardController {
                                     @RequestPart("tag") String tag,
                                     @RequestPart("content") String content,
                                     @RequestPart(value = "image", required = false) MultipartFile image,
-                                    @AuthenticationPrincipal CustomUserDetails userDetails){
+                                    @AuthenticationPrincipal CustomUserDetails userDetails) {
 //        log.info("요청 받은 board: {}", board);
 //        log.info("로그인 사용자: {}", customUserDetails.getUsername());
 //        board.setBoardId(boardId);
@@ -98,13 +98,10 @@ public class BoardController {
 
     //board 삭제
     @DeleteMapping("/{boardId}")
-    public ResponseEntity<?> delete(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable long boardId){
+    public ResponseEntity<?> delete(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable long boardId) {
         String userId = customUserDetails.getUsername();
-        boolean isDeleted = boardService.removeBoard(userId, boardId);
+        boardService.removeBoard(userId, boardId);
 
-        if(isDeleted){
-            return ResponseEntity.status(HttpStatus.OK).body("board delete");
-        }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("실패요");
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
