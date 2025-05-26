@@ -47,7 +47,7 @@ const previewUrl = ref('')
 const imageFile = ref(null)
 const serverUrl = import.meta.env.VITE_API_BASE_URL
 
-const emit = defineEmits(['close'])
+const emit = defineEmits(['close', 'created'])
 
 const close = () => {
   emit('close')
@@ -71,14 +71,7 @@ const submitPost = async () => {
   formData.append('title', title.value)
   formData.append('tag', tag.value)
   formData.append('content', content.value)
-  if (imageFile.value) {
-    formData.append('image', imageFile.value)
-  }
-
-  for (const pair of formData.entries()) {
-    console.log(pair[0] + ': ' + pair[1])
-  }
-
+  
   try {
     if(props.editMode && props.board?.boardId){
       //글 수정
@@ -89,20 +82,63 @@ const submitPost = async () => {
         withCredentials: true
       })
       alert('수정 완료!')
+      emit('updated')
     }else{
-      //글 등록
-      await axios.post(`${serverUrl}/api/board`, formData, {
+      // 이미지가 있는 경우 먼저 이미지 업로드
+      let imageUrl = 'default.jpg'
+      if (imageFile.value) {
+        const imageFormData = new FormData()
+        imageFormData.append('image', imageFile.value)
+        
+        try {
+          const imageResponse = await axios.post(`${serverUrl}/api/upload`, imageFormData, {
+            headers: {
+              Authorization: token,
+              'Content-Type': 'multipart/form-data'
+            },
+            withCredentials: true
+          })
+          
+          console.log('📸 이미지 업로드 응답:', imageResponse.data)
+          
+          if (imageResponse.data?.name) {
+            imageUrl = imageResponse.data.name
+            console.log('📸 이미지 이름:', imageUrl)
+          }
+        } catch (imageError) {
+          console.error('이미지 업로드 실패:', imageError)
+        }
+      }
+
+      // 게시글 등록
+      formData.append('image', imageFile.value) // 원본 이미지 파일도 함께 전송
+      const response = await axios.post(`${serverUrl}/api/board`, formData, {
         headers: {
           Authorization: token,
         },
         withCredentials: true
       })
+      console.log('📦 서버 응답:', response.data)
+
+      const newBoardId = response.data?.boardId
+      if (!newBoardId) {
+        console.error('❌ boardId 응답 없음!', response.data)
+        alert('게시글 등록은 되었지만 boardId를 받지 못했습니다.')
+        return
+      }
+
+      emit('created', {
+        boardId: newBoardId,
+        title: title.value,
+        imgName: imageUrl // 업로드된 이미지 이름 사용
+      })
       alert('게시글이 등록되었습니다!')
+      close()
+      window.location.reload()
     }
-    close()
   } catch (err) {
     console.error('실패:', err)
-    alert('에러 발생생')
+    alert('에러 발생')
   }
 }
 </script>

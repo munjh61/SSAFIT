@@ -58,7 +58,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public void createBoard(String title, String tag, String content, MultipartFile image, String userId) {
+    public Long createBoard(String title, String tag, String content, MultipartFile image, String userId) {
         Board board = new Board();
         board.setUserId(userId);
         board.setTitle(title);
@@ -76,6 +76,8 @@ public class BoardServiceImpl implements BoardService {
             img.setOrgName(image.getOriginalFilename());
             imgDao.insertImg(img);
         }
+
+        return board.getBoardId();
     }
 
     @Override

@@ -9,7 +9,7 @@
           <RecordGrid :records="userRecords" @write="WriteClick" @open-detail="openDetail"/>
         </div>
     </div>
-    <PostWriteBoard v-if="isWriting" @close="isWriting = false"/>
+    <PostWriteBoard v-if="isWriting" @close="isWriting = false" @created="handlePostCreated" />
 
     <BoardDetail
       v-if="showDetail"
@@ -55,20 +55,26 @@ const openEdit = (board) => {
   isEditing.value = true
 }
 
+const handlePostCreated = (postData) => {
+  console.log('🔥 새 글 도착:', postData)
+  isWriting.value = false
+
+  // 방금 등록된 글을 리스트에 추가
+  userRecords.value.unshift({
+    id: postData.boardId,
+    caption: postData.title,
+    img: `http://localhost:5173/images/${postData.imgName}`
+  })
+
+  // BoardDetail 자동 표시 제거
+  if (!postData.boardId) {
+    console.error('❌ boardId가 undefined입니다!', postData)
+  }
+}
+
 onMounted(async () => {
   const token = `Bearer ${sessionStorage.getItem('ssafit-login-token')}`
-  // console.log('토큰:', token)
   try {
-    // // 1. 사용자 통계 정보
-    // const statsResponse = await axios.get(`${serverUrl}/api/public/`, {
-    //         headers:{
-    //             Authorization: token
-    //         },
-    //         withCredentials: true
-    //     })
-    // userStats.value = statsResponse.data 
-
-    // 2. 사용자 기록 이미지 목록
     const recordsResponse = await axios.get(`${serverUrl}/api/board`, {
       headers:{
         Authorization: token
@@ -83,14 +89,17 @@ onMounted(async () => {
     const images = recordsResponse.data.images
 
     userRecords.value = boards.map(board => {
-      const imgList = images[board.boardId]
-      const imgName = imgList && imgList.length > 0 ? imgList[0].name : 'default.jpg'
+      const imageArray = images[board.boardId];
+      const imgName = imageArray && imageArray.length > 0 ? imageArray[0].name : 'default.jpg';
+      
       return {
         id: board.boardId,
         caption: board.title,
-        img: `/images/${imgName}`
+        img: `http://localhost:5173/images/${imgName}`
       }
     })
+
+    console.log('🔄 변환된 userRecords:', userRecords.value)
   } catch (error) {
     console.error('마이페이지 데이터 불러오기 실패:', error)
     console.log('응답 코드:', error.response.status)

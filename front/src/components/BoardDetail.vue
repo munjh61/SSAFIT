@@ -59,6 +59,7 @@
     :board="board"
     :editMode="true"
     @close="showEdit = false"
+    @updated="handleUpdate"
   />
 </template>
 
@@ -69,7 +70,7 @@ import { useAuthStore } from '@/stores/auth'
 const store = useAuthStore()
 
 const props = defineProps({ boardId: Number })
-const emit = defineEmits(['close'])
+const emit = defineEmits(['close', 'created'])
 
 const serverUrl = import.meta.env.VITE_API_BASE_URL
 const token = `Bearer ${sessionStorage.getItem('ssafit-login-token')}`
@@ -79,8 +80,6 @@ store.userId
 const board = ref(null)
 const imageUrl = ref('')
 const comments = ref([])
-// const likeCount = ref(0)
-// const isLiked = ref(false)
 const newComment = ref('')
 const bucketCount = ref(0)
 const showEdit = ref(false)
@@ -100,13 +99,13 @@ const cancelEdit = () => {
 
 watch(board, () => {
   console.log('📌 board.userId:', board.value?.userId)
-  console.log('👤 로그인한 ID:', loginUserId)
+  console.log('👤 로그인한 ID:', store.userId)
 })
 
 watch(comments, () => {
   console.log('💬 댓글 목록:', comments.value)
   comments.value.forEach(c => {
-    console.log('🧑 댓글 작성자:', c.userId, '👤 로그인 유저:', loginUserId, '→ 같나?', c.userId === loginUserId)
+    console.log('🧑 댓글 작성자:', c.userId, '👤 로그인 유저:', store.userId, '→ 같나?', c.userId === store.userId)
   })
 })
 
@@ -129,7 +128,14 @@ onMounted(async () => {
   const data = await res.json()
   board.value = data.board
   const images = data.images?.[props.boardId]
-  imageUrl.value = images?.[0]?.name ? `/images/${images[0].name}` : '/images/default.jpg'
+  console.log('🖼 이미지 데이터:', images)
+  
+  // 이미지 URL 설정 수정
+  if (images && images.length > 0) {
+    imageUrl.value = `http://localhost:5173/images/${images[0].name}`
+  } else {
+    imageUrl.value = 'http://localhost:5173/images/default.jpg'
+  }
 
   const bucketRes = await fetch(`${serverUrl}/api/bucket/count/${props.boardId}`, {
     headers: { Authorization: token },
@@ -140,11 +146,18 @@ onMounted(async () => {
   console.log('📌 게시글 데이터:', data)
   console.log('🖼 이미지 목록:', images)
 
+  const commentRes = await fetch(`${serverUrl}/api/public/comment/board/${props.boardId}`, {
+    headers: {
+    Authorization: token 
+  },
+  credentials: 'include'
+  })
 
-  // const likeRes = await fetch(`${serverUrl}/like/count/${props.boardId}`)
-  // likeCount.value = await likeRes.json()
+  if (!commentRes.ok) {
+    console.error('❌ 댓글 목록 가져오기 실패:', commentRes.status)
+    return
+  }
 
-  const commentRes = await fetch(`${serverUrl}/api/comment/${props.boardId}`)
   comments.value = await commentRes.json()
 })
 
@@ -175,16 +188,41 @@ const deletePost = async () => {
   }
 }
 
-// const toggleLike = async () => {
-//   const res = await fetch(`${serverUrl}/like/${props.boardId}`, {
-//     method: 'POST',
-//     headers: { Authorization: token },
-//     credentials: 'include'
-//   })
-//   const liked = await res.json()
-//   isLiked.value = liked
-//   likeCount.value += liked ? 1 : -1
-// }
+const handleUpdate = async () => {
+  showEdit.value = false
+  await fetchBoard()
+}
+
+const fetchBoard = async () => {
+  const res = await fetch(`${serverUrl}/api/public/board/${props.boardId}`, {
+    headers: { Authorization: token },
+    credentials: 'include'
+  })
+
+  if (!res.ok) {
+    console.error('❌ 게시글 데이터 불러오기 실패:', res.status)
+    return
+  }
+
+  const data = await res.json()
+  board.value = data.board
+  const images = data.images?.[props.boardId]
+  console.log('🖼 이미지 데이터:', images)
+  
+  // 이미지 URL 설정 수정
+  if (images && images.length > 0) {
+    imageUrl.value = `http://localhost:5173/images/${images[0].name}`
+  } else {
+    imageUrl.value = 'http://localhost:5173/images/default.jpg'
+  }
+
+  const bucketRes = await fetch(`${serverUrl}/api/bucket/count/${props.boardId}`, {
+    headers: { Authorization: token },
+    credentials: 'include'
+  })
+  bucketCount.value = await bucketRes.json()
+}
+
 
 //버킷리스트 추가 버튼튼
 const toggleBucket = async () => {
@@ -293,8 +331,6 @@ const fetchComments = async () => {
 
   comments.value = await res.json()
 }
-
-
 
 </script>
 

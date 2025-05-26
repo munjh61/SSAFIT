@@ -21,7 +21,7 @@ public interface BoardService {
     //tag 조회
     String getTagByBoardId(long boardId);
     //board 등록
-    void createBoard(String title, String tag, String content, MultipartFile image, String userId);
+    Long createBoard(String title, String tag, String content, MultipartFile image, String userId);
     //board 수정
     void updateBoard(Long boardId, String userId, String title, String content, String tag, MultipartFile image);
     //board 삭제

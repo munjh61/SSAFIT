@@ -27,6 +27,7 @@ public class BoardController {
     private final ImgService imgService;
 
     //로그인 유저가 작성한 보드만 조회 - 마이페이지용
+    //페이지 주인의 보드 가져오기
     @GetMapping("")
     public ResponseEntity<Map<String, Object>> getBoardByUserId(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         String loginUser = customUserDetails.getUsername();
@@ -70,13 +71,17 @@ public class BoardController {
 
     //board 등록
     @PostMapping("")
-    public ResponseEntity<?> create(@RequestPart("title") String title,
+    public ResponseEntity<Map<String, Object>> create(@RequestPart("title") String title,
                                     @RequestPart("tag") String tag, @RequestPart("content") String content,
                                     @RequestPart(value = "image", required = false) MultipartFile image,
                                     @AuthenticationPrincipal CustomUserDetails userDetails) {
         String userId = userDetails.getUsername();
-        boardService.createBoard(title, tag, content, image, userId);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        Long boardId = boardService.createBoard(title, tag, content, image, userId);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("boardId", boardId);
+
+        return ResponseEntity.ok(result);
     }
 
     //board 수정

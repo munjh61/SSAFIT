@@ -5,8 +5,8 @@
 <mapper namespace="com.ssafy.ssafit.model.dao.BoardDao">
     <!-- 등록 -->
     <insert id="insertBoard" parameterType="Board" useGeneratedKeys="true" keyProperty="boardId">
-        INSERT INTO board (user_id, title, content, tag)
-        VALUES (#{userId}, #{title}, #{content}, #{tag})
+        INSERT INTO board (user_id, title, content, tag, reg_date)
+        VALUES (#{userId}, #{title}, #{content}, #{tag}, #{regDate})
     </insert>
 
     <!-- 검색 조회-->

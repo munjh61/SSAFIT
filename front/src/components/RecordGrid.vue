@@ -3,7 +3,7 @@
         <button class="record-btn" @click="emit('write')">기록하기</button>
         <div class="record-grid">
             <div class="record" v-for="record in records" :key="record.id" @click="emit('open-detail', record.id)">
-                <img :src="record.img" :alt="record.caption" />
+                <img :src="record.img" :alt="record.caption" :key="record.img"/>
             </div>
         </div>
     </div>
