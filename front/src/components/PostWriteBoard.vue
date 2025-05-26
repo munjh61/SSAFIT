@@ -35,17 +35,17 @@
 import { ref } from 'vue'
 import axios from 'axios'
 
+const props = defineProps({
+  board: Object,
+  editMode: Boolean
+})
+
 const title = ref(props.board?.title || '')
 const tag = ref(props.board?.tag || '')
 const content = ref(props.board?.content || '')
 const previewUrl = ref('')
 const imageFile = ref(null)
 const serverUrl = import.meta.env.VITE_API_BASE_URL
-
-// const props = defineProps({
-//   board: Object,
-//   editMode: Boolean
-// })
 
 const emit = defineEmits(['close'])
 
@@ -75,6 +75,10 @@ const submitPost = async () => {
     formData.append('image', imageFile.value)
   }
 
+  for (const pair of formData.entries()) {
+  console.log(pair[0] + ': ' + pair[1])
+}
+
   try {
     // if(props.editMode && props.board?.boardId){
     //   //글 수정
@@ -91,7 +95,7 @@ const submitPost = async () => {
       await axios.post(`${serverUrl}/api/board`, formData, {
         headers: {
           Authorization: token,
-          'Content-Type': 'multipart/form-data'
+          // 'Content-Type': 'multipart/form-data'
         },
         withCredentials: true
       })
