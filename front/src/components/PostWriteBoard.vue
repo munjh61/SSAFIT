@@ -99,12 +99,6 @@ const submitPost = async () => {
             withCredentials: true
           })
           
-          console.log('📸 이미지 업로드 응답:', imageResponse.data)
-          
-          if (imageResponse.data?.name) {
-            imageUrl = imageResponse.data.name
-            console.log('📸 이미지 이름:', imageUrl)
-          }
         } catch (imageError) {
           console.error('이미지 업로드 실패:', imageError)
         }
@@ -118,11 +112,9 @@ const submitPost = async () => {
         },
         withCredentials: true
       })
-      console.log('📦 서버 응답:', response.data)
 
       const newBoardId = response.data?.boardId
       if (!newBoardId) {
-        console.error('❌ boardId 응답 없음!', response.data)
         alert('게시글 등록은 되었지만 boardId를 받지 못했습니다.')
         return
       }
