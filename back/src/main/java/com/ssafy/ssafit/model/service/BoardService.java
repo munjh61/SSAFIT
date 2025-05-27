@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface BoardService {
     //board 키워드로 제목/내용 검색 조회
-    List<Board> searchBoard(String keyword);
+    List<Board> searchBoard(String keyword, String field);
     //board 전체 조회, 마이페이지에 전체 게시글 로드하는데 사용
     List<Board> getAllBoards();
     //로그인 한 유저가 쓴 보드 조회

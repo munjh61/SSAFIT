@@ -14,4 +14,6 @@ public interface FollowDao {
     List<Follow> selectOnlyMe(String userId);
     // 상대만 팔로우
     List<Follow> selectOnlyYou(String userId);
+
+    List<String> selectFollowingUserIds(String userId);
 }

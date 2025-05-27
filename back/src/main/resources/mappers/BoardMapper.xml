@@ -10,12 +10,26 @@
     </insert>
 
     <!-- 검색 조회-->
-    <select id="searchByKeyword" parameterType="String" resultType="Board">
+    <select id="searchByKeyword" parameterType="map" resultType="Board">
         SELECT *
         FROM board
-        WHERE title LIKE CONCAT('%', #{keyword}, '%')
-            OR content LIKE CONCAT('%', #{keyword}, '%')
-        ORDER BY reg_date DESC
+        WHERE
+        <choose>
+            <when test="field.equals('title')">
+                title LIKE CONCAT('%', #{keyword}, '%')
+            </when>
+            <when test="field.equals('content')">
+                content LIKE CONCAT('%', #{keyword}, '%')
+            </when>
+            <when test="field.equals('tag')">
+                tag LIKE CONCAT('%', #{keyword}, '%')
+            </when>
+            <otherwise>
+                1 = 0 <!-- 잘못된 field 값 들어왔을 때 결과 없음 -->
+            </otherwise>
+        </choose>
+
+        AND is_deleted = false
     </select>
     <!--전체 조회-->
     <select id="selectAll" resultType="Board">

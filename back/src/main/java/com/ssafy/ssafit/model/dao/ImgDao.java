@@ -2,8 +2,10 @@ package com.ssafy.ssafit.model.dao;
 
 import com.ssafy.ssafit.model.dto.Img;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ImgDao {
 //    List<Img> selectImgByUserId(String userId);
@@ -12,4 +14,6 @@ public interface ImgDao {
     void insertImg(Img img);
     //이미지 수정
     void updateImage(Long boardId, String fileName);
+
+    List<Img> selectImgListByBoardId(@Param("boardIds") List<Long> boardIds);
 }

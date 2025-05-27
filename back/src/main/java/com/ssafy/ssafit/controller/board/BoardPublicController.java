@@ -4,14 +4,17 @@ import com.ssafy.ssafit.model.dto.Board;
 import com.ssafy.ssafit.model.dto.Img;
 import com.ssafy.ssafit.model.service.BoardService;
 import com.ssafy.ssafit.model.service.ImgService;
+import com.ssafy.ssafit.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -22,12 +25,50 @@ public class BoardPublicController {
     private final BoardService boardService;
     private final ImgService imgService;
 
+    //유저의 게시물 조회
+    @GetMapping("/{userId}")
+    public ResponseEntity<Map<String, Object>> getBoardByUserId(@PathVariable String userId) {
+        Map<String, Object> result = new HashMap<>();
+
+        //1. 해당 유저가 쓴 보드 불러오기
+        List<Board> boardList = boardService.getBoardByUserId(userId);
+        result.put("boards", boardList);
+        //2. 불러와진 보드 별 이미지 묶기
+        Map<Long, List<Img>> boardImgs = new HashMap<>();
+        for (Board board : boardList) {
+            List<Img> imgList = imgService.getImgByBoardId(board.getBoardId());
+            boardImgs.put(board.getBoardId(), imgList);
+        }
+        result.put("images", boardImgs);
+
+        return ResponseEntity.ok(result);
+    }
+
+
     //board 검색 조회
     //검색어에 걸리는 모든 게시글 조회
-    @GetMapping("/search/{keyword}")
-    public ResponseEntity<List<Board>> searchBoard(@PathVariable String keyword){
-        List<Board> result = boardService.searchBoard(keyword);
-        return ResponseEntity.ok(result);
+    @GetMapping("/search")
+    public ResponseEntity<Map<String, Object>> searchBoard(@RequestParam String keyword,
+                                         @RequestParam String field){
+        //게시글 검색
+        List<Board> result = boardService.searchBoard(keyword, field);
+
+        //게시글 ID 리스트 뽑기
+        List<Long> boardIds = result.stream()
+                .map(Board::getBoardId)
+                .collect(Collectors.toList());
+
+        //게시글 별 이미지 리스트 조회
+        Map<Long, List<Img>> boardImages = imgService.getImgListByBoardId(boardIds);
+
+        //결과 묶어서 반환
+        Map<String, Object> map = new HashMap<>();
+        map.put("boards", result);
+        map.put("images", boardImages);
+
+        System.out.println("📥 field: " + field);
+
+        return ResponseEntity.ok(map);
     }
 
     //board 전체 조회

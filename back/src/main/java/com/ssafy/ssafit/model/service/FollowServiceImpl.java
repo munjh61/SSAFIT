@@ -58,4 +58,10 @@ public class FollowServiceImpl implements FollowService {
         return followDao.selectOne(follow) != null;
     }
 
+    @Override
+    public List<String> getFollowingUserIds(String userId) {
+        return followDao.selectFollowingUserIds(userId);
+    }
+
+
 }

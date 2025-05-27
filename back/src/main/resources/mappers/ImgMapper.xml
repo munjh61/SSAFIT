@@ -23,10 +23,15 @@
         WHERE board_id = #{boardId}
     </update>
 
-    <!--    <select id="selectImgByUserId" parameterType="String">-->
-<!--        SELECT *-->
-<!--        FROM img-->
-<!--        JOIN board ON img.board_id = board.board_id-->
-<!--        WHERE board.user_id = #{userId}-->
-<!--    </select>-->
+    <!-- 검색에 사용-->
+    <select id="selectImgListByBoardId" parameterType="list" resultType="Img">
+        SELECT *
+        FROM img
+        WHERE board_id IN
+        <foreach item="id" collection="boardIds" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+
 </mapper>

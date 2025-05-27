@@ -48,33 +48,27 @@ const scrollRight = () => {
 onMounted(async () => {
   try {
     const token = `Bearer ${sessionStorage.getItem('ssafit-login-token')}`
-    const response = await axios.get(`${serverUrl}/api/board/recommend`,{
+    const response = await axios.get(`${serverUrl}/api/board/recommend`, {
       headers: {
         Authorization: token
       },
       withCredentials: true
     })
 
-    console.log('운동 게시글 목록:', response.data)
+    console.log('추천 운동 목록:', response.data)
 
-    const boardList = response.data.boards || response.data
-    const images = response.data.images
-
-    exercises.value = boardList.map(item => {
-      const boardId = item.boardId
-      const imgList = images[boardId]
-      const imgName = imgList?.[0]?.name || 'default.jpg'
-      // const imgPath = `/images/${item.name}`
-      console.log('이미지 경로:', `/images/${imgName}`)
-
-      return{
-      boardId,
-      img: `/images/${imgName}`,
-      title: item.title
+    // 백엔드에서 받은 데이터 형식에 맞게 매핑
+    exercises.value = response.data.map(board => {
+      return {
+        boardId: board.boardId,
+        img: board.images && board.images.length > 0 
+          ? `/images/${board.images[0].name}` 
+          : '/images/default.jpg',
+        title: board.title
       }
     })
   } catch (err) {
-    console.error('운동 목록 불러오기 실패', err)
+    console.error('추천 운동 목록 불러오기 실패:', err)
   }
 })
 

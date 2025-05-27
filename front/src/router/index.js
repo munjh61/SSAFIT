@@ -7,6 +7,8 @@ import CalenderView from '@/views/CalenderView.vue'
 import GuildView from '@/views/GuildView.vue'
 import BucketListView from '@/views/BucketListView.vue'
 import JoonhoTestView from '@/views/JoonhoTestView.vue'
+import SearchResultsView from '@/views/SearchResultsView.vue'
+import RecommendedExercise from '@/components/RecommendedExercise.vue'
 
 // const isAuth = true; //로그인 됨
 const router = createRouter({
@@ -47,6 +49,11 @@ const router = createRouter({
       name:'guild',
       component:GuildView
     },
+    {
+      path: '/search',
+      name: 'search-results',
+      component: SearchResultsView
+    },
     // {
     //   path:'/settings',
     //   name:'settings',
@@ -57,6 +64,12 @@ const router = createRouter({
       path:'/joonhoTestView',
       name:'joonhoTestView',
       component:JoonhoTestView
+    },
+    {
+      path: '/recommended',
+      name: 'recommended',
+      component: RecommendedExercise,
+      meta: { requiresAuth: true }
     },
   ],
 })

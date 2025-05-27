@@ -10,4 +10,5 @@ public interface FollowService {
     boolean delete(Follow follow);
     Map<String,List<Follow>> followList(String userId);
     boolean isFollowed(String targetUserId,String loginUserId);
+    List<String> getFollowingUserIds(String userId);
 }
