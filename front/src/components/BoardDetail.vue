@@ -349,8 +349,8 @@ const fetchComments = async () => {
 .modal-card {
   display: flex;
   background: white;
-  width: 65%;
-  height: 70%;
+  width: 55%;
+  height: 50%;
   border-radius: 5px;
   overflow: hidden;
 }

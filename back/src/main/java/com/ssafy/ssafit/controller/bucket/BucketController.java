@@ -31,7 +31,6 @@ public class BucketController {
      public ResponseEntity<?> addBucket(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody Bucket bucket){
           String userId = customUserDetails.getUsername();
           bucket.setUserId(userId);
-          System.out.println("🔐 로그인 사용자: " + customUserDetails);
           boolean result = bucketService.addBucket(bucket);
 
           if(!result){
@@ -57,7 +56,6 @@ public class BucketController {
      public ResponseEntity<?> removeByBoardId(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                               @PathVariable long boardId){
           String userId = customUserDetails.getUsername();
-//          System.out.println("로그인 유저 확인: " + customUserDetails);
           boolean success = bucketService.removeByBoardId(userId, boardId);
 
           if (!success) {

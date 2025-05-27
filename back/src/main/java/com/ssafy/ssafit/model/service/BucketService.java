@@ -22,4 +22,7 @@ public interface BucketService {
     Map<String, Object> getBucketStats(String userId);
     //버킷 갯수
     int countByBoardId(Long boardId);
+
+    //버킷에 들어가있는지 확인
+    boolean isBoardInBucket(String userId, Long boardId);
 }

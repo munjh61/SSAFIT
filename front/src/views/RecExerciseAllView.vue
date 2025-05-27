@@ -11,23 +11,40 @@
         <section class="exercise-list">
             <h2>추천 운동</h2>
             <div class="grid">
-                <div class="card" v-for="(ex, idx) in exercises" :key="idx">
+                <div class="card" v-for="(ex, idx) in exercises" :key="idx" @click="showBoardDetail(ex.boardId)">
                     <img :src="ex.img" :alt="ex.title" />
                     <div class="title">{{ ex.title }}</div>
                 </div>
             </div>
         </section>
+
+        <!-- BoardDetail 모달 -->
+        <BoardDetail 
+            v-if="showDetail" 
+            :boardId="selectedBoardId"
+            @close="showDetail = false"
+        />
     </div>
 </template>
 
 <script setup>
 import {ref, onMounted } from 'vue';
 import axios from 'axios';
+import { useRouter } from 'vue-router';
 import HeaderBar from '@/components/HeaderBar.vue';
 import SearchBar from '@/components/SearchBar.vue';
+import BoardDetail from '@/components/BoardDetail.vue';
 
+const router = useRouter();
 const exercises = ref([]);
 const serverUrl = import.meta.env.VITE_API_BASE_URL
+const showDetail = ref(false);
+const selectedBoardId = ref(null);
+
+const showBoardDetail = (boardId) => {
+  selectedBoardId.value = boardId;
+  showDetail.value = true;
+}
 
 
 onMounted(async () => {
@@ -42,18 +59,21 @@ onMounted(async () => {
 
     console.log('응답 데이터:', response.data);
 
-    const boards = response.data.boards;
-    const images = response.data.images;
+    // Map<Long, Map<String, Object>> 형태의 데이터를 배열로 변환
+    const exerciseArray = []
+    for (const [boardId, entry] of Object.entries(response.data)) {
+      const board = entry.board
+      const images = entry.images
 
-    exercises.value = boards.map(board => {
-      const imgList = images[board.boardId];
-      const firstImg = imgList && imgList.length > 0 ? imgList[0].name : 'default.jpg';
-      
-      return {
+      exerciseArray.push({
+        boardId: board.boardId,
         title: board.title,
-        img: `/images/${firstImg}`
-      };
-    });
+        img: images && images.length > 0 
+          ? `${serverUrl}/images/${images[0].name}`
+          : '/images/default.jpg'
+      })
+    }
+    exercises.value = exerciseArray
   } catch (error) {
     console.error('추천 운동 목록 불러오기 실패', error);
   }
@@ -107,6 +127,13 @@ onMounted(async () => {
   border-radius: 5px;
   overflow: hidden;
   text-align: left;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .card img {
@@ -120,5 +147,9 @@ onMounted(async () => {
   padding: 12px 0;
   font-weight: bold;
   font-size: large;
+}
+
+.exercise-list h2{
+  margin-top: 60px;
 }
 </style>

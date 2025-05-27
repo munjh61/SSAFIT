@@ -7,14 +7,12 @@
             <span class="date">{{ date }}</span>
             <button class="delete-btn" @click="deleteItem">❌</button>
         </div>
-            
             <img :src="imgUrl" class="exercise-img" />
 
             <div class="card-bottom">
                 <div class="title">{{ title }}</div>
                 <button class="done-btn" @click="mark" :disabled="localDone === 2">완료</button>
             </div>
-            
     </div>
 
 </template>
@@ -52,12 +50,12 @@ const mark = () => {
 <style scoped>
 .bucket-card {
   position: relative;
-  width: 50%;
-  height:100%;
+  width: 40%;
+  height: 80%;
   background: white;
   padding: 16px;
   border-radius: 16px;
-  margin-bottom: 32px;
+  margin-bottom: 50px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   overflow: hidden;
 }

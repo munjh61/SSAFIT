@@ -1,13 +1,17 @@
 <template>
     <HeaderBar />
     <div class="container">
-    <h2>✨나의 버킷리스트✨</h2>
-        <div class="stats">
-            <p>나의 총 버킷리스트: {{ bucketStats.total }}</p>
-            <p>앞으로: {{ bucketStats.doing }}</p>
-            <p>완료: {{ bucketStats.done }}</p>
-            <p>달성률: {{ bucketStats.rate }}%</p>
-            <progress :value="bucketStats.rate" max="100"></progress>
+      <h2>✨나의 버킷리스트✨</h2>
+      <div class="graph">
+        <progress :value="bucketStats.rate" max="100"></progress>
+        <p>{{ bucketStats.rate }}%</p>
+      </div>
+      <div class="stats">
+          <div class="num">
+            <p>나의 버킷리스트: {{ bucketStats.total }}</p>
+            <p>미달성: {{ bucketStats.doing }}</p>
+            <p>달성: {{ bucketStats.done }}</p>
+          </div>
         </div>
         <BucketItem v-for="item in bucketList" 
         :key="item.bucketId" 
@@ -45,15 +49,13 @@ onMounted(async () => {
         const token = `Bearer ${sessionStorage.getItem('ssafit-login-token')}`
         // const token = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoidXNlciIsInVzZXJOYW1lIjoi67CV7ZSE66Gg7Yq4IiwidXNlcklkIjoidXNlcjAzIiwiaWF0IjoxNzQ3NzIxMjYyLCJleHAiOjE3NDg5MzA4NjJ9.Au6-Ze8jG78wUgcEW0LEcdwno5t-Gzvw0GBC37MuomM"
         console.log('토큰:', token);
-        //버킷리스트 목록 불러오기기
+        //버킷리스트 목록 불러오기
         const response = await axios.get(`${serverUrl}/api/bucket/list`,{
             headers:{
                 Authorization: token
             },
             withCredentials: true
         })
-
-        console.log('응답 데이터:', response.data)
 
         const{ bucketList: rawList, bucketImgs }= response.data
 
@@ -139,12 +141,32 @@ const markDone = async (bucketId) => {
   align-items: center;
   flex-direction: column;
 }
+
+.num{
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+}
+.graph{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.graph p{
+  margin-left: 10px;
+}
 .stats {
-  margin-top: 16px;
-  margin-bottom: 30px;
+  margin-top: 1px;
+  margin-bottom: 50px;
   padding: 12px;
+  width: 300px;
   background: #f7f7f7;
   border-radius: 8px;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
 }
 .stats p {
   margin: 4px 0;

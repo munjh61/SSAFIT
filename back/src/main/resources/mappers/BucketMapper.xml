@@ -62,4 +62,13 @@
             FROM bucket
             WHERE board_id = #{boardId} AND done >= 1
         </select>
+
+        <select id="exist" resultType="boolean">
+            SELECT EXISTS(
+            SELECT 1 FROM bucket
+            WHERE user_id = #{userId}
+            AND board_id = #{boardId}
+            AND done != 0
+            )
+        </select>
     </mapper>

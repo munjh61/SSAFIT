@@ -23,11 +23,26 @@ const serverUrl = import.meta.env.VITE_API_BASE_URL
 
 const token = `Bearer ${sessionStorage.getItem('ssafit-login-token')}`
 
-console.log('🧩 받은 props:', props)
+
+const checkBucketStatus = async () => {
+  try {
+    const response = await axios.get(`${serverUrl}/api/board/check/${props.boardId}`, {
+      headers: {
+        Authorization: token
+      },
+      withCredentials: true
+    })
+    isBucketmarked.value = response.data
+  } catch (err) {
+    console.error('버킷리스트 상태 확인 실패:', err)
+  }
+}
+
+onMounted(() => {
+  checkBucketStatus()
+})
 
 const addBucketmark = async() => {
-  console.log("🧪 버튼 클릭됨, isBucketmarked:", isBucketmarked.value)
-  console.log("🧪 boardId:", props.boardId)
   try{
     if(!isBucketmarked.value) {
       await axios.post(`${serverUrl}/api/bucket`, {

@@ -88,5 +88,10 @@ public class BucketServiceImpl implements BucketService {
         return bucketDao.countByBoardId(boardId);
     }
 
+    @Override
+    public boolean isBoardInBucket(String userId, Long boardId) {
+        return bucketDao.exist(userId, boardId);
+    }
+
 
 }

@@ -9,11 +9,11 @@
           <button v-if="isFollowed && canFollow" @click="del">언팔로우</button>
         </div>
         <div class="status-container">
-          <span v-if="canModify" @click="modify" :class="{ active: canModify}">⚙️</span>
           <div class="status">
             <input v-model="otherStore.otherMsg1" :readonly="!canModify" />
             <input v-model="otherStore.otherMsg2" :readonly="!canModify" />
           </div>
+          <span v-if="canModify" @click="modify" :class="{ active: canModify}">✏️</span>
         </div>
       </div>
     </div>
@@ -198,7 +198,7 @@ onMounted(async () => {
 .status input {
   font-size: 18px;
   color: #666;
-  width: 600px;
+  width: 300px;
   border: 0;
 }
 

@@ -19,7 +19,7 @@
         검색 결과가 없습니다.
       </div>
       
-      <div v-else class="results-grid">
+      <div v-else class="results-list">
         <div v-for="board in searchStore.searchResults" :key="board.boardId" class="board-card">
           <div class="card-wrapper" @click="openDetail(board.boardId)">
             <div class="card-image" v-if="board.images && board.images.length > 0">
@@ -29,12 +29,14 @@
               <div class="no-image">이미지 없음</div>
             </div>
             <div class="card-content">
-              <h3>{{ board.title }}</h3>
-              <p class="content">{{ board.content }}</p>
-              <div class="tags" v-if="board.tag">
-                <span v-for="tag in (board.tag || '').split(',')" :key="tag" class="tag">
-                  #{{ tag.trim() }}
-                </span>
+              <div class="top">
+                <h3>{{ board.title }}</h3>
+                <p class="content">{{ board.content }}</p>
+                <div class="tags" v-if="board.tag">
+                  <span v-for="tag in (board.tag || '').split(',')" :key="tag" class="tag">
+                    #{{ tag.trim() }}
+                  </span>
+                </div>
               </div>
               <div class="board-info">
                 <span class="author">{{ board.userId }}</span>
@@ -124,7 +126,8 @@ const formatDate = (dateString) => {
 }
 
 .search-info {
-  margin-bottom: 24px;
+  margin-top: 30px;
+  margin-bottom: 40px;
 }
 
 h2 {
@@ -144,13 +147,17 @@ h2 {
   color: #666;
 }
 
-.results-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
+.results-list{
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
 }
 
+/* 보드 카드 크기 */
 .board-card {
+  width: 80%;
+  height: 250px;
   border: 1px solid #eee;
   border-radius: 8px;
   overflow: hidden;
@@ -165,13 +172,17 @@ h2 {
 }
 
 .card-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
   text-decoration: none;
   color: inherit;
 }
 
 .card-image {
-  width: 100%;
-  height: 200px;
+  width: 250px;
+  height: 100%;
   overflow: hidden;
   background-color: #f5f5f5;
 }
@@ -191,9 +202,17 @@ h2 {
   color: #999;
   font-size: 14px;
 }
+.top{
+  padding-bottom: 25px;
+}
 
 .card-content {
-  padding: 16px;
+  flex: 1;
+  min-height: 60%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 30px;
 }
 
 .card-content h3 {
@@ -232,6 +251,7 @@ h2 {
   justify-content: space-between;
   font-size: 12px;
   color: #999;
+  margin-top: auto;
 }
 
 .author {

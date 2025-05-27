@@ -3,6 +3,7 @@ package com.ssafy.ssafit.controller.board;
 import com.ssafy.ssafit.model.dto.Board;
 import com.ssafy.ssafit.model.dto.Img;
 import com.ssafy.ssafit.model.service.BoardService;
+import com.ssafy.ssafit.model.service.BucketService;
 import com.ssafy.ssafit.model.service.FollowService;
 import com.ssafy.ssafit.model.service.ImgService;
 import com.ssafy.ssafit.security.CustomUserDetails;
@@ -25,6 +26,7 @@ public class BoardController {
     private final BoardService boardService;
     private final ImgService imgService;
     private final FollowService followService;
+    private final BucketService bucketService;
 
     //로그인 유저가 작성한 보드만 조회 - 마이페이지용
     //페이지 주인의 보드 가져오기
@@ -122,6 +124,16 @@ public class BoardController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("추천 운동 조회 중 오류가 발생했습니다.");
         }
+    }
+
+    @GetMapping("/check/{boardId}")
+    public ResponseEntity<Boolean> checkBucketStatus(
+            @PathVariable Long boardId,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        String userId = userDetails.getUsername();
+        System.out.println("로그인 유저: " + userId);
+        boolean isAdded = bucketService.isBoardInBucket(userId, boardId);
+        return ResponseEntity.ok(isAdded);
     }
 
 }

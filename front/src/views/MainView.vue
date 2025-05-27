@@ -10,7 +10,7 @@
 
         <section>
             <h2>추천 운동</h2>
-            <RecommendedExercise />
+            <RecommendedExercise @show-detail="showBoardDetail" />
             <RouterLink class="more-link" to="/exercise/all">전체보기</RouterLink>
         </section>
 
@@ -19,14 +19,31 @@
             <RecommendedFollower />
             <RouterLink class="more-link" to="/follower/all">전체보기</RouterLink>
         </section>
+
+        <!-- BoardDetail 모달 -->
+        <BoardDetail 
+            v-if="showDetail" 
+            :boardId="selectedBoardId"
+            @close="showDetail = false"
+        />
     </div>
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import HeaderBar from '@/components/HeaderBar.vue'
 import SearchBar from '@/components/SearchBar.vue'
 import RecommendedExercise from '@/components/RecommendedExercise.vue'
 import RecommendedFollower from '@/components/RecommendedFollower.vue'
+import BoardDetail from '@/components/BoardDetail.vue'
+
+const showDetail = ref(false)
+const selectedBoardId = ref(null)
+
+const showBoardDetail = (boardId) => {
+  selectedBoardId.value = boardId
+  showDetail.value = true
+}
 </script>
 
 <style scoped>

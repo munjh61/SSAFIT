@@ -9,6 +9,7 @@
                 :img-url="exercise.img"
                 :title="exercise.title"
                 :boardId="exercise.boardId"
+                @click="$emit('show-detail', exercise.boardId)"
                 />
             </div>
         <button class="scroll-btn right" @click="scrollRight">›</button>
@@ -30,6 +31,8 @@ const props = defineProps({
   title: String,
   boardId: Number
 })
+
+const emit = defineEmits(['show-detail'])
 
 const scrollLeft = () => {
   sliderRef.value.scrollBy({

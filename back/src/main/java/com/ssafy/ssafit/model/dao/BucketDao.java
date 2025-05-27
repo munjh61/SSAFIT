@@ -29,4 +29,6 @@ public interface BucketDao {
     //버킷 갯수
     int countByBoardId(Long boardId);
 
+    //버킷에 존재하는거인지
+    boolean exist(String userId, Long boardId);
 }
