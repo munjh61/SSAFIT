@@ -1,15 +1,15 @@
 <template>
+    <HeaderBar/>
     <div class="container">
         <h1>dk</h1>
     </div>
 </template>
 
-<script>
-    export default {
-        
-    }
+<script setup>
+import HeaderBar from '@/components/HeaderBar.vue';
+    
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 
 </style>

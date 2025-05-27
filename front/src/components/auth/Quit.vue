@@ -9,15 +9,17 @@
                     <p>회원 탈퇴</p>
                     <p class="icon">🧹</p>
                 </div>
-                <div class="inputs">
-                    <div class="input-container">
-                        <fieldset>
-                            <legend>비밀번호를 재입력 해주세요.</legend>
-                            <input type="text" v-model="password">
-                        </fieldset>
+                <div class="main-contents-container">
+                    <div class="inputs">
+                        <div class="input-container">
+                            <fieldset>
+                                <legend>비밀번호를 재입력 해주세요.</legend>
+                                <input type="password" v-model="password">
+                            </fieldset>
+                        </div>
                     </div>
+                    <button @click="quit">회원 탈퇴</button>
                 </div>
-                <button @click="quit">회원 탈퇴</button>
             </div>
         </div>
     </Teleport>
@@ -25,15 +27,22 @@
 
 <script setup>
 import { useAuthStore } from '@/stores/auth'
-import { useAuthNewStore } from '@/stores/authNew'
 import { ref } from 'vue'
-const store = useAuthNewStore()
+import { useRouter } from 'vue-router'
+const store = useAuthStore()
 const emit = defineEmits(["close"])
 const password = ref('')
+const router = useRouter()
 const closeModal = () => emit('close')
+
+const quit = async () => {
+    const success = await store.quit(password.value)
+    if (success) {
+        emit('close')
+    }
+}
+
 </script>
-
-
 
 <style scoped>
 /* 모달창 */
@@ -90,6 +99,13 @@ const closeModal = () => emit('close')
     text-align: center;
     font-weight: bold;
     color: #4a90e2;
+}
+.main-contents-container{
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 30px;
 }
 
 .input-container {
