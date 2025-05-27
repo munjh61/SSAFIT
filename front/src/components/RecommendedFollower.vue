@@ -3,11 +3,10 @@
     <button class="scroll-btn left" @click="scrollLeft">‹</button>
 
     <div class="scroll-wrapper" ref="sliderRef">
-      <div v-for="user in followers" :key="user.userId" class="card">
-        <img :src="user.imgUrl" alt="user" />
-        <div class="userName">{{ user.name }}</div>
-        <!-- <div class="info">{{ user.intro }}</div> -->
-        <button>Follow</button>
+      <div v-for="user in followers" :key="user.followingId" class="card">
+        <div class="userName">{{ user.followingName }}</div>
+        <div class="userId">{{ user.followingId }}</div>
+        <button @click="follow(user.followingId)">Follow</button>
       </div>
     </div>
 
@@ -37,21 +36,44 @@ const scrollRight = () => {
   })
 }
 
-// onMounted(async () => {
-//   try {
-//     //유저 추천 컨트롤러 만들어야 됨됨
-//     const response = await axios.get(`${serverUrl}/api/public/user/recommend`)
-//     console.log('팔로우 추천 목록:', response.data)
-//     followers.value = response.data
-//   } catch (error) {
-//     console.error('팔로우 추천 목록 불러오기 실패', error)
-//   }
-// })
+
+const follow = async (targetUserId) => {
+  try {
+    const token = `Bearer ${sessionStorage.getItem('ssafit-login-token')}`
+    await axios.post(`${serverUrl}/api/follow/${targetUserId}`, {}, {
+      headers: {
+        Authorization: token
+      },
+      withCredentials: true
+    })
+    alert(`${targetUserId}님을 팔로우했어요!`)
+  } catch (error) {
+    console.error('팔로우 실패', error)
+    alert('팔로우에 실패했습니다')
+  }
+}
+
+onMounted(async () => {
+  try {
+    const token = `Bearer ${sessionStorage.getItem('ssafit-login-token')}`
+    const response = await axios.get(`${serverUrl}/api/follow/recommend`, {
+      headers: {
+        Authorization: token
+      },
+      withCredentials: true
+    })
+    console.log('팔로우 추천 목록:', response.data)
+    followers.value = response.data
+  } catch (error) {
+    console.error('팔로우 추천 목록 불러오기 실패', error)
+  }
+})
+
 </script>
 
 <style scoped>
 button{
-  color: #10217D;
+  color: #1BA9B5;
 }
 .slider-container {
   position: relative;
@@ -109,6 +131,7 @@ button{
   border: 1px solid #ddd;
   padding: 20px;
   width: 150px;
+  height: 120px;
   text-align: center;
   border-radius: 8px;
   background-color: #fff;
@@ -137,7 +160,7 @@ img {
 button {
   margin-top: 8px;
   padding: 6px 12px;
-  border: 1px solid #000;
+  border: 1px solid #1BA9B5;
   background-color: white;
   border-radius: 4px;
   cursor: pointer;

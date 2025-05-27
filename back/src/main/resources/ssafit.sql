@@ -1,4 +1,4 @@
-DROP DATABASE IF EXISTS ssafit;
+DROP DATABASE IF EXISTS ssafit;bucket
 CREATE DATABASE IF NOT EXISTS ssafit;
 USE ssafit;
 
@@ -137,9 +137,9 @@ VALUES
 
 INSERT INTO bucket (board_id, user_id, done, done_date)
 VALUES 
-(1, 'user01', 0, '2025-05-20 14:30:00'),
-(2, 'user01', 0, '2024-01-01 12:00:00'),                            -- 그냥 좋아요
-(4, 'user02', 1, '2025-05-20 14:30:00'),             -- 버킷리스트 추가
+(1, 'user01', 0, null),
+(2, 'user01', 0, null),                            -- 그냥 좋아요
+(4, 'user02', 0, null),             -- 버킷리스트 추가
 (5, 'user03', 2, '2025-05-22 10:15:00');    
 
 -- img 더미데이터

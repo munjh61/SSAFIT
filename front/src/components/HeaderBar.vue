@@ -4,7 +4,7 @@
     <nav class="nav">
       <RouterLink :to="`/myPage/${store.userId}`" class="mypage">마이페이지</RouterLink>
       <RouterLink to="/bucketList" class="bucketlist">버킷리스트</RouterLink>
-      <RouterLink to="/calender" class="calender">캘린더</RouterLink>
+      <!-- <RouterLink to="/calender" class="calender">캘린더</RouterLink> -->
       <RouterLink to="/guild" class="guild">모임</RouterLink>
     </nav>
     <div class="auth">

@@ -1,6 +1,7 @@
 package com.ssafy.ssafit.model.dao;
 
 import com.ssafy.ssafit.model.dto.Follow;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -16,4 +17,6 @@ public interface FollowDao {
     List<Follow> selectOnlyYou(String userId);
 
     List<String> selectFollowingUserIds(String userId);
+
+    List<Follow> getRecommendedUsers(@Param("userId") String userId);
 }

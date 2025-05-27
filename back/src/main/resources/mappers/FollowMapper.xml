@@ -85,4 +85,19 @@
         AND f2.follower_id IS NULL
     </select>
 
+    <select id="getRecommendedUsers" resultType="Follow">
+        SELECT DISTINCT
+        u.user_id        AS followingId,
+        u.user_name      AS followingName
+        FROM follow f1
+        JOIN follow f2 ON f1.following_id = f2.follower_id
+        JOIN user u ON f2.following_id = u.user_id
+        WHERE f1.follower_id = #{userId}
+        AND f2.following_id != #{userId}
+        AND f2.following_id NOT IN (
+        SELECT following_id FROM follow WHERE follower_id = #{userId}
+        )
+    </select>
+
+
 </mapper>

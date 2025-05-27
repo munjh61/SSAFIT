@@ -5,6 +5,7 @@ import com.ssafy.ssafit.model.dto.Bucket;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -91,6 +92,14 @@ public class BucketServiceImpl implements BucketService {
     @Override
     public boolean isBoardInBucket(String userId, Long boardId) {
         return bucketDao.exist(userId, boardId);
+    }
+    
+    //완료 시간 수정
+    @Override
+    public void markDoneTime(Long bucketId) {
+        Bucket bucket = bucketDao.selectBucketByBucketId(bucketId);
+        bucket.setDone(2); // 또는 안 써도 됨
+        bucket.setDoneDate(LocalDateTime.now());
     }
 
 

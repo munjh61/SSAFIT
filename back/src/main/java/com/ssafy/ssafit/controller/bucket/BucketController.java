@@ -119,4 +119,11 @@ public class BucketController {
           int count = bucketService.countByBoardId(boardId);
           return ResponseEntity.ok(count);
      }
+
+     //버킷 완료 시간 수정
+     @PutMapping("/done/{bucketId}")
+     public ResponseEntity<Void> markDoneTime(@PathVariable Long bucketId) {
+          bucketService.markDoneTime(bucketId);
+          return ResponseEntity.ok().build();
+     }
 }

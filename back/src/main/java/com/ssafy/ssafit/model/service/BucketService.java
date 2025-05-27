@@ -25,4 +25,7 @@ public interface BucketService {
 
     //버킷에 들어가있는지 확인
     boolean isBoardInBucket(String userId, Long boardId);
+
+    //버킷 시간
+    void markDoneTime(Long bucketId);
 }

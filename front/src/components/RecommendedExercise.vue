@@ -32,8 +32,6 @@ const props = defineProps({
   boardId: Number
 })
 
-const emit = defineEmits(['show-detail'])
-
 const scrollLeft = () => {
   sliderRef.value.scrollBy({
     left: -320, 

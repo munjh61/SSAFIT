@@ -63,5 +63,13 @@ public class FollowServiceImpl implements FollowService {
         return followDao.selectFollowingUserIds(userId);
     }
 
+    //추천
+    @Override
+    public List<Follow> getRecommendedUsers(String userId) {
+        return followDao.getRecommendedUsers(userId);
+    }
+
+
+
 
 }

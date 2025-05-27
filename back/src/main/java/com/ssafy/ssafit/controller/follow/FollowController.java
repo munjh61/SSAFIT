@@ -60,5 +60,14 @@ public class FollowController {
         return new ResponseEntity<>(true, HttpStatus.OK);
     }
 
+    //follow 추천
+    @GetMapping("/recommend")
+    public ResponseEntity<List<Follow>> recommend(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        String userId = userDetails.getUsername();
+        List<Follow> recommended = followService.getRecommendedUsers(userId);
+        return ResponseEntity.ok(recommended);
+    }
+
+
 
 }

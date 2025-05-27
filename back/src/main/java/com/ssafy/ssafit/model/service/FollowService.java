@@ -11,4 +11,5 @@ public interface FollowService {
     Map<String,List<Follow>> followList(String userId);
     boolean isFollowed(String targetUserId,String loginUserId);
     List<String> getFollowingUserIds(String userId);
+    List<Follow> getRecommendedUsers(String userId);
 }
