@@ -4,7 +4,7 @@
           ✔️
       </div>
       <div class="card-header">
-          <span class="date">{{ date }}</span>
+          <!-- <span class="date">{{ date }}</span> -->
           <button class="delete-btn" @click="deleteItem">❌</button>
       </div>
           <img :src="imgUrl" class="exercise-img" />

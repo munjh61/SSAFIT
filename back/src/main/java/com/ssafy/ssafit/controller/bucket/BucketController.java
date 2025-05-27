@@ -70,8 +70,6 @@ public class BucketController {
           String userId = customUserDetails.getUsername(); //로그인 한 유저
           boolean isCompleted = bucketService.completeBucket(userId, bucketId);
 
-          System.out.println(userId);
-
           if(isCompleted){
                return ResponseEntity.ok().body("버킷리스트가 달성되었습니다.");
           }

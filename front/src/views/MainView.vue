@@ -9,20 +9,20 @@
         </section>
 
         <section v-if="!isLoggedIn">
-          <h2>🆕최신 게시글</h2>
+          <h2>🆕 최신 게시글</h2>
           <RecentBoard @show-detail="showBoardDetail" />
         </section>
 
         <section class="e" v-if="isLoggedIn">
-            <h2>🏃‍♂️‍➡️추천 운동</h2>
+            <h2>🏃‍♂️‍➡️ 추천 운동</h2>
             <RecommendedExercise @show-detail="showBoardDetail" />
             <RouterLink class="more-link" to="/exercise/all">전체보기</RouterLink>
         </section>
 
         <section class="followers" v-if="isLoggedIn">
-            <h2>👤팔로우 추천</h2>
+            <h2>👤 팔로우 추천</h2>
             <RecommendedFollower />
-            <RouterLink class="more-link" to="/follower/all">전체보기</RouterLink>
+            <!-- <RouterLink class="more-link" to="/follower/all">전체보기</RouterLink> -->
         </section>
 
         <!-- BoardDetail 모달 -->

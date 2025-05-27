@@ -11,7 +11,7 @@
           <p>나의 버킷리스트: {{ bucketStats.total }}</p>
           <p>미달성: {{ bucketStats.doing }}</p>
           <p>달성: {{ bucketStats.done }}</p>
-        </div>
+    </div>
       </div>
       <BucketItem v-for="item in bucketList" 
       :key="item.bucketId" 
@@ -122,7 +122,8 @@ try {
 
 <style scoped>
 .container h2{
-  margin-top: 40px;
+  font-size: 30px;
+  margin-top: 70px;
   margin-bottom: 30px;
 }
 .container{
@@ -142,6 +143,7 @@ flex-direction: row;
 gap: 20px;
 justify-content: center;
 align-items: center;
+font-size: 20px;
 }
 .graph{
 display: flex;
@@ -155,7 +157,8 @@ margin-left: 10px;
 margin-top: 1px;
 margin-bottom: 50px;
 padding: 12px;
-width: 300px;
+width: 400px;
+height: 47px;
 background: #f7f7f7;
 border-radius: 8px;
 align-content: center;

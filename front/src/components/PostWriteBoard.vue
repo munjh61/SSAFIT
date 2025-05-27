@@ -16,13 +16,15 @@
 
         <!-- 오른쪽: 글쓰기 -->
         <div class="text-section">
-          <input v-model="title" placeholder="제목을 입력하세요" class="input-title">
-          <input v-model="tag" placeholder="태그를 입력하세요" class="input-tag">
-          <textarea v-model="content" @input="updateCount" :maxlength="2000" placeholder="내용을 입력하세요" />
+          <div class="input-group">
+            <input v-model="title" placeholder="제목을 입력하세요" class="input-field title" />
+            <input v-model="tag" placeholder="태그를 입력하세요" class="input-field tag" />
+          </div>
+          <textarea v-model="content" @input="updateCount" :maxlength="2000" placeholder="내용을 입력하세요" class="input-field content" />
           <div class="tail">
             <div class="right-group">
-                <div class="char-count">{{ content.length }}/2000</div>
-                <button @click="submitPost" class="submit-btn">등록</button>
+              <div class="char-count">{{ content.length }}/2000</div>
+              <button @click="submitPost" class="submit-btn">등록</button>
             </div>
           </div>
         </div>
@@ -198,40 +200,63 @@ const submitPost = async () => {
   display: flex;
   flex-direction: column;
   margin-left: 15px;
+  gap: 16px;
 }
-.text-section textarea {
+
+.input-group {
+  display: flex;
+  gap: 12px;
+}
+
+.input-field {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  font-size: 25px;
+  transition: all 0.2s;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: #10217D;
+  box-shadow: 0 0 0 2px rgba(16, 33, 125, 0.1);
+}
+
+.input-field.title {
+  flex: 1;
+  font-weight: 500;
+  height: 25px;
+}
+
+.input-field.tag {
+  flex: 1;
+  height: 25px;
+}
+
+.input-field.content {
+  flex: 1;
+  min-height: 300px;
+  resize: none;
+  line-height: 1.6;
+  font-size: 25px;
+}
+
+.input-field::placeholder {
+  color: #aaa;
+  font-size: 25px;
+}
+
+.text-section textarea.input-field {
   width: 100%;
   max-width: 100%;
-  flex: 1;
-  resize: none;
-  font-size: 16px;
-  padding: 20px;
-  border-radius: 12px;
-  border: 1px solid #ccc;
   box-sizing: border-box;
 }
-.char-count {
-  bottom: 40px;
-  right: 16px;
-  font-size: 14px;
-  color: #888;
-}
-.submit-btn {
-  margin-left: 12px;
-  align-self: flex-end;
-  padding: 10px 20px;
-  border: none;
-  background-color: #10217D;
-  color: white;
-  font-weight: bold;
-  border-radius: 6px;
-  cursor: pointer;
-  display: flex;
-}
+
 .tail {
   display: flex;
   justify-content: flex-end;
-  margin-top: 8px;
+  margin-top: auto;
+  padding-top: 8px;
   width: 100%;
   box-sizing: border-box;
 }
@@ -243,9 +268,26 @@ const submitPost = async () => {
   min-width: 160px;
   justify-content: right;
 }
+
 .char-count {
-  display: flex;
   font-size: 14px;
   color: #888;
+}
+
+.submit-btn {
+  padding: 12px 32px;
+  border: none;
+  background-color: #10217D;
+  color: white;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.2s;
+}
+
+.submit-btn:hover {
+  background-color: #1a2f8f;
+  transform: translateY(-1px);
 }
 </style>

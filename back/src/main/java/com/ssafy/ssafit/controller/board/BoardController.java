@@ -131,7 +131,6 @@ public class BoardController {
             @PathVariable Long boardId,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
         String userId = userDetails.getUsername();
-        System.out.println("로그인 유저: " + userId);
         boolean isAdded = bucketService.isBoardInBucket(userId, boardId);
         return ResponseEntity.ok(isAdded);
     }

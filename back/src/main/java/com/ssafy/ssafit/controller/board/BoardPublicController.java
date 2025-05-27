@@ -66,8 +66,6 @@ public class BoardPublicController {
         map.put("boards", result);
         map.put("images", boardImages);
 
-        System.out.println("📥 field: " + field);
-
         return ResponseEntity.ok(map);
     }
 
