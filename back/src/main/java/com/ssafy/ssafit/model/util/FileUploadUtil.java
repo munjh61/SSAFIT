@@ -12,8 +12,8 @@ import java.util.UUID;
 
 @Component
 public class FileUploadUtil {
-//    private static final String UPLOAD_DIR = "C:/Users/SSAFY/JYW/SSAFIT_Final_Project/SSAFIT/front/public/images"; // 경로 조정 가능
-    private static final String UPLOAD_DIR = "C:/SSAFY/final_project/SSAFIT/front/public/images"; // 경로 조정 가능
+    private static final String UPLOAD_DIR = "C:/Users/SSAFY/JYW/SSAFIT_Final_Project/SSAFIT/front/public/images"; // 경로 조정 가능
+//    private static final String UPLOAD_DIR = "C:/SSAFY/final_project/SSAFIT/front/public/images"; // 경로 조정 가능
 
     public String save(MultipartFile file) {
         try {
