@@ -67,7 +67,7 @@ onMounted(async () => {
         boardId: board.boardId,
         title: board.title,
         img: images && images.length > 0 
-          ? `${serverUrl}/images/${images[0].name}`
+          ? `/images/${images[0].name}`
           : '/images/default.jpg'
       })
     }

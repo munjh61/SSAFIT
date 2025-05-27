@@ -5,25 +5,20 @@
         <img :src="imageUrl" alt="게시글 이미지" />
       </div>
       <div class="right">
-        <div class="header">
-          <h3>{{ board?.title }}</h3>
-          <p class="date">{{ formatDate(board?.regDate) }}</p>
-        </div>
-        <p class="content">{{ board?.content }}</p>
-
-        <div class="actions">
-          <!-- <span @click="toggleLike" :class="{ liked: isLiked }">❤️</span> {{ likeCount }} -->
-          <span class="bucket-count">{{ bucketCount }}</span>
-          <button @click="toggleBucket">⭐ 버킷 추가</button>
-
-          <button v-if="board?.userId === store.userId" @click="showEdit = true">✏️ 수정</button>
-
-          <button
-            v-if="board?.userId === store.userId"
-            @click="deletePost"
-          >
-            ❌ 삭제
-          </button>
+        <div class="top">
+          <div class="header">
+            <h3>{{ board?.title }}</h3>
+            <p class="date">{{ formatDate(board?.regDate) }}</p>
+          </div>
+          <p class="content">{{ board?.content }}</p>
+          <div class="actions">
+            <!-- <span @click="toggleLike" :class="{ liked: isLiked }">❤️</span> {{ likeCount }} -->
+            <span class="bucket-count">{{ bucketCount }}</span>
+            <button @click="toggleBucket">⭐ 버킷 추가</button>
+            <button v-if="board?.userId === store.userId" @click="showEdit = true">✏️ 글 수정</button>
+            <button v-if="board?.userId === store.userId" @click="deletePost">❌ 글 삭제</button>
+          </div>
+          <div class="divider"></div>
         </div>
 
         <div class="comments">
@@ -311,7 +306,7 @@ const fetchComments = async () => {
   display: flex;
   background: white;
   width: 55%;
-  height: 50%;
+  height: 55%;
   border-radius: 5px;
   overflow: hidden;
 }
@@ -334,20 +329,29 @@ const fetchComments = async () => {
 }
 .header {
   margin-bottom: 16px;
+  font-size: large;
 }
 .date {
-  font-size: 0.9rem;
+  font-size: medium;
   color: #888;
 }
 .content {
   flex-grow: 1;
   margin-bottom: 16px;
+  font-size: large;
 }
 .actions {
   display: flex;
   align-items: center;
   gap: 12px;
   margin-bottom: 16px;
+  margin-top: 50px;
+}
+.divider {
+  height: 1px;
+  background-color: #ddd;
+  width: 100%;
+  margin: 24px 0;
 }
 .liked {
   color: red;
