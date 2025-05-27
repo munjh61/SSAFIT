@@ -26,8 +26,8 @@
           </div>
 
           <div class="button-group">
-            <button @click="apply">지원하기</button>
-            <button @click="quit">탈퇴하기</button>
+            <button v-if="!store.isMember" @click="apply">지원하기</button>
+            <button v-else @click="quit">탈퇴하기</button>
           </div>
         </div>
         <div v-if="store.isOwner" class="main-contents">
@@ -235,14 +235,9 @@ onMounted(async () => {
   background-color: transparent;
 }
 
-.button-group {
-  display: flex;
-  justify-content: space-evenly;
-}
-
 /* 넓이를 input container에만 줘서 나머지 %들이 맞춰짐 */
 button {
-  width: 48%;
+  width: 100%;
   height: 40px;
   border: 0;
   border-radius: 8px;
@@ -278,6 +273,7 @@ button:hover {
 }
 
 .member-buttons button {
+  width: 48%;
   padding: 4px 8px;
   font-size: 12px;
   height: auto;

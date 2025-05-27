@@ -18,6 +18,7 @@ export const useGuildDetailStore = defineStore("guildDetail", () => {
     const loginUser = ref('')
     const isOwner = ref(false)
     const msg = ref('')
+    const isMember = ref(false);
 
     const start = async (inputGuildId) => {
         await aStore.me()
@@ -64,8 +65,9 @@ export const useGuildDetailStore = defineStore("guildDetail", () => {
                     isOwner.value = guild.userId == aStore.userId
                     const all = res.data.crews
                     if (all != null) {
-                        crews.value = all.filter(a => a.status == 0 && a.userId != owner.value)
-                        candidates.value = all.filter(a => a.status != 0)
+                        crews.value = all.filter(a => a.status === 0);
+                        candidates.value = all.filter(a => a.status !== 0);
+                        isMember.value = all.some(a => a.userId === aStore.userId && a.status === 0);
                     }
                 })
                 .catch((err) => {
@@ -135,5 +137,5 @@ export const useGuildDetailStore = defineStore("guildDetail", () => {
             })
     }
 
-    return { guildId, guildName, description, owner, crews, candidates, isOwner, msg, start, getDetail, apply, applyManage, quit }
+    return { guildId, guildName, description, owner, crews, candidates, isOwner, isMember, msg, start, getDetail, apply, applyManage, quit }
 })
