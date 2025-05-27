@@ -6,7 +6,6 @@ import MyPageView from "@/views/MyPageView.vue";
 import CalenderView from "@/views/CalenderView.vue";
 import GuildView from "@/views/GuildView.vue";
 import BucketListView from "@/views/BucketListView.vue";
-import JoonhoTestView from "@/views/JoonhoTestView.vue";
 import SearchResultsView from "@/views/SearchResultsView.vue";
 import RecommendedExercise from "@/components/RecommendedExercise.vue";
 
@@ -68,11 +67,6 @@ const router = createRouter({
         //   component:SettingView
         // }
         //------------------junho
-        {
-            path: "/joonhoTestView",
-            name: "joonhoTestView",
-            component: JoonhoTestView,
-        },
         {
             path: "/recommended",
             name: "recommended",
