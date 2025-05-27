@@ -8,7 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -20,112 +22,150 @@ public class CrewServiceImpl implements CrewService {
 
     @Transactional
     @Override
-    public String manageCrew(Crew crew, String manage, String userId) {
+    public Map<String, Object> manageCrew(Crew crew, String manage, String userId) {
+        Map<String, Object> map = new HashMap<>();
+        boolean success =false;
+        String msg;
 
         Guild guild = guildDao.select(crew.getGuildId());
         if (guild == null) {
-            return "잘못된 guildId";
+            msg = "잘못된 guildId";
+            map.put("success",success);
+            map.put("msg", msg);
+            return map;
         }
 
         String master = guild.getUserId();
         String crewId = crew.getUserId();
-        String msg;
+
+
 
         switch (manage) {
             case "apply":
                 if (!userId.equals(crewId)) {
                     msg = "신청한 사람이 본인이 아닙니다.";
                 } else {
-                    msg = apply(crew);
+                    if (!apply(crew)) {
+                        msg = "이미 신청, 초대하거나 멤버입니다.";
+                    } else {
+                        success = true;
+                        msg = "신청되었습니다.";
+                    }
                 }
                 break;
             case "invite":
                 if (!userId.equals(master)) {
                     msg = "초대자가 모임장이 아님";
                 } else {
-                    msg = invite(crew);
+                    if (!invite(crew)) {
+                        msg = "이미 신청, 초대하거나 멤버입니다";
+                    } else {
+                        success = true;
+                        msg = "초대 되었습니다.";
+                    }
                 }
                 break;
             case "applyAccept":
                 if (!userId.equals(master)) {
                     msg = "허락한 사람이 모임장이 아님.";
                 } else {
-                    msg = accept(crew);
+                    if(!accept(crew)){
+                        msg = "신청, 초대 된적이 없음";
+                    } else {
+                        success = true;
+                        msg = "멤버가 되었습니다.";
+                    }
                 }
                 break;
             case "applyRefuse":
                 if (!userId.equals(master)) {
                     msg = "모임장이 아니므로 거부할 수 없습니다.";
                 } else {
-                    msg = refuse(crew);
+                    if(!refuse(crew)){
+                        msg = "신청, 초대 된적이 없음";
+                    } else {
+                        success = true;
+                        msg = "신청 거부되어 table에서 삭제하였습니다.";
+                    }
                 }
                 break;
             case "inviteAccept":
                 if (!userId.equals(crewId)) {
                     msg = "허락한 사람이 초대받은 사람이 아님.";
                 } else {
-                    msg = accept(crew);
+                    if(!accept(crew)){
+                        msg = "신청, 초대 된적이 없음";
+                    } else {
+                        success = true;
+                        msg = "멤버가 되었습니다.";
+                    }
                 }
                 break;
             case "inviteRefuse":
                 if (!userId.equals(crewId)) {
                     msg = "거절한 사람이 초대받은 사람이 아님.";
                 } else {
-                    msg = refuse(crew);
+                    if(!refuse(crew)){
+                        msg = "신청, 초대 된적이 없음";
+                    } else {
+                        success = true;
+                        msg = "신청 거부되어 table에서 삭제하였습니다.";
+                    }
                 }
                 break;
             default:
-                msg = "알 수 없는 manage입니다. manage : apply, invite, applyAccept, applyRefuse, inviteAccept, inviteRefuse 중에서 선택해주세요.";
+                msg = "알 수 없는 요청입니다."; // manage : apply, invite, applyAccept, applyRefuse, inviteAccept, inviteRefuse 중에서 선택해주세요.
         }
-
-        return msg;
+        map.put("success",success);
+        map.put("msg", msg);
+        return map;
     }
 
-    public String apply(Crew crew) {
+    public boolean apply(Crew crew) {
         List<Crew> tmp = crewDao.search(crew);
         if (!tmp.isEmpty()) {
-            return "이미 신청, 초대하거나 멤버임";
+            return false;
         }
         crew.setStatus(2);
         crewDao.insert(crew);
-        return "신청되었습니다.";
+        return true;
     }
 
-    public String invite(Crew crew) {
+    public boolean invite(Crew crew) {
         List<Crew> tmp = crewDao.search(crew);
         if (!tmp.isEmpty()) {
-            return "이미 신청, 초대하거나 멤버임";
+            return false;
         }
         crew.setStatus(1);
         crewDao.insert(crew);
-        return "초대되었습니다.";
+        return true;
     }
 
-    public String accept(Crew crew) {
+    public boolean accept(Crew crew) {
         List<Crew> tmp = crewDao.search(crew);
         if (tmp.isEmpty()) {
-            return "신청, 초대 된적이 없음";
+            return false;
         }
         crew.setCrewId(tmp.get(0).getCrewId());
         crew.setStatus(0);
         crewDao.update(crew);
-        return "멤버가 되었습니다.";
+        return true;
     }
 
-    public String refuse(Crew crew) {
+    public boolean refuse(Crew crew) {
         List<Crew> tmp = crewDao.search(crew);
         if (tmp.isEmpty()) {
-            return "신청, 초대 된적이 없음";
+            return false;
         }
         crew.setCrewId(tmp.get(0).getCrewId());
         crewDao.delete(crew);
-        return "신청 거부되어 table에서 삭제하였습니다.";
+        return true;
     }
 
     @Transactional
     @Override
-    public String quitCrew(long crewId, String loginUser) {
-        Crew crew = crewDao.select(crewId);
+    public String quitCrew(Crew tmp, String loginUser) {
+        Crew crew = crewDao.selectByGuildIdAndUserId(tmp);
         if (crew == null) {
             return "잘못된 crewId";
         }
@@ -150,10 +190,10 @@ public class CrewServiceImpl implements CrewService {
             }
             // 2.2 탈퇴자가 모임장이 아닌 경우
             // if (quitter.equals(loginUser)) {
-                crewDao.delete(crew);
-                guild.setHeadCount(guild.getHeadCount() - 1);
-                guildDao.update(guild);
-                return "탈퇴처리되었습니다.";
+            crewDao.delete(crew);
+            guild.setHeadCount(guild.getHeadCount() - 1);
+            guildDao.update(guild);
+            return "탈퇴처리되었습니다.";
             // }
         }
         // 3. 모임장이 탈퇴시키는 경우
@@ -179,5 +219,11 @@ public class CrewServiceImpl implements CrewService {
         }
         crew.setUserId(null);
         return crewDao.search(crew);
+    }
+
+    public List<Crew> getCandidates(long guildId) {
+        Guild tmp = guildDao.select(guildId);
+        if (tmp == null) return null;
+        return crewDao.candidates(guildId);
     }
 }

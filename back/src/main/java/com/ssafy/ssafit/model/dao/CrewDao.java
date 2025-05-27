@@ -13,4 +13,5 @@ public interface CrewDao {
     int delete(Crew crew);
     int update(Crew crew);
     List<Crew> search(Crew crew);
+    List<Crew> candidates(long guildId);
 }

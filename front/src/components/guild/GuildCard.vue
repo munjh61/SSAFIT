@@ -4,7 +4,7 @@
         <img class="guild-img" src="/src/assets/images/SSAFIT.png" />
 
         <!-- 오른쪽: 텍스트 정보 -->
-        <div class="guild-info">
+        <div class="guild-info" @click="openDetail">
             <h2>
                 {{ guildName }}
                 <span class="headcount-badge">{{ formatHeadCount(headCount) }}</span>
@@ -37,14 +37,19 @@ const props = defineProps({
     headCount: Number,
 })
 
-const emit = defineEmits(['del','apply'])
+const emit = defineEmits(['del', 'openDetail'])
 
 const del = () => {
     emit('del')
 }
 
-const apply = () => {
-    emit('apply')
+const apply = async () => {
+    await store.apply(props.guildId)
+    alert(store.msg)
+}
+
+const openDetail = () => {
+    emit('openDetail', props.guildId)
 }
 
 function formatHeadCount(count) {
@@ -55,27 +60,11 @@ function formatHeadCount(count) {
 }
 
 import { useAuthStore } from '@/stores/auth'
+import { useGuildDetailStore } from '@/stores/guildDetail';
+const store = useGuildDetailStore()
 const authStore = useAuthStore()
 const isOwner = computed(() => authStore.userId === props.userId)
 const isMember = ref(false) // 아직은 더미 상태, 나중에 API로 확인 가능
-
-const applyToGuild = () => {
-    axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/crew`, {
-        guildId: props.guildId,
-        userId: authStore.userId,
-        status: 2 // 신청
-    }, {
-        headers: {
-            Authorization: `Bearer ${sessionStorage.getItem('ssafit-login-token')}`
-        }
-    }).then(() => {
-        alert("가입 신청이 완료되었습니다.")
-        isMember.value = true
-    }).catch(() => {
-        alert("신청에 실패했습니다.")
-    })
-}
-
 
 </script>
 

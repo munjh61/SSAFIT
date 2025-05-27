@@ -17,11 +17,14 @@
                     <button :class="{ active: !showMineOnly }" @click="showMineOnly = false">전체 보기</button>
                     <button :class="{ active: showMineOnly }" @click="showMineOnly = true">내 모임만</button>
                 </div>
-                <button class="create-btn" @click="showCreateModal = true">+ 모임 생성</button>
+                <div>
+                    <button v-if="isLoggedIn" class="create-btn" @click="showCreateModal = true">+ 모임 생성</button>
+                </div>
             </div>
 
             <div class="guild-list">
-                <GuildCard v-for="guild in filteredGuilds" :key="guild.guildId" v-bind="guild" @del="store.deleteGuild(guild.guildId)"/>
+                <GuildCard v-for="guild in filteredGuilds" :key="guild.guildId" v-bind="guild"
+                    @del="store.deleteGuild(guild.guildId)" @openDetail="openDetail"/>
             </div>
         </div>
 
@@ -35,13 +38,16 @@ import GuildCard from '@/components/guild/GuildCard.vue';
 import GuildCreateModal from '@/components/guild/GuildCreateModal.vue';
 import GuildDetailModal from '@/components/guild/GuildDetailModal.vue';
 import HeaderBar from '@/components/HeaderBar.vue';
+import { useAuthStore } from '@/stores/auth';
 import { useGuildStore } from '@/stores/guildForm';
 import { computed, onMounted, ref } from 'vue';
 
 const store = useGuildStore();
-
-onMounted(() => {
+const isLoggedIn = ref(false)
+onMounted(async () => {
     store.getList('')
+    await useAuthStore().me()
+    isLoggedIn.value = useAuthStore().isLoggedIn
 })
 
 const showMineOnly = ref(false)
@@ -57,6 +63,11 @@ const search = () => {
 const selectedId = ref(0)
 const showDetailModal = ref(false)
 const showCreateModal = ref(false)
+
+const openDetail = (guildId) =>{
+    selectedId.value = guildId
+    showDetailModal.value = true
+}
 </script>
 
 <style scoped>

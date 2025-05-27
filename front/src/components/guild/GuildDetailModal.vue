@@ -8,46 +8,113 @@
           </div>
           <div class="title">
             <p class="icon">🔐</p>
-            <h2>모임 생성 </h2>
+            <h2> 모임 상세 보기 </h2>
+            <h4>모임장 @{{ store.owner }}</h4>
           </div>
-          <div class="input-container">
+          <div class="input-container" :class="{ ownerOnly: !store.isOwner }">
             <fieldset>
               <legend>모임 이름</legend>
-              <input v-model="guildName" />
+              <input v-model="store.guildName" :readonly="!store.isOwner" />
             </fieldset>
-            <p class="error-msg">nameError</p>
           </div>
 
-          <div class="input-container">
+          <div class="input-container" :class="{ ownerOnly: !store.isOwner }">
             <fieldset>
               <legend>소개글</legend>
-              <textarea v-model="description" rows="4" style="resize: none;" />
+              <textarea v-model="store.description" rows="4" style="resize: none;" :readonly="!store.isOwner" />
             </fieldset>
           </div>
 
           <div class="button-group">
-            <button @click="submit">생성</button>
-            <button class="cancel" @click="close">취소</button>
+            <button @click="apply">지원하기</button>
+            <button @click="quit">탈퇴하기</button>
           </div>
         </div>
+        <div v-if="store.isOwner" class="main-contents">
+          <h3>✅ 현재 모임 인원 ({{ store.crews.length }})</h3>
+          <ul>
+            <li v-for="crew in store.crews" :key="crew.userId" class="member-item">
+              <span class="member-info">{{ crew.userId }} - {{ crew.roll || '멤버' }}</span>
+              <div class="member-buttons">
+                <button @click="kick(crew.userId)">강퇴</button>
+              </div>
+            </li>
+          </ul>
+
+          <h3>📝 가입 신청자 목록 ({{ store.candidates.length }})</h3>
+          <ul>
+            <li v-for="cand in store.candidates" :key="cand.userId" class="member-item">
+              <span class="member-info">
+                {{ cand.userId }} - 상태:
+                <span v-if="cand.status == 2">지원</span>
+                <span v-else-if="cand.status == 1">초대</span>
+                <span v-else>기타</span>
+              </span>
+              <div class="member-buttons">
+                <button @click="accept(cand.userId)">수락</button>
+                <button @click="refuse(cand.userId)">거절</button>
+              </div>
+            </li>
+          </ul>
+        </div>
+
       </div>
     </div>
   </Teleport>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { useAuthStore } from '@/stores/auth'
+import { useGuildDetailStore } from '@/stores/guildDetail'
+import { onMounted } from 'vue'
+const store = useGuildDetailStore()
+const props = defineProps({
+  guildId: Number
+})
 
 const emit = defineEmits(['close'])
 
 const close = () => {
-  guildName.value = ''
-  description.value = ''
   emit('close')
 }
 
-const guildName = ref('')
-const description = ref('')
+const apply = async () => {
+  await store.apply(props.guildId)
+  alert(store.msg)
+}
+
+const quit = () => {
+  store.quit(props.guildId)
+}
+
+const accept = async (targetId) => {
+  const result = await store.applyManage(props.guildId, targetId, "applyAccept");
+  if (result) {
+    const idx = store.candidates.findIndex(c => c.userId === targetId);
+    if (idx !== -1) {
+      const accepted = store.candidates.splice(idx, 1)[0];
+      accepted.status = 0;
+      store.crews.push(accepted);
+    }
+  }
+  alert(store.msg);
+};
+
+
+const refuse = async (targetId) => {
+  await store.applyManage(props.guildId, targetId, "applyRefuse");
+  store.candidates = store.candidates.filter(c => c.userId !== targetId);
+};
+
+const kick = async (targetId) => {
+  await store.applyManage(props.guildId, targetId, "quit");
+  store.crews = store.crews.filter(c => c.userId !== targetId);
+};
+
+
+onMounted(async () => {
+  store.start(props.guildId)
+})
 
 </script>
 
@@ -104,8 +171,8 @@ const description = ref('')
 }
 
 .icon {
-    font-size: 40px;
-    margin: 10px 0;
+  font-size: 40px;
+  margin: 10px 0;
 }
 
 .input-container {
@@ -185,5 +252,44 @@ button {
 
 button:hover {
   background-color: #357ABD;
+}
+
+.ownerOnly input,
+.ownerOnly textarea {
+  pointer-events: none;
+}
+
+.member-item {
+  width: 100%;
+  padding: 4px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.member-info {
+  font-size: 14px;
+  color: #333;
+}
+
+.member-buttons {
+  display: flex;
+  gap: 6px;
+}
+
+.member-buttons button {
+  padding: 4px 8px;
+  font-size: 12px;
+  height: auto;
+  width: auto;
+  background-color: #ddd;
+  color: #333;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.member-buttons button:hover {
+  background-color: #aaa;
 }
 </style>

@@ -143,5 +143,8 @@ public class GuildServiceImpl implements GuildService {
         return true;
     }
 
-
+    @Override
+    public Guild getGuild(long guildId){
+        return guildDao.select(guildId);
+    }
 }
