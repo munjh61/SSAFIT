@@ -49,11 +49,12 @@ onMounted(async () => {
       const board = entry.board
       const images = entry.images
 
+
       boardArray.push({
         boardId: board.boardId,
         title: board.title || '제목 없음',
         img: images && images.length > 0
-          ? `${serverUrl}/images/${images[0].name}`
+          ? `/images/${images[0].name}`
           : '/images/default.jpg'
       })
     }

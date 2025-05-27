@@ -34,7 +34,7 @@
 
     <!--전체 조회 최신순-->
     <select id="selectAll" resultType="Board">
-        SELECT board_id AS boardId, user_id AS userId, reg_date AS regDate, view_cnt AS viewCnt
+        SELECT board_id AS boardId, user_id AS userId, reg_date AS regDate, view_cnt AS viewCnt, title
         FROM board
         WHERE is_deleted = false
         ORDER BY reg_date DESC
