@@ -57,8 +57,6 @@ onMounted(async () => {
       withCredentials: true
     })
 
-    console.log('응답 데이터:', response.data);
-
     // Map<Long, Map<String, Object>> 형태의 데이터를 배열로 변환
     const exerciseArray = []
     for (const [boardId, entry] of Object.entries(response.data)) {

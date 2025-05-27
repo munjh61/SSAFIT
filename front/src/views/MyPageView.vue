@@ -57,7 +57,6 @@ const openEdit = (board) => {
 }
 
 const handlePostCreated = (postData) => {
-  console.log('🔥 새 글 도착:', postData)
   isWriting.value = false
 
   // 방금 등록된 글을 리스트에 추가
@@ -72,7 +71,6 @@ const handlePostCreated = (postData) => {
     ...userStats.value,
     posts: userStats.value.posts + 1
   }
-
   // BoardDetail 자동 표시 제거
   if (!postData.boardId) {
     console.error('❌ boardId가 undefined입니다!', postData)
@@ -96,9 +94,6 @@ onMounted(async () => {
       },
       withCredentials: true
     })
-    console.log('✅ API 응답 전체:', recordsResponse.data)
-    console.log('📋 게시글 목록 boards:', recordsResponse.data.boards)
-    console.log('🖼 이미지 목록 images:', recordsResponse.data.images)
 
     const boards = recordsResponse.data.boards
     const images = recordsResponse.data.images
@@ -120,11 +115,7 @@ onMounted(async () => {
       }
     })
 
-    console.log('🔄 변환된 userRecords:', userRecords.value)
   } catch (error) {
-    console.error('마이페이지 데이터 불러오기 실패:', error)
-    console.log('응답 코드:', error.response.status)
-    console.log('응답 데이터:', error.response.data)
   }
 })
 

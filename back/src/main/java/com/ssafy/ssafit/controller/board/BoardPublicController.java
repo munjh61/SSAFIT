@@ -71,12 +71,29 @@ public class BoardPublicController {
         return ResponseEntity.ok(map);
     }
 
-    //board 전체 조회
+    // board + img 전체 조회
     @GetMapping("")
-    public ResponseEntity<List<Board>> getAllBoard(){
-        List<Board> list = boardService.getAllBoards();
-        return ResponseEntity.ok(list);
+    public ResponseEntity<Map<Long, Map<String, Object>>> getAllBoardWithImg() {
+        Map<Long, Map<String, Object>> result = new HashMap<>();
+
+        // 1. 게시글 전체 불러오기
+        List<Board> boardList = boardService.getAllBoards(); // is_deleted = false 조건 포함된 메서드
+
+        // 2. 각 게시글에 해당하는 이미지들 묶기
+        for (Board board : boardList) {
+            Long boardId = board.getBoardId();
+            List<Img> imgs = imgService.getImgByBoardId(boardId);
+
+            Map<String, Object> boardData = new HashMap<>();
+            boardData.put("board", board);
+            boardData.put("images", imgs);
+
+            result.put(boardId, boardData);
+        }
+
+        return ResponseEntity.ok(result);
     }
+
 
     //board 상세 조회
     @GetMapping("detail/{boardId}")

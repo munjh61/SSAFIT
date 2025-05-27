@@ -66,7 +66,7 @@ const addBucketmark = async() => {
       alert('버킷리스트에서 삭제되었습니다.')
     }
   }catch (err) {
-    console.error('처리 실패패', err)
+    console.error('처리 실패', err)
     alert('처리에 실패했습니다.')
   }
 

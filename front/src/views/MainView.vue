@@ -8,14 +8,19 @@
             </div>
         </section>
 
-        <section>
-            <h2>추천 운동</h2>
+        <section v-if="!isLoggedIn">
+          <h2>🆕최신 게시글</h2>
+          <RecentBoard @show-detail="showBoardDetail" />
+        </section>
+
+        <section class="e" v-if="isLoggedIn">
+            <h2>🏃‍♂️‍➡️추천 운동</h2>
             <RecommendedExercise @show-detail="showBoardDetail" />
             <RouterLink class="more-link" to="/exercise/all">전체보기</RouterLink>
         </section>
 
-        <section class="followers">
-            <h2>팔로우 추천</h2>
+        <section class="followers" v-if="isLoggedIn">
+            <h2>👤팔로우 추천</h2>
             <RecommendedFollower />
             <RouterLink class="more-link" to="/follower/all">전체보기</RouterLink>
         </section>
@@ -30,12 +35,17 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import HeaderBar from '@/components/HeaderBar.vue'
 import SearchBar from '@/components/SearchBar.vue'
 import RecommendedExercise from '@/components/RecommendedExercise.vue'
 import RecommendedFollower from '@/components/RecommendedFollower.vue'
 import BoardDetail from '@/components/BoardDetail.vue'
+import { useAuthStore } from '@/stores/auth'
+import RecentBoard from '@/components/RecentBoard.vue'
+
+const store = useAuthStore()
+const isLoggedIn = ref(false)
 
 const showDetail = ref(false)
 const selectedBoardId = ref(null)
@@ -44,6 +54,11 @@ const showBoardDetail = (boardId) => {
   selectedBoardId.value = boardId
   showDetail.value = true
 }
+
+onMounted(async ()=>{
+  await store.me()
+  isLoggedIn.value = store.isLoggedIn
+})
 </script>
 
 <style scoped>

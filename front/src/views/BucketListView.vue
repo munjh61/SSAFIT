@@ -31,7 +31,6 @@ import axios from 'axios';
 import HeaderBar from '@/components/HeaderBar.vue';
 import BucketItem from '@/components/BucketItem.vue';
 
-// console.log('imgList with title:', response.data.bucketImgs)
 const serverUrl = import.meta.env.VITE_API_BASE_URL
 
 const bucketList = ref([])
@@ -45,10 +44,7 @@ rate: 0
 //화면 출력, 통계 출력력
 onMounted(async () => {
   try{
-      console.log(sessionStorage.getItem('ssafit-login-token'))
       const token = `Bearer ${sessionStorage.getItem('ssafit-login-token')}`
-      // const token = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoidXNlciIsInVzZXJOYW1lIjoi67CV7ZSE66Gg7Yq4IiwidXNlcklkIjoidXNlcjAzIiwiaWF0IjoxNzQ3NzIxMjYyLCJleHAiOjE3NDg5MzA4NjJ9.Au6-Ze8jG78wUgcEW0LEcdwno5t-Gzvw0GBC37MuomM"
-      console.log('토큰:', token);
       //버킷리스트 목록 불러오기
       const response = await axios.get(`${serverUrl}/api/bucket/list`,{
           headers:{
@@ -67,7 +63,6 @@ onMounted(async () => {
               imgUrl: imgs.length > 0 ? `/images/${imgs[0].name}` : null, title
           }
       })
-      console.log("통계 요청 토큰:", token)
       // 통계 불러오기
       const statsRes = await axios.get(`${serverUrl}/api/bucket/stats`, {
           headers: { Authorization: token },
@@ -85,7 +80,6 @@ onMounted(async () => {
 const deleteBucket = async (bucketId) => {
 try {
     const token = `Bearer ${sessionStorage.getItem('ssafit-login-token')}`
-    console.log("삭제용 토큰:", token)
     await axios.delete(`${serverUrl}/api/bucket/${bucketId}`, {
         headers: {
             Authorization: token

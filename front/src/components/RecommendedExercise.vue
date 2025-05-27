@@ -49,7 +49,6 @@ const scrollRight = () => {
 onMounted(async () => {
   try {
     const token = `Bearer ${sessionStorage.getItem('ssafit-login-token')}`
-    console.log('토큰:', token)  // 토큰 확인
 
     const response = await axios.get(`${serverUrl}/api/board/recommend`, {
       headers: {
@@ -57,9 +56,6 @@ onMounted(async () => {
       },
       withCredentials: true
     })
-
-    console.log('서버 응답 전체 데이터:', response)
-    console.log('추천 운동 목록 데이터:', response.data)
 
     // Map<Long, Map<String, Object>> 형태의 데이터를 배열로 변환
     const exerciseArray = []
@@ -78,12 +74,6 @@ onMounted(async () => {
     exercises.value = exerciseArray
   } catch (err) {
     console.error('추천 운동 목록 불러오기 실패:', err)
-    console.error('에러 상세 정보:', {
-      message: err.message,
-      response: err.response,
-      status: err.response?.status,
-      data: err.response?.data
-    })
   }
 })
 

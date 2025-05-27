@@ -31,12 +31,15 @@
 
         AND is_deleted = false
     </select>
-    <!--전체 조회-->
+
+    <!--전체 조회 최신순-->
     <select id="selectAll" resultType="Board">
-        SELECT *
+        SELECT board_id AS boardId, user_id AS userId, reg_date AS regDate, view_cnt AS viewCnt
         FROM board
+        WHERE is_deleted = false
         ORDER BY reg_date DESC
     </select>
+
     <!--로그인 한 유저가 쓴 보드만 조회-->
     <select id="selectByUserId" parameterType="String" resultType="Board">
         SELECT *

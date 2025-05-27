@@ -62,7 +62,6 @@ onMounted(async () => {
       },
       withCredentials: true
     })
-    console.log('팔로우 추천 목록:', response.data)
     followers.value = response.data
   } catch (error) {
     console.error('팔로우 추천 목록 불러오기 실패', error)

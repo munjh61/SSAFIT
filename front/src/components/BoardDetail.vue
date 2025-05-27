@@ -97,18 +97,6 @@ const cancelEdit = () => {
   editContent.value = ''
 }
 
-watch(board, () => {
-  console.log('📌 board.userId:', board.value?.userId)
-  console.log('👤 로그인한 ID:', store.userId)
-})
-
-watch(comments, () => {
-  console.log('💬 댓글 목록:', comments.value)
-  comments.value.forEach(c => {
-    console.log('🧑 댓글 작성자:', c.userId, '👤 로그인 유저:', store.userId, '→ 같나?', c.userId === store.userId)
-  })
-})
-
 const formatDate = (date) => {
   if (!date) return ''
   const d = new Date(date)
@@ -120,15 +108,9 @@ onMounted(async () => {
     headers: { Authorization: token },
     credentials: 'include'
   })
-
-  if (!res.ok) {
-    console.error('❌ 게시글 데이터 불러오기 실패:', res.status)
-    return
-  }
   const data = await res.json()
   board.value = data.board
   const images = data.images?.[props.boardId]
-  console.log('🖼 이미지 데이터:', images)
   
   // 이미지 URL 설정 수정
   if (images && images.length > 0) {
@@ -143,20 +125,12 @@ onMounted(async () => {
   })
   bucketCount.value = await bucketRes.json()
 
-  console.log('📌 게시글 데이터:', data)
-  console.log('🖼 이미지 목록:', images)
-
   const commentRes = await fetch(`${serverUrl}/api/public/comment/board/${props.boardId}`, {
     headers: {
     Authorization: token 
   },
   credentials: 'include'
   })
-
-  if (!commentRes.ok) {
-    console.error('❌ 댓글 목록 가져오기 실패:', commentRes.status)
-    return
-  }
 
   comments.value = await commentRes.json()
 })
@@ -175,7 +149,6 @@ const deletePost = async () => {
     })
 
     if (!res.ok) {
-      console.error('❌ 삭제 실패', res.status)
       alert('삭제에 실패했습니다.')
       return
     }
@@ -185,7 +158,6 @@ const deletePost = async () => {
     window.location.reload()
     emit('close')
   } catch (err) {
-    console.error('삭제 중 에러:', err)
     alert('에러가 발생했습니다.')
   }
 }
@@ -201,15 +173,9 @@ const fetchBoard = async () => {
     credentials: 'include'
   })
 
-  if (!res.ok) {
-    console.error('❌ 게시글 데이터 불러오기 실패:', res.status)
-    return
-  }
-
   const data = await res.json()
   board.value = data.board
   const images = data.images?.[props.boardId]
-  console.log('🖼 이미지 데이터:', images)
   
   // 이미지 URL 설정 수정
   if (images && images.length > 0) {
@@ -263,7 +229,6 @@ const submitComment = async () => {
 
   if (!res.ok) {
     const msg = await res.text()
-    console.error('❌ 댓글 등록 실패:', res.status, msg)
     alert('댓글 등록에 실패했습니다.')
     return
   }
@@ -272,10 +237,7 @@ const submitComment = async () => {
     headers: { Authorization: token },
     credentials: 'include'
   })
-  if (!commentRes.ok) {
-    console.error('❌ 댓글 목록 가져오기 실패:', commentRes.status)
-    return
-  }
+
   comments.value = await commentRes.json()
 }
 //댓글 수정
@@ -327,7 +289,6 @@ const fetchComments = async () => {
   })
 
   if (!res.ok) {
-    console.error('❌ 댓글 목록 다시 불러오기 실패:', res.status)
     return
   }
 
