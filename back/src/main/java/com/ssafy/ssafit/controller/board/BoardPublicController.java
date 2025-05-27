@@ -79,7 +79,7 @@ public class BoardPublicController {
     }
 
     //board 상세 조회
-    @GetMapping("/{boardId}")
+    @GetMapping("detail/{boardId}")
     public ResponseEntity<Map<String, Object>> getBoard(@PathVariable long boardId){
         Board board = boardService.getBoardByBoardId(boardId);
         List<Img> imgList = imgService.getImgByBoardId(boardId);

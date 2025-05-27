@@ -11,7 +11,7 @@
 
 
     <select id="selectFollowingUserIds" resultType="string">
-        SELECT followee_id
+        SELECT following_id
         FROM follow
         WHERE follower_id = #{userId}
     </select>

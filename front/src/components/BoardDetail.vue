@@ -116,7 +116,7 @@ const formatDate = (date) => {
 }
 
 onMounted(async () => {
-  const res = await fetch(`${serverUrl}/api/public/board/${props.boardId}`, {
+  const res = await fetch(`${serverUrl}/api/public/board/detail/${props.boardId}`, {
     headers: { Authorization: token },
     credentials: 'include'
   })
@@ -196,7 +196,7 @@ const handleUpdate = async () => {
 }
 
 const fetchBoard = async () => {
-  const res = await fetch(`${serverUrl}/api/public/board/${props.boardId}`, {
+  const res = await fetch(`${serverUrl}/api/public/board/detail/${props.boardId}`, {
     headers: { Authorization: token },
     credentials: 'include'
   })

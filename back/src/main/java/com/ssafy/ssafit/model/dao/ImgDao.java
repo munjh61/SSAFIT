@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface ImgDao {
-//    List<Img> selectImgByUserId(String userId);
+    //해당 유저들이 작성한 게시글 목록 가져 올 때 사용
     List<Img> selectImgByBoardId(Long boardId);
     //이미지 저장
     void insertImg(Img img);

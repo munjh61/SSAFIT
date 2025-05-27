@@ -4,8 +4,8 @@
 
             <div class="recommend-wrapper" ref="sliderRef">
                 <ExerciseCard
-                v-for="(exercise, index) in exercises"
-                :key="index"
+                v-for="exercise in exercises"
+                :key="exercise.boardId"
                 :img-url="exercise.img"
                 :title="exercise.title"
                 :boardId="exercise.boardId"
@@ -48,6 +48,8 @@ const scrollRight = () => {
 onMounted(async () => {
   try {
     const token = `Bearer ${sessionStorage.getItem('ssafit-login-token')}`
+    console.log('토큰:', token)  // 토큰 확인
+
     const response = await axios.get(`${serverUrl}/api/board/recommend`, {
       headers: {
         Authorization: token
@@ -55,20 +57,32 @@ onMounted(async () => {
       withCredentials: true
     })
 
-    console.log('추천 운동 목록:', response.data)
+    console.log('서버 응답 전체 데이터:', response)
+    console.log('추천 운동 목록 데이터:', response.data)
 
-    // 백엔드에서 받은 데이터 형식에 맞게 매핑
-    exercises.value = response.data.map(board => {
-      return {
+    // Map<Long, Map<String, Object>> 형태의 데이터를 배열로 변환
+    const exerciseArray = []
+    for (const [boardId, entry] of Object.entries(response.data)) {
+      const board = entry.board
+      const images = entry.images
+
+      exerciseArray.push({
         boardId: board.boardId,
-        img: board.images && board.images.length > 0 
-          ? `/images/${board.images[0].name}` 
-          : '/images/default.jpg',
-        title: board.title
-      }
-    })
+        title: board.title,
+        img: images && images.length > 0 
+          ? `${serverUrl}/images/${images[0].name}`
+          : '/images/default.jpg'
+      })
+    }
+    exercises.value = exerciseArray
   } catch (err) {
     console.error('추천 운동 목록 불러오기 실패:', err)
+    console.error('에러 상세 정보:', {
+      message: err.message,
+      response: err.response,
+      status: err.response?.status,
+      data: err.response?.data
+    })
   }
 })
 
