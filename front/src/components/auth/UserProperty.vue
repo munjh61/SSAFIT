@@ -22,7 +22,7 @@
                         <fieldset class="email">
                             <legend>이메일</legend>
                             <div class="step1">
-                                <input type="text" v-model="password">
+                                <input type="text" v-model="email">
                                 <button @click="send">전송</button>
                             </div>
                             <div class="step2">

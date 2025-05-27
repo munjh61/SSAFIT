@@ -10,6 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,16 +23,17 @@ public class CrewController {
 
     // 신청
     @PostMapping("/{manage}")
-    public ResponseEntity<String> apply(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody Crew crew, @PathVariable("manage")String manage){
+    public ResponseEntity<Map<String, Object>> apply(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody Crew crew, @PathVariable("manage")String manage){
         // manage : apply, invite, applyAccept, applyRefuse, inviteAccept, inviteRefuse
-        String msg = crewService.manageCrew(crew, manage, userDetails.getUsername());
-        return new ResponseEntity<>(msg, HttpStatus.OK);
+        Map<String, Object> map = crewService.manageCrew(crew, manage, userDetails.getUsername());
+        return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
     // 삭제
-    @DeleteMapping("/{crewId}")
-    public ResponseEntity<String> delete(@AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable("crewId") long crewId){
-        String msg = crewService.quitCrew(crewId, userDetails.getUsername());
+    @DeleteMapping("/{guildId}")
+    public ResponseEntity<String> delete(@AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable("guildId") long guildId){
+        Crew crew = Crew.builder().guildId(guildId).userId(userDetails.getUsername()).build();
+        String msg = crewService.quitCrew(crew, userDetails.getUsername());
         return new ResponseEntity<>(msg, HttpStatus.OK);
     }
 

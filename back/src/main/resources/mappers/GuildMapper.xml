@@ -11,6 +11,7 @@
     <select id="select" parameterType="long" resultType="Guild">
         SELECT  guild_id AS guildId,
                 guild_name AS guildName,
+                description,
                 reg_date AS regDate,
                 head_count AS headCount,
                 user_id AS userId
@@ -27,6 +28,7 @@
                 head_count AS headCount
         FROM    guild
         WHERE   LOWER(guild_name) LIKE LOWER(CONCAT('%', #{guildName} , '%'))
+        ORDER BY guild_id DESC
     </select>
     <update id="update" parameterType="Guild">
         UPDATE  guild

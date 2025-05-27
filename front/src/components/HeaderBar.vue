@@ -2,7 +2,8 @@
   <header class="header">
     <RouterLink to="/" class="logo">SSAFIT</RouterLink>
     <nav class="nav">
-      <RouterLink :to="`/myPage/${store.userId}`" class="mypage">마이페이지</RouterLink>
+      <RouterLink v-if="!store.isLoggedIn" :to="'/myPage/user01'" class="mypage">마이페이지</RouterLink>
+      <RouterLink v-if="store.isLoggedIn" :to="`/myPage/${store.userId}`" class="mypage">마이페이지</RouterLink>
       <RouterLink to="/bucketList" class="bucketlist">버킷리스트</RouterLink>
       <!-- <RouterLink to="/calender" class="calender">캘린더</RouterLink> -->
       <RouterLink to="/guild" class="guild">모임</RouterLink>
@@ -47,7 +48,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import Auth from '@/components/auth/Auth.vue'
 import UserProperty from '@/components/auth/UserProperty.vue'
@@ -68,6 +69,10 @@ const showQuit = ref(false)
 const toggleQuitModal = function (){
   showQuit.value = !showQuit.value
 }
+
+onMounted(()=>{
+  useAuthStore().me()
+})
 
 </script>
 

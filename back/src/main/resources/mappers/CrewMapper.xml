@@ -57,4 +57,12 @@
             </if>
         </where>
     </select>
+    <select id="candidates" parameterType="long" resultType="Crew">
+        SELECT  crew_id AS crewId,
+        user_id AS userId,
+        guild_id AS guildId,
+        status
+        FROM    crew
+        WHERE   guild_id = #{guildId} AND status != 0
+    </select>
 </mapper>

@@ -26,7 +26,7 @@ public class AuthController {
         }
 
         String token = (String) map.get("token");
-        map.put("token", token);
+        //map.put("token", token);
 
         return ResponseEntity.ok(token);
     }

@@ -5,11 +5,14 @@ import com.ssafy.ssafit.model.service.EmailService;
 import com.ssafy.ssafit.model.service.GuildService;
 import com.ssafy.ssafit.model.service.UserService;
 import com.ssafy.ssafit.security.CustomUserDetails;
+import com.ssafy.ssafit.security.LoginService;
 import lombok.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/user")
@@ -19,6 +22,7 @@ public class UserController {
     private final UserService userService;
     private final EmailService emailService;
     private final GuildService guildService;
+    private final LoginService loginService;
 
     @GetMapping("/me")
     public ResponseEntity<?> getMyInfo(@AuthenticationPrincipal CustomUserDetails userDetails) {
@@ -43,8 +47,14 @@ public class UserController {
     }
     // 회원 탈퇴
     @DeleteMapping
-    public ResponseEntity<String> changeUserInfo(@AuthenticationPrincipal CustomUserDetails userDetails){
+    public ResponseEntity<String> quit(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody User user){
         String userId = userDetails.getUsername();
+        String password = user.getPassword();
+
+        Map<String, Object> map = loginService.login(userId, password);
+        if((boolean) map.get("result")){
+            return new ResponseEntity<>("탈퇴 처리에 실패하였습니다.", HttpStatus.BAD_REQUEST);
+        }
         userService.delete(userId);
         guildService.quitSSAFIT(userId);
         return new ResponseEntity<>("탈퇴 처리되었습니다.", HttpStatus.OK);

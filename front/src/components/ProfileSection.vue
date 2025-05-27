@@ -106,7 +106,8 @@ const modify = async () => {
 }
 
 onMounted(async () => {
-  await otherStore.you(userId.value)
+  otherStore.you(userId.value)
+  followStore.getFollowData(userId.value)
 
   if (!sessionStorage.getItem('ssafit-login-token')) {
     return isFollowed.value = false
@@ -125,7 +126,6 @@ onMounted(async () => {
     isFollowed.value = await followStore.isFollowed(userId.value)
   }
 
-  await followStore.getFollowData(userId.value)
 })
 </script>
 

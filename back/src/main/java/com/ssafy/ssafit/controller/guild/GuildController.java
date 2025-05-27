@@ -1,6 +1,8 @@
 package com.ssafy.ssafit.controller.guild;
 
+import com.ssafy.ssafit.model.dto.Crew;
 import com.ssafy.ssafit.model.dto.Guild;
+import com.ssafy.ssafit.model.service.CrewService;
 import com.ssafy.ssafit.model.service.GuildService;
 import com.ssafy.ssafit.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
@@ -9,20 +11,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/guild")
 public class GuildController {
 
     private final GuildService guildService;
+    private final CrewService crewService;
 
     // --- 모임 ---
 
     @PostMapping
     public ResponseEntity<String> createGuild(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody Guild guild) {
         guild.setUserId(userDetails.getUsername());
-        System.out.println(guild.getDescription());
-        System.out.println(guild.getUserId());
         if (guild.getGuildName() == null || guild.getGuildName().isEmpty()) {
             return new ResponseEntity<>("모임명을 입력하지 않았습니다.", HttpStatus.BAD_REQUEST);
         }
@@ -55,4 +60,15 @@ public class GuildController {
         return new ResponseEntity<>(msg, HttpStatus.OK);
     }
 
+    @GetMapping("/{guildId}")
+    public ResponseEntity<Map<String, Object>> getDetail(@AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable("guildId") Long guildId){
+        Map<String, Object> map = new HashMap<>();
+        Guild guild = guildService.getGuild(guildId);
+        List<Crew> crews = crewService.getCrews(userDetails.getUsername(), guildId);
+        //List<Crew> candidates = crewService.getCandidates(guildId);
+        map.put("guild", guild);
+        map.put("crews", crews);
+        //map.put("candidates", candidates);
+        return new ResponseEntity<>(map, HttpStatus.OK);
+    }
 }

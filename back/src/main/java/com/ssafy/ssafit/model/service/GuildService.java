@@ -12,5 +12,5 @@ public interface GuildService {
     String deleteGuild(Guild guild);
     String quitMasterGuild(Guild guild, String loginUser);
     boolean quitSSAFIT(String userId);
-
+    Guild getGuild(long GuildId);
 }
