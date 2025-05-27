@@ -305,5 +305,40 @@ insert into img (board_id, org_name, name) values
 (34, 'img34', 'burpee.jpg'),
 (35, 'img35', 'homeworkout.jpg'),
 (36, 'img36', 'taekwondo.jpg');
-(6, "img6", "exercise6.jpg");
 
+INSERT INTO guild (guild_name, description, user_id, head_count)
+VALUES
+('암벽등반 챌린저스', '암벽등반을 함께 즐기는 모임입니다.', 'user01', 3),
+('요가 힐러즈', '요가와 명상을 통한 마음 치유 모임', 'user02', 2),
+('사이클러즈', '국토대장정과 장거리 라이딩을 즐기는 사이클 동호회', 'user03', 4),
+('겨울 스포츠 동호회', '스키, 스노보드 애호가들의 모임입니다.', 'user04', 3),
+('SSAFIT 스터디', '운동 기록 및 도전을 공유하는 SSAFIT 공식 모임', 'user05', 5);
+
+INSERT INTO crew (user_id, guild_id, status)
+VALUES
+-- guild 1: 암벽등반 챌린저스
+('user01', 1, 0), -- owner
+('user18', 1, 0),
+('user13', 1, 0),
+
+-- guild 2: 요가 힐러즈
+('user02', 2, 0), -- owner
+('user10', 2, 0),
+
+-- guild 3: 사이클러즈
+('user03', 3, 0), -- owner
+('user05', 3, 0),
+('user08', 3, 0),
+('user12', 3, 0),
+
+-- guild 4: 겨울 스포츠 동호회
+('user04', 4, 0), -- owner
+('user06', 4, 0),
+('user20', 4, 0),
+
+-- guild 5: SSAFIT 스터디
+('user05', 5, 0), -- owner
+('user01', 5, 0),
+('user02', 5, 0),
+('user03', 5, 0),
+('user04', 5, 0);
