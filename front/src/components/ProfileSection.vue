@@ -33,13 +33,13 @@
       </div>
     </div>
 
-    <Follow v-if="showFollowModal" :mode="mode" :userId="userId" @close="closeFollowModal" @changeMode="changeMode" />
+    <Follow v-if="showFollowModal" :mode="mode" :userId="userId" @close="closeFollowModal" @changeMode="changeMode" @move="move"/>
   </div>
 </template>
 
 <script setup>
-import { onMounted, ref, computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { onMounted, ref, computed, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useFollowStore } from '@/stores/follow'
 import { useAuthStore } from '@/stores/auth'
 import { useOtherStore } from '@/stores/otherUser'
@@ -70,6 +70,13 @@ const closeFollowModal = () => {
 }
 const changeMode = (q) => {
   mode.value = q
+}
+
+const router = useRouter()
+
+const move = (yourId) => {
+  router.push(`/myPage/${yourId}`)
+  closeFollowModal()
 }
 
 // 상태값
@@ -105,28 +112,55 @@ const modify = async () => {
   }
 }
 
-onMounted(async () => {
-  otherStore.you(userId.value)
-  followStore.getFollowData(userId.value)
+watch(userId, async (newId) => {
+  if (!newId) return
+
+  await otherStore.you(newId)
+  await followStore.getFollowData(newId)
 
   if (!sessionStorage.getItem('ssafit-login-token')) {
-    return isFollowed.value = false
+    isFollowed.value = false
+    canFollow.value = false
+    canModify.value = false
+    return
   }
 
   if (!authStore.userId) {
     await authStore.me()
   }
 
-  if (authStore.userId === userId.value) {
+  if (authStore.userId === newId) {
     canModify.value = true
     canFollow.value = false
   } else {
     canModify.value = false
     canFollow.value = true
-    isFollowed.value = await followStore.isFollowed(userId.value)
+    isFollowed.value = await followStore.isFollowed(newId)
   }
+}, { immediate: true })
 
-})
+// onMounted(async () => {
+//   otherStore.you(userId.value)
+//   followStore.getFollowData(userId.value)
+
+//   if (!sessionStorage.getItem('ssafit-login-token')) {
+//     return isFollowed.value = false
+//   }
+
+//   if (!authStore.userId) {
+//     await authStore.me()
+//   }
+
+//   if (authStore.userId === userId.value) {
+//     canModify.value = true
+//     canFollow.value = false
+//   } else {
+//     canModify.value = false
+//     canFollow.value = true
+//     isFollowed.value = await followStore.isFollowed(userId.value)
+//   }
+
+// })
 </script>
 
 <style scoped>

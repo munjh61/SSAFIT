@@ -1,6 +1,6 @@
 <template>
     <div class="card">
-        <div class="info">
+        <div class="info" @click="goYourPage">
             <h3>{{ props.fName }}</h3>
             <p> @{{ props.fUserId }}</p>
         </div>
@@ -22,7 +22,11 @@ const props = defineProps({
     isLoginUser: Boolean
 })
 
-const emit = defineEmits(['addFollow', 'delFollow'])
+const goYourPage = () =>{
+    emit('move', props.fUserId)
+}
+
+const emit = defineEmits(['addFollow', 'delFollow','close', 'move'])
 
 const followStore = useFollowStore();
 

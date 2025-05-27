@@ -30,21 +30,21 @@
                                 :f-user-id="mutual.followerId === props.userId ? mutual.followingId : mutual.followerId"
                                 :f-name="mutual.followerId === props.userId ? mutual.followingName : mutual.followerName"
                                 :is-followed="true" :is-login-user="isLoginUser" @addFollow="addFollow"
-                                @delFollow="delFollow" />
+                                @delFollow="delFollow" @move="move"/>
                         </div>
 
                         <!-- 나를 팔로우 -->
                         <div v-if="props.mode === 'follower'" v-for="f in filteredFollower" :key="f.followId">
                             <FollowCard :f-id="f.followId" :f-user-id="f.followerId" :f-name="f.followerName"
                                 :is-followed="false" :is-login-user="isLoginUser" @addFollow="addFollow"
-                                @delFollow="delFollow" />
+                                @delFollow="delFollow" @move="move"/>
                         </div>
 
                         <!-- 내가 팔로우 -->
                         <div v-if="props.mode === 'following'" v-for="f in filteredFollowing" :key="f.followId">
                             <FollowCard :f-id="f.followId" :f-user-id="f.followingId" :f-name="f.followingName"
                                 :is-followed="true" :is-login-user="isLoginUser" @addFollow="addFollow"
-                                @delFollow="delFollow" />
+                                @delFollow="delFollow" @move="move"/>
                         </div>
                     </div>
                 </div>
@@ -65,7 +65,7 @@ const props = defineProps({
     userId: String
 })
 
-const emit = defineEmits(["close", "changeMode"])
+const emit = defineEmits(["close", "changeMode", "move"])
 
 const store = useFollowStore()
 const authstore = useAuthStore()
@@ -88,6 +88,10 @@ const changeMode = (mode) => {
 
 const addFollow = () => followingCnt.value++
 const delFollow = () => followingCnt.value--
+
+const move = (yourId) =>{
+    emit('move', yourId)
+}
 
 onMounted(async () => {
     await store.getFollowData(props.userId)
