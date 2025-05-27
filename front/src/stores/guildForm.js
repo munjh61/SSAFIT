@@ -14,7 +14,10 @@ export const useGuildStore = defineStore("guild", () => {
     const guilds = ref([]);
     const regist = async () => {
         await authStore.me();
-        if (!authStore.isLoggedIn) return;
+        if (!authStore.isLoggedIn) {
+            msg.value = '로그인 해주세요'
+            return;
+        }
         return await axios({
             url: `${serverUrl}/api/guild`,
             method: "POST",
@@ -52,13 +55,13 @@ export const useGuildStore = defineStore("guild", () => {
 
     const deleteGuild = async (guildId) => {
         return await axios({
-            url:`${serverUrl}/api/guild/${guildId}`,
-            method:"DELETE",
-            headers:{
+            url: `${serverUrl}/api/guild/${guildId}`,
+            method: "DELETE",
+            headers: {
                 Authorization: `Bearer ${sessionStorage.getItem('ssafit-login-token')}`
             }
         })
-        .then(getList(searchKeyword.value))
+            .then(getList(searchKeyword.value))
     }
 
     const reset = () => {

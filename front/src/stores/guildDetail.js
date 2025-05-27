@@ -79,6 +79,11 @@ export const useGuildDetailStore = defineStore("guildDetail", () => {
     }
 
     const apply = async (inputGuildId) => {
+        await aStore.me();
+        if (!aStore.isLoggedIn) {
+            msg.value = '로그인 해주세요'
+            return;
+        }
         return await axios({
             url: `${serverUrl}/api/crew/apply`,
             method: 'POST',

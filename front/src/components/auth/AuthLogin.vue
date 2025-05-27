@@ -40,7 +40,8 @@ const login = async () => {
     let result = await store.login(userId.value, password.value);
     if (result) {
         emit('close')
-        router.replace({ name: 'main' })
+        router.replace({name: router.name})
+        //router.replace({ name: 'main' })
     }
 }
 </script>
