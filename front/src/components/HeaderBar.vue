@@ -27,7 +27,7 @@
             <img src="/src/assets/images/usersetting.png" class="auth-icon">
             <span>회원 정보 변경</span>
           </button>
-          <button class="auth-button">
+          <button @click="toggleQuitModal" class="auth-button">
             <img src="/src/assets/images/deleteuser.png" class="auth-icon">
             <span>탈퇴</span>
           </button> 
@@ -42,6 +42,7 @@
     </div>
     <Auth v-if="showAuth" @close="toggleAuthModal"/>
     <UserProperty v-if="showUserProperty" @close="toggleUserPropertyModal"/>
+    <Quit v-if="showQuit" @close="toggleQuitModal"/>
   </header>
 </template>
 
@@ -50,6 +51,7 @@ import { ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import Auth from '@/components/auth/Auth.vue'
 import UserProperty from '@/components/auth/UserProperty.vue'
+import Quit from '@/components/auth/Quit.vue'
 const store = useAuthStore()
 // 로그인, 회원가입, 아이디찾기, 비밀번호재설정
 const showAuth = ref(false)
@@ -60,6 +62,11 @@ const toggleAuthModal = function () {
 const showUserProperty = ref(false)
 const toggleUserPropertyModal = function(){
   showUserProperty.value = !showUserProperty.value
+}
+
+const showQuit = ref(false)
+const toggleQuitModal = function (){
+  showQuit.value = !showQuit.value
 }
 
 </script>
