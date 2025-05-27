@@ -77,7 +77,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    if (to?.meta?.requiresAuth && sessionStorage.getItem("ssafit-login-token")){
+    if (to?.meta?.requiresAuth && !sessionStorage.getItem("ssafit-login-token")){
       return next({ name: "main" });
     } 
     next();
